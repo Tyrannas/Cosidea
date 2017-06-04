@@ -14,7 +14,7 @@ export default {
     return {
       lorem: 'Lorem ipsum sit dolor.'
     }
-  }
+  },
   components: {
     'sideBar': Menu,
     'sigmaInstance': Sigma
