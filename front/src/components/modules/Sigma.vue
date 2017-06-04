@@ -4,11 +4,16 @@
 </template>
 
 <script>
-import sigma from 'sigma'
 
+//import Sigma from 'Sigma'
+
+//import Sigma from 'sigma/build/sigma.require'
+//require('sigma/build/sigma.require')
+//console.log(typeof(sigma))
+//import 'sigma/build/plugins/sigma.layout.forceAtlas2.min'
 sigma.settings.scalingMode = "outside";
-var i,
-    s,
+
+let i,
     N = 50,
     E = 150,
     g = {
@@ -41,20 +46,10 @@ for (i = 0; i < E; i++)
     type: 't'
   });
 
-var s = new sigma({
+let s = new sigma({
   graph: g,
 });
 
-setTimeout(function(){
-  s.addRenderer({
-    type: "canvas",
-    container: "graph-container"
-    })
-    .settings({
-        'maxNodeSize':35
-    });
-    s.refresh();
-  }, 500)
 
 console.log(s.graph.edges(), s.graph.nodes(), "ok")
 export default {
@@ -63,6 +58,17 @@ export default {
     return {
       sigmaInstance: s
     }
+  },
+  mounted(){
+    s.addRenderer({
+      type: "canvas",
+      container: "graph-container"
+      })
+      .settings({
+          'maxNodeSize':35
+    });
+    s.refresh();
+    s.startForceAtlas2();
   }
 }
 </script>
