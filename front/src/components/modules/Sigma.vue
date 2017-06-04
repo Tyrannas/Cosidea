@@ -14,8 +14,8 @@
 sigma.settings.scalingMode = "outside";
 
 let i,
-    N = 50,
-    E = 150,
+    N = 250,
+    E = 600,
     g = {
       nodes: [],
       edges: []
