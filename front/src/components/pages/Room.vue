@@ -16,8 +16,8 @@ export default {
     }
   },
   components: {
-    //'sideBar': Menu,
-    //'sigmaInstance': Sigma
+    'sideBar': Menu,
+    'sigmaInstance': Sigma
   }
 }
 </script>
