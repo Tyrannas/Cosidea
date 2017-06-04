@@ -6,7 +6,7 @@
 <script>
 import sigma from 'sigma'
 
-
+sigma.settings.scalingMode = "outside";
 var i,
     s,
     N = 50,
@@ -54,8 +54,7 @@ setTimeout(function(){
         'maxNodeSize':35
     });
     s.refresh();
-  }, 2000)
-
+  }, 500)
 
 console.log(s.graph.edges(), s.graph.nodes(), "ok")
 export default {
@@ -71,9 +70,18 @@ export default {
 <style>
   #graph-container {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   top: 0;
   left: 0;
+  z-index: -1;
+}
+
+body{
+  overflow: hidden;
+}
+
+.sigma-scene, .sigma-labels, .sigma-mouse {
+    left: 0;
 }
 </style>

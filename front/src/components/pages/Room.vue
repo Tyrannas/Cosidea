@@ -1,12 +1,12 @@
 <template>
   <div id="test">
-    <!-- <sideBar id="add_idea"></sideBar> -->
+    <sideBar id="add_idea"></sideBar>
     <sigmaInstance></sigmaInstance>
   </div>
 </template>
 
 <script>
-// import Menu from '../modules/Menu.vue'
+import Menu from '../modules/Menu.vue'
 import Sigma from '../modules/Sigma.vue'
 export default {
   name: 'test',
@@ -16,7 +16,7 @@ export default {
     }
   },
   components: {
-    //'sideBar': Menu,
+    'sideBar': Menu,
     'sigmaInstance': Sigma
   }
 }
