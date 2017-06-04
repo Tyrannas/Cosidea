@@ -1,0 +1,17 @@
+{
+  "name": "cosidea-backend",
+  "version": "1.0.0",
+  "description": "Backend for Cosidea visualization",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "David Gödicke, Felix Aliée",
+  "license": "ISC",
+  "dependencies": {
+    "@types/es6-promise": "0.0.32",
+    "@types/knex": "0.0.53",
+    "knex": "^0.13.0",
+    "pg": "^6.2.3"
+  }
+}
