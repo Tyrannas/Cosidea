@@ -1,5 +1,5 @@
-let config = require('config/db');
-let db = require('model/db.js');
+import * as config from './config/db';
+import * as db from './model/db';
 
 db.connectDb(config.dbconf);
 
