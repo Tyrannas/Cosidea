@@ -1,23 +1,23 @@
 <template>
   <div id="test">
-    <sideBar id="add_idea"></sideBar>
-    <sigmaInstance></sigmaInstance>
+    <!-- <sideBar id="add_idea"></sideBar> -->
+    <!-- <sigmaInstance></sigmaInstance> -->
   </div>
 </template>
 
 <script>
-import Menu from '../modules/Menu.vue'
-import Sigma from '../modules/Sigma.vue'
+//import Menu from '../modules/Menu.vue'
+//import Sigma from '../modules/Sigma.vue'
 export default {
   name: 'test',
   data () {
     return {
       lorem: 'Lorem ipsum sit dolor.'
     }
-  }
+  },
   components: {
-    'sideBar': Menu,
-    'sigmaInstance': Sigma
+    //'sideBar': Menu,
+    //'sigmaInstance': Sigma
   }
 }
 </script>
