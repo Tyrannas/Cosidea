@@ -1,7 +1,7 @@
 import {db} from './db';
 import * as table from '../config/tables';
 
-type ProjectId = number;
+export type ProjectId = number;
 
 export class Project {
     id: ProjectId;
@@ -32,7 +32,15 @@ export function addProject( title: string, description: string, ownerId?: number
     return query;
 }
 
-export function findProjectByPrefix(title: string): Promise<Project[]>
+export function findAll(): Promise<Project[]>
+{
+    let query = db(table.project)
+    .select('*');
+
+    return query;
+}
+
+export function findByPrefix(title: string): Promise<Project[]>
 {
     let query = db(table.project)
     .select('*')
@@ -41,7 +49,7 @@ export function findProjectByPrefix(title: string): Promise<Project[]>
     return query;
 }
 
-export function findProjectByTitle(title: string): Promise<Project>
+export function findByTitle(title: string): Promise<Project>
 {
     let query = db(table.project)
     .select('*')

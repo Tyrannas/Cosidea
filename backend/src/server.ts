@@ -1,27 +1,29 @@
-import * as config from './config/db';
-import * as db from './model/db';
-import * as project from './model/project';
-import * as idee from './model/idee';
+import * as express     from 'express';
+import * as bodyParser  from 'body-parser';
+import * as config      from './config/db';
+import * as db          from './model/db';
+import * as router      from './routes/api';
 
-db.connectDb(config.dbconf);
-
-// project.addProject("t3st", "some project")
-// .then(console.log)
-// .catch(() => {});
-
-// project.findProjectByTitle('t2st')
-// .then((projs) => {
-//         console.log(projs.description);
-// })
-// .catch(() => console.log('err'));
-
-// idee.addIdee(1, 'id', 'amazing idee')
-// .then(console.log)
+let app     = express();
+let port    = process.env.PORT || 3000;
 
 
-idee.getIdeeByProjectId(1)
-.then(console.log)
-.catch(console.log);
+app.use(bodyParser.json() );        // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+}));
+
+app.set('secret', 'hahahahahahahahhahahahahahahahahahaahahah');
+app.use('/', router.api);           //  Set API Router
+
+// import * as project from './model/project';
+// import * as idea from './model/idea';
+// import * as tag from './model/tag';
+
+db.connectDb(config.dbconf);        //  Initialize Connection with Database
+
+
+app.listen(port);
 
 // var bcrypt = require('bcrypt');
 // const saltRounds = 10;

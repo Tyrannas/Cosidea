@@ -1,4 +1,4 @@
 export let project = 'project';
-export let idee = 'idee';
+export let idea = 'idea';
 export let tag = 'tag';
-export let idee_tag_rel = "idee_tag_rel";
+export let idea_tag_rel = "idea_tag_rel";

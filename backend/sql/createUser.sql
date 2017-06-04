@@ -13,7 +13,7 @@ CREATE TABLE "project" (
     "owner" INTEGER REFERENCES "user"("id")
 );
 
-CREATE TABLE "idee" (
+CREATE TABLE "idea" (
     "id" SERIAL PRIMARY KEY,
     "title" VARCHAR(30) NOT NULL,
     "description" TEXT,
@@ -25,10 +25,10 @@ CREATE TABLE "tag" (
     "name" VARCHAR(15) NOT NULL
 );
 
-CREATE TABLE "idee_tag_rel" (
-    "idee_id" INTEGER REFERENCES "idee"("id") NOT NULL,
+CREATE TABLE "idea_tag_rel" (
+    "idea_id" INTEGER REFERENCES "idea"("id") NOT NULL,
     "tag_id" INTEGER REFERENCES "tag"("id") NOT NULL,
-    PRIMARY KEY("idee_id", "tag_id") 
+    PRIMARY KEY("idea_id", "tag_id") 
 );
 
 
