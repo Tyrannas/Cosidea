@@ -1,15 +1,13 @@
 <template>
   <div id="app">
-    <myMenu></myMenu>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+// import Menu from './components/Menu.vue'
 export default {
-  name: 'app',
-  components: {
-  }
+  name: 'app'
 }
 </script>
 
