@@ -1,6 +1,6 @@
 <template>
   <div id="test">
-    <sideBar id="add_idea" :instance="instance"></sideBar>
+    <sideBar ref="add_idea" id="add_idea" :instance="instance"></sideBar>
     <div id="graph-container"></div>
   </div>
 </template>
@@ -33,8 +33,7 @@ export default {
             type: "canvas",
             container: "graph-container"
         }).settings({
-            'maxNodeSize': 35,
-            'defaultEdgeType' : 'curve'
+            'maxNodeSize': 35
         });
         s.refresh();
       }
