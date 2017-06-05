@@ -74,7 +74,7 @@ export function findByProjectId(projectId: number): Promise<TaggedIdea[]> {
     .select('i.*', db.raw('json_agg(t) as tags'))
     .leftJoin(table.idea_tag_rel + ' as r', 'i.id', 'r.idea_id')
     .leftJoin(table.tag + ' as t', 'r.tag_id', 't.id')
-    .where('project_id', projectId)
+    .where('i.project_id', projectId)
     .groupBy('i.id');
 
     return idea;

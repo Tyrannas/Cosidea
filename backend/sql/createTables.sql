@@ -22,7 +22,9 @@ CREATE TABLE "idea" (
 
 CREATE TABLE "tag" (
     "id" SERIAL PRIMARY KEY,
-    "name" VARCHAR(15) NOT NULL
+    "name" VARCHAR(15) NOT NULL,
+    "project_id" INTEGER REFERENCES "project"("id") NOT NULL,
+    UNIQUE ("project_id", "name")
 );
 
 CREATE TABLE "idea_tag_rel" (

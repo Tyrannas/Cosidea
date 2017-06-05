@@ -1,20 +1,21 @@
 import {db} from './db';
 import * as table from '../config/tables';
+import {ProjectId} from './project';
 
 export type TagId = number;
 
 export class Tag {
     id: TagId;
-    constructor(public name: string) {}
+    constructor(public project_id: ProjectId, public name: string) {}
 }
 
-export function addTag(name: string): Promise<TagId> {
+export function addTag(projectId: ProjectId, name: string): Promise<TagId> {
 
     if(name == undefined || name.length < 1) {
         return Promise.reject("Tag needs name");
     }
 
-    let tag = new Tag(name);
+    let tag = new Tag(projectId, name);
 
     let query = db(table.tag)
     .insert(tag)

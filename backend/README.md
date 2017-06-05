@@ -6,26 +6,41 @@ Cosidea Backend
 ### Create
 
 Add User:  
-```/create/user/:user/:password```
+```POST: /create/user/:user/:password```  
+Returns userId.
 
 Add Project:  
-```/create/project/:title/:description/:protected/:ownerId?/:password?```  
-protected can be ```0``` or ```1```. If the project is protected you have to specify ownerId and project password.
+```POST: /create/project/:title/:protected?desc=<description>&owner=<owner_user_id>&pwd=<password>```  
+protected can be ```0``` or ```1```. If the project is protected you have to specify ownerId and project password.  
+Returns the projectId.
+
+Add Idea:  
+```POST: /create/idea/:projectId/:title?desc=<description>&token=<token>```  
+Returns the ideaId.
+
+Add Tag:  
+```POST: /create/tag/:projectId/:name?token=<token>```  
+Returns the tagId.
+
+### Remove
+
+Remove Tag:  
+```POST: /rm/link/:projectId/:ideaId/:tagId?token=<token>```  
 
 ### Info
 
 Project Info:  
-```/info/project/:projectTitle```  
-returns the fields ```title, description, id, owner, protected```
+```GET: /info/project/:projectTitle```  
+Returns the fields ```title, description, id, owner, protected```
 
 Ideas in some project:  
-```/info/idea/:projectId/:token?```  
-if the project is password protected you need to specify a token (see /auth).
-
+```GET: /info/idea/:projectId?token=<token>```  
+if the project is password protected you need to specify a token (see /auth).  
+Returns an array of Ideas with tags
 ### Auth
 
 Connect to project:  
-```/info/project/:projectId/:password```  
+```GET: /info/project/:projectId/:password```  
 returns projectId and token. The token can be used to request Ideas from protected projects.
 
 

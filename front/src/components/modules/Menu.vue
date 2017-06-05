@@ -42,7 +42,7 @@ export default {
 				color: this.nodeParameters.color,
                 x: Math.random(),
                 y: Math.random(),
-                size: Math.random(),
+                size: 1,
 				tags: this.nodeParameters.tags.toLowerCase().split(';'),
 				description: this.nodeParameters.description
 			};
@@ -73,8 +73,8 @@ export default {
 								   weight: 1
 							   });
 						   // a node related to others is bigger
-						   newNode.size *= 1.1;
-						   node.size *= 1.1;
+						   //newNode.size *= 2;
+						   node.size *= 2;
 					   }
 					});
                 }

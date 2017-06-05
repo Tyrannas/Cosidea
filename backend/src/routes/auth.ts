@@ -56,3 +56,38 @@ router.get('/user/:user/:password', async (req, res) => {
     
     res.json({ userId: usr.id, token: token });
 });
+
+
+export async function secureProject(req: express.Request, res: express.Response, next: express.NextFunction) {
+
+    //console.log('secure project');
+    let token = req.query.token;
+    let proj = await project.find(req.params.projectId);
+
+    if (proj === undefined) {
+        res.json(new ReqError('Project not found'));
+        return;
+    }
+
+    if (proj.isProtected) {
+        if (token === undefined) {
+            res.json(new ReqError('Project is protected, no connection token found'));
+            return;
+        }
+
+
+        jwt.verify(token, req.app.get('secret'), (err: any, decode: any) => {
+
+            if (err || decode.project !== proj.id) {
+                res.json(new ReqError('Wrong token, please connect to the project first'));
+                return;
+            }
+            else {
+                next();
+            }
+        });
+    }
+    else {
+        next();
+    }
+}
