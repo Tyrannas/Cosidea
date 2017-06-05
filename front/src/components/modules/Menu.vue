@@ -5,7 +5,6 @@ Created by Orion 2017
 
 <template>
 	<nav class="sideBar">
-		<a class="myButton" v-on:click="toggleFA">{{forceAtlasStatus}}</a>
 		<input type="text" class="myInput" placeholder="Idée" v-model="nodeParameters.label"/>
 		<multiselect class="myInput"
 				v-model="nodeParameters.tags"
@@ -14,6 +13,7 @@ Created by Orion 2017
 		</multiselect>
 		<textarea class="myInput" placeholder="Description" v-model="nodeParameters.description"></textarea>
 		<a class="myButton" v-on:click="addNode">addNode</a>
+        <a class="myButton" v-on:click="toggleFA">{{forceAtlasStatus}}</a>
 	</nav>
 </template>
 
@@ -40,15 +40,19 @@ export default {
 			  this.forceAtlasStatus = "Start FA2"
 		  }
 		  else{
-			  this.instance.startForceAtlas2();
+			  this.instance.startForceAtlas2({
+                  linLogMode: true,
+                  edgeWeightInfluence: 0.8,
+                  scalingRatio: 1.5,
+                  gravity: 1.3
+              });
 			  this.forceAtlasStatus = "Stop FA2"
 		  }
 		},
-		/*
+		/**
 		add a Node to the graph, and create links if common tags
 		 */
 		addNode: function(){
-		    console.log(this.nodeParameters.tags);
 			// init Node
 			let newNode = {
 				id : "N" + this.instance.graph.nodes().length + 1,
@@ -72,7 +76,8 @@ export default {
 						   let id = "E" + newNode.id + "-" + node.id;
 						   // if there is already an existing edge increase it
 						   if(this.instance.graph.edges(id) !== undefined){
-							   this.instance.graph.edges(id).weight *= 1.5;
+						       console.log('coucou')
+							   //this.instance.graph.edges(id).weight *= 1.05;
 						   }
 						   // otherwise just create it
 						   else
@@ -81,7 +86,7 @@ export default {
 								   source: newNode.id,
 								   target: node.id,
 								   label: [t],
-								   size: Math.random(),
+								   size: 0.5,
 								   color: "#3997ff",
 								   weight: 1
 							   });
@@ -107,7 +112,7 @@ export default {
 			tagsValues: ['art', 'informatic', 'philosophy', 'politic', 'sociology', 'action', 'game', 'sport', 'society', 'anarchism', 'agriculture', 'education']
 		}
 	},
-	/*
+	/**
 	sigma instance inherited from SigmaRoom
 	 */
 	props:['instance']
@@ -122,6 +127,7 @@ export default {
 	    float: right;
 	    display: block;
 		min-width: 250px;
+        padding-top: 1rem;
 	}
 
 	.myButton{
@@ -138,6 +144,8 @@ export default {
 
 	.myInput{
 		padding: 1.2rem;
+        border: none;
+        border-radius: 7.5px;
 	}
     fieldset[disabled] .multiselect {
         pointer-events: none;
@@ -247,7 +255,7 @@ export default {
         margin-right: 10px;
         color: #fff;
         line-height: 1;
-        background: #41B883;
+        background: #3997ff;
         margin-bottom: 8px;
         white-space: nowrap;
     }
@@ -270,13 +278,13 @@ export default {
 
     .multiselect__tag-icon:after {
         content: "×";
-        color: #266d4d;
+        color: #fffdfc;
         font-size: 14px;
     }
 
     .multiselect__tag-icon:focus,
     .multiselect__tag-icon:hover {
-        background: #369a6e;
+        background: #ff951a;
     }
 
     .multiselect__tag-icon:focus:after,
@@ -398,14 +406,14 @@ export default {
     }
 
     .multiselect__option--highlight {
-        background: #41B883;
+        background: #ff951a;
         outline: none;
         color: white;
     }
 
     .multiselect__option--highlight:after {
         content: attr(data-select);
-        background: #41B883;
+        background: #ff951a;
         color: white;
     }
 

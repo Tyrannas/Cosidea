@@ -33,8 +33,7 @@ export default {
             type: "canvas",
             container: "graph-container"
         }).settings({
-            'maxNodeSize': 35,
-            'defaultEdgeType' : 'curve'
+            'maxNodeSize': 35
         });
         s.refresh();
       }

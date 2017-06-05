@@ -13,6 +13,7 @@
     "babel-runtime": "^6.23.0",
     "http-proxy-middleware": "^0.17.4",
     "knex": "^0.13.0",
+    "lodash": "^4.17.4",
     "sigma": "^1.2.0",
     "vue": "^2.3.3",
     "vue-multiselect": "^2.0.0-beta.15",
