@@ -8,6 +8,7 @@ Created by Orion 2017
 		<a class="myButton" v-on:click="toggleFA">{{forceAtlasStatus}}</a>
 		<input type="text" class="myInput" placeholder="Idée" v-model="nodeParameters.label"/>
 		<textarea class="myInput" placeholder="Description" v-model="nodeParameters.description"/>
+		<input type="text" class="myInput" placeholder="Tags" v-model="nodeParameters.tags"/>
 		<a class="myButton" v-on:click="addNode">addNode</a>
 	</nav>
 </template>
@@ -42,7 +43,7 @@ export default {
                 x: Math.random(),
                 y: Math.random(),
                 size: Math.random(),
-				tags: this.nodeParameters.tags,
+				tags: this.nodeParameters.tags.toLowerCase().split(';'),
 				description: this.nodeParameters.description
 			};
 			this.instance.graph.addNode(newNode);
@@ -88,7 +89,7 @@ export default {
 			nodeParameters: {
   	            label: "",
 				color : "red",
-				tags: ['art', 'informatic'],
+				tags: "",
 				description : ""
 			}
 		}
