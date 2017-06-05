@@ -39,8 +39,18 @@ module.exports = {
     }
   },
   devServer: {
-    historyApiFallback: true,
-    noInfo: true
+    //historyApiFallback: true,
+    //noInfo: true,
+
+    //  Set proxy to avoid CORS
+    proxy: {
+        "/api/**": {
+        target: "http://localhost:3000/",
+        pathRewrite: {
+                    "^/api": ""
+        }
+      }
+    }
   },
   performance: {
     hints: false

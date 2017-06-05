@@ -71,7 +71,7 @@ export function findByProjectId(projectId: number): Promise<TaggedIdea[]> {
     }
 
     let idea = db(table.idea + ' as i')
-    .select('i.*', db.raw('json_agg(t) as tags'))
+    .select('i.*', db.raw('case when count(t) = 0 then \'[]\' else json_agg(t) end as tags'))
     .leftJoin(table.idea_tag_rel + ' as r', 'i.id', 'r.idea_id')
     .leftJoin(table.tag + ' as t', 'r.tag_id', 't.id')
     .where('i.project_id', projectId)
