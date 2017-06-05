@@ -40,8 +40,14 @@ Returns an array of Ideas with tags
 ### Auth
 
 Connect to project:  
-```GET: /info/project/:projectId/:password```  
-returns projectId and token. The token can be used to request Ideas from protected projects.
+```
+GET: /info/project
+Query : {
+  pid: projectId,
+  pwd: projectPassword
+}
+```  
+returns id and token. The token can be used to request Ideas from protected projects.
 
 
 ### Setup ###
