@@ -24,7 +24,7 @@ Returns the tagId.
 
 ### Remove
 
-Remove Tag:  
+Remove Link:  
 ```POST: /rm/link/:projectId/:ideaId/:tagId?token=<token>```  
 
 ### Info
