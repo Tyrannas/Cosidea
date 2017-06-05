@@ -8,6 +8,7 @@ export class Project {
     constructor(public title: string, public description: string, 
                 public owner?: number, public isProtected?: boolean, 
                 public hash?: string) {}
+    secure() { this.hash = undefined; }
 }
 
 
@@ -27,6 +28,16 @@ export function addProject( title: string, description: string, ownerId?: number
     let query = db(table.project)
     .insert(proj)
     .returning('id')
+    .then((arr) => arr[0]);
+
+    return query;
+}
+
+export function find(id: ProjectId): Promise<Project> {
+
+    let query = db(table.project)
+    .select('*')
+    .where('id', id)
     .then((arr) => arr[0]);
 
     return query;
@@ -60,3 +71,5 @@ export function findByTitle(title: string): Promise<Project>
 
     return query;
 }
+
+

@@ -1,7 +1,7 @@
 CREATE TABLE "user" (
   "id" SERIAL PRIMARY KEY,
   "name"  VARCHAR(30) NOT NULL,
-  "pass_hash" VARCHAR(60) NOT NULL
+  "hash" VARCHAR(60) NOT NULL
 );
 
 CREATE TABLE "project" (

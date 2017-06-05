@@ -64,7 +64,7 @@ export function removeTag(ideaId: IdeaId, tagId: TagId) {
     return idea_tag_rel.removeIdeaTagRel(ideaId, tagId);
 }
 
-export function getIdeaByProjectId(projectId: number): Promise<TaggedIdea[]> {
+export function findByProjectId(projectId: number): Promise<TaggedIdea[]> {
 
     if(projectId === undefined) {
         return Promise.reject("Project title is undefined");
