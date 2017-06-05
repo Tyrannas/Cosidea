@@ -1,0 +1,23 @@
+{
+  "name": "cosidea",
+  "version": "0.0.1",
+  "description": "graph visualization of ideas",
+  "main": "index.js",
+  "dependencies": {
+    "vue-multiselect": "^2.0.0-beta.15"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tyrannas/Cosidea.git"
+  },
+  "author": "Félix Alié & David Gödicke",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tyrannas/Cosidea/issues"
+  },
+  "homepage": "https://github.com/Tyrannas/Cosidea#readme"
+}
