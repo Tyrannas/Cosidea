@@ -10,10 +10,13 @@ import {ReqError}   from './api';
 export let router = express.Router();
 
 
-router.get('/project/:projectId/:password', async (req, res) => {
+router.get('/project/', async (req, res) => {
 
-    let proj = await project.find(req.params.projectId);
+    let id   = req.query.projectId;
+    let pwd  = req.query.pwd;
 
+    let proj = await project.find(id);
+    
     if(proj === undefined) {
         res.json(new ReqError('Project not found'));
         return;
@@ -23,7 +26,7 @@ router.get('/project/:projectId/:password', async (req, res) => {
         return;
     }
 
-    let valid = await bcrypt.compare(req.params.password, proj.hash as string);
+    let valid = await bcrypt.compare(pwd, proj.hash as string);
 
     if(!valid) {
         res.json(new ReqError('Password not valid'));
@@ -36,16 +39,19 @@ router.get('/project/:projectId/:password', async (req, res) => {
  
 });
 
-router.get('/user/:user/:password', async (req, res) => {
+router.get('/user', async (req, res) => {
 
-    let usr = await user.findByName(req.params.user);
+    let name = req.query.name;
+    let pwd = req.query.pwd;
+
+    let usr = await user.findByName(name);
 
     if(usr === undefined) {
         res.json(new ReqError('User not found'));
         return;
     }
 
-    let valid = await bcrypt.compare(req.params.password, usr.hash);
+    let valid = await bcrypt.compare(pwd, usr.hash);
 
     if(!valid) {
         res.json(new ReqError('Password not valid'));
@@ -54,15 +60,17 @@ router.get('/user/:user/:password', async (req, res) => {
 
     let token = jwt.sign({ data: usr.id }, req.app.get('secret'), { expiresIn: '24h' });
     
-    res.json({ userId: usr.id, token: token });
+    res.json({ id: usr.id, token: token });
 });
 
 
 export async function secureProject(req: express.Request, res: express.Response, next: express.NextFunction) {
 
     //console.log('secure project');
-    let token = req.query.token;
-    let proj = await project.find(req.params.projectId);
+    let token   = req.query.token;
+    let id      = req.query.projectId;
+
+    let proj = await project.find(id);
 
     if (proj === undefined) {
         res.json(new ReqError('Project not found'));

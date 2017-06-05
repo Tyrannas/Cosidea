@@ -12,11 +12,11 @@ import {ReqError, ReqSucces}   from './api';
 
 export let router = express.Router();
 
-router.use('/link/:projectId/:ideaId/:tagId', auth.secureProject);
-router.post('/link/:projectId/:ideaId/:tagId', (req, res) => {
+router.use('/link', auth.secureProject);
+router.post('/link', (req, res) => {
 
-    let ideaId = req.params.ideaId;
-    let tagId  = req.params.tagId;
+    let ideaId = req.query.ideaId;
+    let tagId  = req.query.tagId;
 
     idea.removeTag(ideaId, tagId)
     .then(() => res.json( new ReqSucces('Removed link')))

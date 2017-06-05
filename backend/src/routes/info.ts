@@ -10,9 +10,11 @@ import {ReqError}   from './api';
 
 export let router = express.Router();
 
-router.get('/project/:projectTitle', async (req, res) => {
+router.get('/project', async (req, res) => {
+    
+    let title = req.query.title;
 
-    let proj = await project.findByTitle(req.params.projectTitle);
+    let proj = await project.findByTitle(title);
 
     if(proj === undefined) {
         res.json( new ReqError('Project not found') );
@@ -25,10 +27,12 @@ router.get('/project/:projectTitle', async (req, res) => {
 });
 
 
-router.use('/idea/:projectId', auth.secureProject);
-router.get('/idea/:projectId', async (req, res) => {
+router.use('/idea', auth.secureProject);
+router.get('/idea', async (req, res) => {
 
-    let ideas = await idea.findByProjectId(req.params.projectId);
+    let projId = req.query.projectId;
+
+    let ideas = await idea.findByProjectId(projId);
 
     if(ideas === undefined) {
         res.json( new ReqError('get Idea failed') );

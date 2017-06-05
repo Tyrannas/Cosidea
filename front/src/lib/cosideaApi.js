@@ -65,7 +65,9 @@ export async function addProject( vue, params={ protected: false }){
  */
 export async function initRoom(vue, projectName) {
 
-    let req = await vue.$http.get('/api/info/project/' + projectName);
+    let query = { title: projectName };
+
+    let req = await vue.$http.get('/api/info/project/', {params: query});
     let body = req.body;
 
     if(body.err) {

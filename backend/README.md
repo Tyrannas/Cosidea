@@ -6,48 +6,108 @@ Cosidea Backend
 ### Create
 
 Add User:  
-```POST: /create/user/:user/:password```  
-Returns userId.
+```
+POST: /create/user
+query: {
+    name: <username>,
+    pwd: <userPassword>
+}
+```  
+Returns ```{ id: <newUserId> }```
 
 Add Project:  
-```POST: /create/project/:title/:protected?desc=<description>&owner=<owner_user_id>&pwd=<password>```  
-protected can be ```0``` or ```1```. If the project is protected you have to specify ownerId and project password.  
-Returns the projectId.
+```
+POST: /create/project/
+query: {
+    title: <projectTitle>,
+    protected: <isProtected>,
+    desc: <description>,        //  Optional
+    owner: <ownerUserId>,       //  Only if is protected
+    pwd: <projectPassword>      //  Only if is protected
+}
+```  
+Returns ```{ id: <newProjectId> }```.
 
 Add Idea:  
-```POST: /create/idea/:projectId/:title?desc=<description>&token=<token>```  
-Returns the ideaId.
+```
+POST: /create/idea
+query: {
+    projectId: <projectId>,
+    title: <projectTitle>,
+    desc: <projectDescription>, //  Optional
+    token: <projectToken>       //  Only if project is protected. See /auth.
+}
+```  
+Returns ```{ id: <newIdeaId> }```.
 
 Add Tag:  
-```POST: /create/tag/:projectId/:name?token=<token>```  
-Returns the tagId.
+```
+POST: /create/tag
+query: {
+    projectId: <projectId>,
+    name: <tagName>,
+    token: <projectToken>   //  Only if project is protected. See /auth.
+}
+```  
+Returns ```{ id: <newTagId> }```.
 
 ### Remove
 
 Remove Link:  
-```POST: /rm/link/:projectId/:ideaId/:tagId?token=<token>```  
+```
+POST: /rm/link
+query: {
+    projectId: <projectId>,
+    ideaId: <ideaId>,
+    tagId: <tagId>,
+    token: <projectToken>   //  Only if project is protected. See /auth.
+}
+```  
 
 ### Info
 
 Project Info:  
-```GET: /info/project/:projectTitle```  
+```
+GET: /info/project
+query: {
+    title: <projectTitle>
+}
+```  
 Returns the fields ```title, description, id, owner, protected```
 
 Ideas in some project:  
-```GET: /info/idea/:projectId?token=<token>```  
-if the project is password protected you need to specify a token (see /auth).  
+```
+GET: /info/idea/:projectId?token=<token>
+query: {
+    projectId: <projectId>,
+    token: <projectToken>   //  Only if project is protected. See /auth.
+}
+```   
 Returns an array of Ideas with tags
+
+
 ### Auth
 
 Connect to project:  
 ```
-GET: /info/project
-Query : {
-  pid: projectId,
-  pwd: projectPassword
+GET: /auth/project
+Query: {
+    projectId: <projectId>,
+    pwd: <projectPassword>
 }
 ```  
 returns id and token. The token can be used to request Ideas from protected projects.
+
+Connect user:  
+```
+GET: /auth/user
+Query: {
+    name: <userName>,
+    pwd: <userPassword>
+}
+```  
+
+
 
 
 ### Setup ###

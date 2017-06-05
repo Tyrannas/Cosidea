@@ -12,10 +12,10 @@ import {ReqError, ReqSucces}   from './api';
 
 export let router = express.Router();
 
-router.post('/user/:user/:password', async (req, res) => {
+router.post('/user', async (req, res) => {
 
-    let name    = req.params.user as string;
-    let pwd     = req.params.password as string;
+    let name    = req.query.name as string;
+    let pwd     = req.query.pwd as string;
     let usr     = await user.findByName(name);
 
     if(usr !== undefined) {
@@ -36,14 +36,20 @@ router.post('/user/:user/:password', async (req, res) => {
 
 });
 
-router.post('/project/:title/:protected', async(req, res) => {
+router.post('/project', async(req, res) => {
 
-    let title   = req.params.title as string;
-    let protect = req.params.protected == true as boolean;
+    let title   = req.query.title as string;
+    let protect = req.query.protected == true as boolean;
     let desc    = req.query.desc as string;
     let owner   = req.query.owner as number;
     let pwd     = req.query.pwd as string;
     let hash    = '';
+
+    if(title === undefined || protect === undefined) {
+        res.json( new ReqError('title and protected params needed'));
+        return;
+    }
+
     let proj = await project.findByTitle(title);
 
     if(proj !== undefined) {
@@ -56,7 +62,7 @@ router.post('/project/:title/:protected', async(req, res) => {
         return;
     }
 
-    if(owner !== undefined) {
+    if(protect) {
         let usr = await user.findById(owner);
 
         if(usr === undefined) {
@@ -78,11 +84,11 @@ router.post('/project/:title/:protected', async(req, res) => {
 });
 
 
-router.use('/idea/:projectId/:title', auth.secureProject);
-router.post('/idea/:projectId/:title', async (req, res) => {
+router.use('/idea', auth.secureProject);
+router.post('/idea', async (req, res) => {
 
-    let projId  = req.params.projectId;
-    let title   = req.params.title;
+    let projId  = req.query.projectId;
+    let title   = req.query.title;
     let desc    = req.query.desc;
 
     idea.addIdea(projId, title, desc)
@@ -92,11 +98,11 @@ router.post('/idea/:projectId/:title', async (req, res) => {
 });
 
 
-router.use('/tag/:projectId/:name', auth.secureProject);
-router.post('/tag/:projectId/:name', (req, res) => {
+router.use('/tag', auth.secureProject);
+router.post('/tag', (req, res) => {
 
-    let projId = req.params.projectId;
-    let name = req.params.name;
+    let projId = req.query.projectId;
+    let name = req.query.name;
 
     tag.addTag(projId, name)
     .then((id) => res.json( new ReqSucces(id) ))
@@ -104,8 +110,8 @@ router.post('/tag/:projectId/:name', (req, res) => {
 });
 
 
-router.use('/link/:projectId/:ideaId/:tagId', auth.secureProject);
-router.post('/link/:projectId/:ideaId/:tagId', (req, res) => {
+router.use('/link', auth.secureProject);
+router.post('/link', (req, res) => {
 
     let ideaId = req.params.ideaId;
     let tagId  = req.params.tagId;
