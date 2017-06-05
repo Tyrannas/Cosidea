@@ -27,11 +27,7 @@ export default {
 	    'multiselect': multiselect
 	},
 	methods : {
-
-        getIdeas: function() {
-            api.getIdeas(this, 4);
-        },
-		/*
+		/**
 		toggle Force Atlas 2
 		 */
 		toggleFA: function(){
