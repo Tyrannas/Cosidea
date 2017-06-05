@@ -11,7 +11,7 @@ export class ReqError {
 //  Initialise API Router
 let router = express.Router();
 
-router.use('/connect', auth.router);
+router.use('/auth', auth.router);
 router.use('/create', create.router);
 router.use('/info', info.router);
 

@@ -10,7 +10,7 @@ import {ReqError}   from './api';
 export let router = express.Router();
 
 
-router.get('/project/:projectId/:password?', async (req, res) => {
+router.get('/project/:projectId/:password', async (req, res) => {
 
     let proj = await project.find(req.params.projectId);
 
