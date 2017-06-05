@@ -1,5 +1,13 @@
 {
   "presets": [
     ["env", { "modules": false }]
+  ],
+
+  //  Need for async/await
+  "plugins": [
+    ["transform-runtime", {
+      "polyfill": false,
+      "regenerator": true
+    }]
   ]
 }

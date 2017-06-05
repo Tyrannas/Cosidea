@@ -19,6 +19,7 @@ Created by Orion 2017
 
 
 <script>
+import * as api from '../../lib/cosideaApi';
 import multiselect from 'vue-multiselect'
 export default {
 	name: 'menu',
@@ -26,6 +27,10 @@ export default {
 	    'multiselect': multiselect
 	},
 	methods : {
+
+        getIdeas: function() {
+            api.getIdeas(this, 4);
+        },
 		/*
 		toggle Force Atlas 2
 		 */

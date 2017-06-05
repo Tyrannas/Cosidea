@@ -1,6 +1,6 @@
 <template>
   <div id="test">
-    <sideBar id="add_idea" :instance="instance"></sideBar>
+    <sideBar ref="add_idea" id="add_idea" :instance="instance"></sideBar>
     <div id="graph-container"></div>
   </div>
 </template>
