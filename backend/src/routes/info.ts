@@ -19,7 +19,7 @@ router.get('/project/:projectTitle', async (req, res) => {
         return;
     }
 
-    proj.secure();
+    delete proj.hash;
     res.json(proj);
 
 });
