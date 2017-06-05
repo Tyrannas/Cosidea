@@ -5,8 +5,11 @@ Cosidea Backend
 
 ### Database
 The Cosidea Backend needs a postgresql Database. (https://www.postgresql.org/).
-Use the script sql/createTables.sql to setup your tables.
-Configure your Database connection in the config.js file:
+
+Use the script ```sql/createTables.sql``` to setup your tables.
+
+
+Configure your Database connection in the ```config.js``` file:
 
 ```
 exports.dbconf = {
