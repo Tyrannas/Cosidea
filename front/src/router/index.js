@@ -14,7 +14,7 @@ export default new Router({
       component: Home
     },
     {
-      path: '/room',
+      path: '/room/:project',
       name: 'SigmaRoom',
       component: SigmaRoom
     }

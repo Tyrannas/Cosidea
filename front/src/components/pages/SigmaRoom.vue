@@ -17,16 +17,27 @@ let s = new sigma({
     }
 });
 
+import * as api from 'lib/cosideaApi';
 export default {
       name: 'sigmaRoom',
       data () {
             return {
                 lorem: 'Lorem ipsum sit dolor.',
-                instance: s
+                instance:       s,
+                project:        this.$route.params.project,
+                projectId:      undefined,
+                description:    undefined,
+                isProtected:    false,
+                token:          undefined
             }
       },
       components: {
         'sideBar': Menu
+      },
+      created() {
+          let proj = this.project;
+          api.initRoom(this, proj)
+          .then(() => console.log(this.projectId));
       },
       mounted(){
         s.addRenderer({

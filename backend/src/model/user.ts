@@ -6,7 +6,6 @@ export type UserId = number;
 export class User {
     id: UserId;
     constructor(public name: string, public hash: string) {}
-    secure() { delete this.hash; }
 }
 
 export function addUser(name: string, hash: string): Promise<UserId> {

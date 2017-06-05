@@ -8,7 +8,6 @@ export class Project {
     constructor(public title: string, public description: string, 
                 public owner?: number, public isProtected?: boolean, 
                 public hash?: string) {}
-    secure() { this.hash = undefined; }
 }
 
 
