@@ -3,7 +3,7 @@
  */
 
 const _ = require('lodash');
-graphApi = {};
+let graphApi = {};
 
 /**
  * Takes data from the db and parse it to build a graph
@@ -54,4 +54,4 @@ graphApi.buildGraph = function( data ){
     return {'nodes': nodes, 'edges': edges};
 };
 
-export graphApi;
+export {graphApi};

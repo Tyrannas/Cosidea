@@ -115,6 +115,12 @@ export default {
 </script>
 
 <style>
+    * {
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
 	.sideBar{
 		height: 100vh;
 	    background: rgb(36, 36, 36);
@@ -138,9 +144,12 @@ export default {
 	}
 
 	.myInput{
-		padding: 1.2rem;
         border: none;
-        border-radius: 7.5px;
+        border-radius: 7px;
+        display: block;
+        width: 85%;
+        padding: 1rem;
+        margin: 1rem auto;
 	}
     fieldset[disabled] .multiselect {
         pointer-events: none;
@@ -184,16 +193,14 @@ export default {
     .multiselect--active .multiselect__current,
     .multiselect--active .multiselect__input,
     .multiselect--active .multiselect__tags {
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
+        border-radius: 7px;
     }
 
 
     .multiselect--above.multiselect--active .multiselect__current,
     .multiselect--above.multiselect--active .multiselect__input,
     .multiselect--above.multiselect--active .multiselect__tags {
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
+        border-radius: 7px;
     }
 
     .multiselect__input,
@@ -203,7 +210,7 @@ export default {
         min-height: 20px;
         line-height: 20px;
         border: none;
-        border-radius: 5px;
+        /*border-radius: 5px;*/
         background: #fff;
         padding: 1px 0 0 5px;
         width: calc(100%);
@@ -236,8 +243,8 @@ export default {
     .multiselect__tags {
         min-height: 40px;
         display: block;
-        padding: 8px 40px 0 8px;
-        border-radius: 5px;
+        padding: 8px 8px 0 8px;
+        border-radius: 7px;
         border: 1px solid #E8E8E8;
         background: #fff;
     }
@@ -246,12 +253,12 @@ export default {
         position: relative;
         display: inline-block;
         padding: 4px 26px 4px 10px;
-        border-radius: 5px;
-        margin-right: 10px;
+        border-radius: 7px;
+        margin-right: 3px;
         color: #fff;
         line-height: 1;
         background: #3997ff;
-        margin-bottom: 8px;
+        margin-bottom: 5px;
         white-space: nowrap;
     }
 
@@ -268,7 +275,7 @@ export default {
         text-align: center;
         line-height: 22px;
         transition: all 0.2s ease;
-        border-radius: 5px;
+        /*border-radius: 5px;*/
     }
 
     .multiselect__tag-icon:after {
@@ -298,7 +305,7 @@ export default {
         white-space: nowrap;
         margin: 0;
         text-decoration: none;
-        border-radius: 5px;
+        /*border-radius: 5px;*/
         border: 1px solid #E8E8E8;
         cursor: pointer;
     }
@@ -355,8 +362,8 @@ export default {
         margin: 0;
         border: 1px solid #E8E8E8;
         border-top: none;
-        border-bottom-left-radius: 5px;
-        border-bottom-right-radius: 5px;
+        /*border-bottom-left-radius: 5px;*/
+        /*border-bottom-right-radius: 5px;*/
         z-index: 50;
     }
 
@@ -364,8 +371,8 @@ export default {
         bottom: 100%;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
+        /*border-top-left-radius: 5px;*/
+        /*border-top-right-radius: 5px;*/
         border-bottom: none;
         border-top: 1px solid #E8E8E8;
     }
