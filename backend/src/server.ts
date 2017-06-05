@@ -1,5 +1,6 @@
+let config = require('../config.js');
+
 import * as express     from 'express';
-import * as config      from './config/db';
 import * as db          from './model/db';
 import * as router      from './routes/api';
 
