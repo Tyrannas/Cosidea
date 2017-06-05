@@ -2,14 +2,17 @@ import * as express from 'express';
 import * as project from '../model/project';
 import * as idea    from '../model/idea';
 import * as user    from '../model/user';
+import * as tag     from '../model/tag';
 import * as bcrypt  from 'bcrypt';
 import * as jwt     from 'jsonwebtoken';
-import {ReqError}   from './api';
+import * as auth    from './auth';
+
+import {ReqError, ReqSucces}   from './api';
 
 
 export let router = express.Router();
 
-router.get('/user/:user/:password', async (req, res) => {
+router.post('/user/:user/:password', async (req, res) => {
 
     let name    = req.params.user as string;
     let pwd     = req.params.password as string;
@@ -28,28 +31,28 @@ router.get('/user/:user/:password', async (req, res) => {
     let hash = await bcrypt.hash(pwd, req.app.get('saltRounds'));
     
     user.addUser(name, hash)
-    .then(() => res.json({msg: 'User ' + name + ' created'}))
-    .catch(() => res.json(new ReqError('Add User failed')));
+    .then((id) => res.json( new ReqSucces(id) ))
+    .catch(() => res.json( new ReqError('Add User failed') ));
 
 });
 
-router.get('/project/:title/:description/:protected/:owner?/:password?', async(req, res) => {
+router.post('/project/:title/:protected', async(req, res) => {
 
     let title   = req.params.title as string;
-    let desc    = req.params.description as string;
     let protect = req.params.protected == true as boolean;
-    let owner   = req.params.owner as number;
-    let pwd     = req.params.password as string;
+    let desc    = req.query.desc as string;
+    let owner   = req.query.owner as number;
+    let pwd     = req.query.pwd as string;
     let hash    = '';
     let proj = await project.findByTitle(title);
 
     if(proj !== undefined) {
-        res.json(new ReqError('Project name already exist'));
+        res.json( new ReqError('Project name already exist') );
         return;
     }
 
     if(protect && owner === undefined) {
-        res.json(new ReqError('Protected Project needs an Owner'));
+        res.json( new ReqError('Protected Project needs an Owner') );
         return;
     }
 
@@ -57,11 +60,11 @@ router.get('/project/:title/:description/:protected/:owner?/:password?', async(r
         let usr = await user.findById(owner);
 
         if(usr === undefined) {
-            res.json(new ReqError('Owner not found'));
+            res.json( new ReqError('Owner not found') );
             return;
         }
         if(pwd === undefined) {
-            res.json(new ReqError('Password needed if owner is set'));
+            res.json( new ReqError('Password needed if owner is set') );
             return;
         }
         
@@ -69,7 +72,45 @@ router.get('/project/:title/:description/:protected/:owner?/:password?', async(r
     }
 
     project.addProject(title, desc, owner, protect, hash)
-    .then(() => res.json({ msg: 'Project ' + title + ' created' }))
-    .catch(() => res.json(new ReqError('Project creation failed')));
+    .then((id) => res.json( new ReqSucces(id) ))
+    .catch(() => res.json( new ReqError('Project creation failed') ));
 
+});
+
+
+router.use('/idea/:projectId/:title', auth.secureProject);
+router.post('/idea/:projectId/:title', async (req, res) => {
+
+    let projId  = req.params.projectId;
+    let title   = req.params.title;
+    let desc    = req.query.desc;
+
+    idea.addIdea(projId, title, desc)
+
+    .then((id) => res.json( new ReqSucces(id) ))
+    .catch((err) => res.json( new ReqError(err) ));
+});
+
+
+router.use('/tag/:projectId/:name', auth.secureProject);
+router.post('/tag/:projectId/:name', (req, res) => {
+
+    let projId = req.params.projectId;
+    let name = req.params.name;
+
+    tag.addTag(projId, name)
+    .then((id) => res.json( new ReqSucces(id) ))
+    .catch((err) => res.json( new ReqError(err) ));
+});
+
+
+router.use('/link/:projectId/:ideaId/:tagId', auth.secureProject);
+router.post('/link/:projectId/:ideaId/:tagId', (req, res) => {
+
+    let ideaId = req.params.ideaId;
+    let tagId  = req.params.tagId;
+
+    idea.addTag(ideaId, tagId)
+    .then(() => res.json( new ReqSucces('Link added') ))
+    .catch(() => res.json( new ReqError('Add link failed') ));
 });
