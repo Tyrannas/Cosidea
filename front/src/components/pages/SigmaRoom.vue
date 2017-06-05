@@ -8,6 +8,7 @@
 <script>
 import Menu from '../modules/Menu.vue'
 sigma.settings.scalingMode = "outside";
+//sigma.canvas.edges.def = sigma.canvas.edges.curve;
 
 let s = new sigma({
     graph: {
@@ -32,7 +33,8 @@ export default {
             type: "canvas",
             container: "graph-container"
         }).settings({
-            'maxNodeSize': 35
+            'maxNodeSize': 35,
+            'defaultEdgeType' : 'curve'
         });
         s.refresh();
       }

@@ -42,14 +42,14 @@ export default {
 				color: this.nodeParameters.color,
                 x: Math.random(),
                 y: Math.random(),
-                size: Math.random(),
+                size: 1,
 				tags: this.nodeParameters.tags.toLowerCase().split(';'),
 				description: this.nodeParameters.description
 			};
 			this.instance.graph.addNode(newNode);
 
 			// create links between new Node and previously existing ones
-		    this.instance.graph.nodes().forEach(node =>{
+		    this.instance.graph.nodes().forEach(node => {
 		        // check if current node is not itself
 		        if(node.id !== newNode.id){
 					node.tags.forEach(t => {
@@ -66,20 +66,20 @@ export default {
 								   id : id,
 								   source: newNode.id,
 								   target: node.id,
-								   type: 'curve',
 								   label: [t],
 								   size: Math.random(),
-								   color: "black",
+								   color: "#3997ff",
 								   weight: 1
 							   });
 						   // a node related to others is bigger
-						   newNode.size *= 1.1;
-						   node.size *= 1.1;
+						   console.log(this.instance.graph.nodes())
+						   this.instance.graph.nodes(newNode.id).size *= 2;
+						   node.size *= 2;
 					   }
 					});
                 }
 			});
-		    console.log(this.instance.graph.edges());
+            console.log(this.instance.graph.nodes())
 		    this.instance.refresh();
 		}
 	},
@@ -88,7 +88,7 @@ export default {
   	        forceAtlasStatus: "Start FA2",
 			nodeParameters: {
   	            label: "",
-				color : "red",
+				color : "#ff951a",
 				tags: "",
 				description : ""
 			}
@@ -112,14 +112,14 @@ export default {
 	}
 
 	.myButton{
-		background: #2471ff;
+		background: #3997ff;
 		color: white;
 		padding: 1rem;
 		margin: 1rem;
 		display: block;
 	}
 	.myButton:hover{
-		background: #cd6231;
+		background: #ff951a;
 		cursor: pointer
 	}
 
