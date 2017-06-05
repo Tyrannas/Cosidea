@@ -17,7 +17,7 @@ Returns ```{ id: <newUserId> }```
 
 Add Project:  
 ```
-POST: /create/project/
+POST: /create/project
 query: {
     title: <projectTitle>,
     protected: <isProtected>,
