@@ -75,15 +75,12 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                     data: params
                 };
 
-                console.log('ADD NODE');
-                console.log(newNode.data.tags);
-
                 // add the node to the graph
                 this.sigmaInstance.graph.addNode(newNode);
 
                 // create links between new Node and previously existing ones
                 this.addEdge(newNode);
-                console.log(this.sigmaInstance.graph.nodes());
+                //console.log(this.sigmaInstance.graph.nodes());
                 this.init();
 
                 // returns the newly created node
@@ -152,7 +149,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 // send node to menu when clicked on
                 this.sigmaInstance.bind('clickNode', function( event ){
                     let node = event.data.node;
-                    console.log(parent);
+                    //console.log(parent);
                     parent.$emit('clickNode', node);
                 });
 

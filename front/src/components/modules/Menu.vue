@@ -29,13 +29,13 @@ export default {
 	data (){
 		return {
 			forceAtlasStatus: "Start",
-			nodeParameters: {
-				title: "",
-				tags: null,
-				description : ""
-			}
+			nodeParameters: {},
+            isNew: true
 		}
 	},
+    mounted: function() {
+        this.reset();
+    },
     computed: {
         tagsValues: function() {
             return this.tags.map((tag) => tag.name);
@@ -47,6 +47,14 @@ export default {
         }
     },
     methods: {
+        reset: function() {
+            this.nodeParameters = {
+                title: "",
+				tags: null,
+				description : ""
+            };
+            this.isNew = true;
+        },
 	    toggleForceAtlas: function(){
 	        this.$emit("toggleForceAtlas");
 	        this.forceAtlasStatus = this.forceAtlasStatus === "Start" ? "Stop" : "Start";
@@ -56,12 +64,13 @@ export default {
             let node = Object.assign({}, this.nodeParameters);
             node.tags = node.tags.map((tag) => this.tagsIndex[tag]);
 	        this.$emit("addNode", node);
+            this.reset();
 
         },
         clickNode: function( node ){
-            
+            this.isNew = false;
             this.nodeParameters.title = node.data.title;
-            this.nodeParameters.tags = node.data.tags;
+            this.nodeParameters.tags = node.data.tags.map((t) => t.name);
             this.nodeParameters.description = node.data.description;
         }
     }
