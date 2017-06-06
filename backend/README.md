@@ -17,7 +17,7 @@ Returns ```{ id: <newUserId> }```
 
 Add Project:  
 ```
-POST: /create/project/
+POST: /create/project
 query: {
     title: <projectTitle>,
     protected: <isProtected>,
@@ -91,7 +91,7 @@ Returns an array of Ideas with tags
 Connect to project:  
 ```
 GET: /auth/project
-Query: {
+query: {
     projectId: <projectId>,
     pwd: <projectPassword>
 }
@@ -101,7 +101,7 @@ returns id and token. The token can be used to request Ideas from protected proj
 Connect user:  
 ```
 GET: /auth/user
-Query: {
+query: {
     name: <userName>,
     pwd: <userPassword>
 }

@@ -33,7 +33,7 @@ router.get('/project/', async (req, res) => {
         return;
     }
 
-    let token = jwt.sign({ project: proj.id }, req.app.get('secret'), { expiresIn: '24h' });
+    let token = jwt.sign({ project: proj.id } as any, req.app.get('secret'), { expiresIn: '24h' });
 
     res.json({projectId: proj.id, token: token});
  
@@ -58,7 +58,7 @@ router.get('/user', async (req, res) => {
         return;
     }
 
-    let token = jwt.sign({ data: usr.id }, req.app.get('secret'), { expiresIn: '24h' });
+    let token = jwt.sign({ data: usr.id } as any, req.app.get('secret'), { expiresIn: '24h' });
     
     res.json({ id: usr.id, token: token });
 });
