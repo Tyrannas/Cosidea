@@ -14,6 +14,7 @@
     </div>
     <sigma ref="sigma"
            v-on:clickNode="clickNode"
+           v-on:clickStage="clickStage"
     ></sigma>
   </div>
 </template>
