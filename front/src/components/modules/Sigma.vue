@@ -38,9 +38,9 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                     size: 1
                 },
                 forceAtlasParameters: {
-                    linLogMode: true,
-                    edgeWeightInfluence: 1.2,
-                    scalingRatio: 0.8,
+                    linLogMode: false,
+                    edgeWeightInfluence: 1,
+                    scalingRatio: 10,
                     gravity: 1
                 }
             }
@@ -65,7 +65,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
             addNode: function( params ){
 
                 // init Node
-                params.tags = params.tags.map(w => w.toLowerCase())
+                params.tags = params.tags.map(w => { if(typeof(w) === String) w.toLowerCase()});
                 let newNode = {
                     id : "N" + this.sigmaInstance.graph.nodes().length + 1,
                     label: params.title,
@@ -135,6 +135,12 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 nodesArray.forEach(node => {
                     this.addNode( node );
                 })
+            },
+            resetGraph: function (){
+                this.sigmaInstance.graph = {
+                    nodes: [],
+                    edges: []
+                }
             }
         },
         props:null,
