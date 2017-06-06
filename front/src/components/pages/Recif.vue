@@ -5,6 +5,7 @@
     <sideBar ref="addIdea" id="addIdea"
              v-on:toggleForceAtlas="toggleForceAtlas"
              v-on:addNode="addNode"
+             v-bind:tags="tags"
     ></sideBar>
     <div v-if="connected">Project: {{ title }} <br /> {{ description }} </div>
     <div v-else>Create room? <input type="text" v-model="description" placeholder="description" /><button type="submit" v-on:click="addProject">YES!</button></div>
@@ -26,6 +27,8 @@ export default {
             description:    '',
             isProtected:    false,
             token:          undefined,
+
+            tags: [],
 
             isValid:        true,
             isAuth:         false
@@ -75,6 +78,8 @@ export default {
             if (this.connected)
             {
                 let taggedIdeas = await api.getIdeas(this.id);
+                this.tags = await api.getTags(this.id);
+
                 console.log(taggedIdeas);
                 this.$refs.sigma.buildGraph( taggedIdeas );
             }
@@ -93,6 +98,13 @@ export default {
             else {
                 this.init();
             }
+        },
+        clear: function() {
+            this.description = '';
+            this.isProtected = false;
+            this.token = false;
+            this.auth = false;
+            this.isValid = true;
         }
     },
     computed: {
@@ -111,6 +123,7 @@ export default {
         $route: function(route) {
             let newTitle = route.params.project;
             if(newTitle !== this.title) {
+                this.clear();
                 this.title = newTitle;
                 this.init();
             }

@@ -5,8 +5,9 @@ import * as user    from '../model/user';
 import * as bcrypt  from 'bcrypt';
 import * as jwt     from 'jsonwebtoken';
 import * as auth    from './auth';
+import * as tag     from '../model/tag';
 
-import {ReqError}   from './api';
+import {ReqError, ReqSucces}   from './api';
 
 export let router = express.Router();
 
@@ -54,4 +55,19 @@ router.get('/idea', async (req, res) => {
     }
     
     res.json(ideas);
+});
+
+router.use('/tag', auth.secureProject);
+router.use('/tag', async (req, res) => {
+
+    let projId = req.query.projectId;
+
+    let tags = await tag.getByProject(projId);
+
+    if(tags === undefined) {
+        res.json( new ReqError('get Tags failed') );
+        return;
+    }
+
+    res.json(tags);
 });

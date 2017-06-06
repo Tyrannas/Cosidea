@@ -24,3 +24,16 @@ export function addTag(projectId: ProjectId, name: string): Promise<TagId> {
 
     return query;
 }
+
+export function getByProject(projectId: ProjectId): Promise<Tag[]> {
+
+    if(projectId === undefined) {
+        return Promise.reject("project undefined");
+    }
+
+    let query = db(table.tag)
+    .select('*')
+    .where('project_id', projectId);
+
+    return query;
+}

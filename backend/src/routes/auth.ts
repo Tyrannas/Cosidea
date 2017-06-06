@@ -70,6 +70,11 @@ export async function secureProject(req: express.Request, res: express.Response,
     let token   = req.query.token;
     let id      = req.query.projectId;
 
+    if(id === undefined) {
+        res.json(new ReqError('Needs projectId'));
+        return;
+    }
+
     let proj = await project.find(id);
     
     if (proj === undefined) {

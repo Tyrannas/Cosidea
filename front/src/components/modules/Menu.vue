@@ -25,6 +25,7 @@ export default {
 	components: {
 	    'multiselect': multiselect
 	},
+    props: ['tags'],
 	data (){
 		return {
 			forceAtlasStatus: "Start",
@@ -32,10 +33,15 @@ export default {
 				title: "",
 				tags: null,
 				description : ""
-			},
-			tagsValues: ['art', 'informatic', 'philosophy', 'politic', 'sociology', 'action', 'game', 'sport', 'society', 'anarchism', 'agriculture', 'education']
+			}
+			//tagsValues: ['art', 'informatic', 'philosophy', 'politic', 'sociology', 'action', 'game', 'sport', 'society', 'anarchism', 'agriculture', 'education']
 		}
 	},
+    computed: {
+        tagsValues: function() {
+            return this.tags.map((tag) => tag.name);
+        }
+    },
     methods: {
 	    toggleForceAtlas: function(){
 	        this.$emit("toggleForceAtlas");
@@ -44,8 +50,7 @@ export default {
         addNode: function(){
 	        this.$emit("addNode", this.nodeParameters)
         }
-    },
-	props: null
+    }
 }
 </script>
 

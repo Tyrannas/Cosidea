@@ -11,7 +11,12 @@ let get = function(option) {
                 reject(err);
             }
             else {
-                resolve(JSON.parse(body));
+                try {
+                    resolve(JSON.parse(body));
+                }
+                catch(err) {
+                    reject(err);
+                }
             }
         })
     })
@@ -157,4 +162,23 @@ export async function getProjects() {
         let body = await get(query);
 
         return body;
+}
+
+/**
+ * Get Tags from Project 
+ * @param projectId
+ * @returns Tags[]
+ */
+export async function getTags(projectId) {
+
+    let params = { projectId: projectId };
+    let query = { url: '/api/info/tag', qs: params};
+
+    let body = await get(query).catch(() => undefined);
+
+    if(body === undefined || body.err) {
+        return undefined;
+    }
+
+    return body;
 }
