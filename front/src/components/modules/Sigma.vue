@@ -81,7 +81,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 // create links between new Node and previously existing ones
                 this.addEdge(newNode);
                 console.log(this.sigmaInstance.graph.nodes());
-                this.sigmaInstance.refresh();
+                this.init();
 
                 // returns the newly created node
                 return this.sigmaInstance.graph.nodes(newNode.id);
@@ -140,6 +140,22 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                     nodes: [],
                     edges: []
                 }
+            },
+            init: function(){
+                // store this reference to access it inside the event binding
+                // otherwise the event is 'this'
+                let parent = this;
+
+                // send node to menu when clicked on
+                this.sigmaInstance.bind('clickNode', function( event ){
+                    let node = event.data.node;
+                    console.log(parent);
+                    parent.$emit('clickNode', node);
+                });
+
+                // dragListener
+                let dragListener = sigma.plugins.dragNodes(this.sigmaInstance, this.sigmaInstance.renderers[0]);
+                this.sigmaInstance.refresh();
             }
         },
         props:null,
@@ -152,17 +168,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 'maxNodeSize': 30
             });
 
-            // store this reference to access it inside the event binding
-            // otherwise the event is 'this'
-            let parent = this;
-            
-            // send node to menu when clicked on
-            this.sigmaInstance.bind('clickNode', function( event ){
-               let node = event.data.node;
-               console.log(parent);
-               parent.$emit('clickNode', node);
-            });
-            this.sigmaInstance.refresh();
+            this.init();
         }
     }
 </script>
