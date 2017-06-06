@@ -63,7 +63,20 @@ export default {
             {
                 let taggedIdeas = await api.getIdeas(this.id); 
                 console.log(taggedIdeas);
-                 //TODO build graph }
+                 //TODO build graph 
+            }
+        },
+        testApplication: function(){
+            let arr = this.$refs.addIdea.tagsValues;
+            for(let i = 0; i < 150; ++i){
+                let tags = [];
+                for(let i = 0; i < Math.floor(Math.random() * 3); ++i){
+                    tags.push(arr[Math.floor(Math.random()*arr.length)])
+                }
+                this.$refs.sigma.addNode({
+                    label: 'n' + i,
+                    tags: tags
+                });
             }
         }
     },
