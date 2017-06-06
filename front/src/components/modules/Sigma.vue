@@ -119,7 +119,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                                     });
                                 // a node related to others is bigger
                                 this.sigmaInstance.graph.nodes(newNode.id).size += 0.2;
-                                node.size += 0.5;
+                                node.size += 0.2;
                             }
                         });
                     }
