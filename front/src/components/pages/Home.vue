@@ -1,16 +1,28 @@
 <template>
   <div id="test">
-    <div class="messageBox">{{lorem}}</div>
+    <div v-for="proj in projects" class="messageBox">Project {{proj.title}} is {{ proj.protect}}
+      <span v-if="!proj.isProtected" >not</span> protected
+    </div>
   </div>
 </template>
 
 <script>
+import * as api from 'lib/backendApi';
+
 export default {
   name: 'test',
   data () {
     return {
-      lorem: 'Lorem ipsum sit dolor.'
+      projects: []
     }
+  },
+  mounted() {
+    api.getProjects()
+    .then((projs) => { 
+        if (projs != undefined) { 
+            this.projects = projs; 
+        } 
+    });
   }
 }
 </script>

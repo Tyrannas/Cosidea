@@ -17,7 +17,7 @@ let s = new sigma({
     }
 });
 
-import * as api from 'lib/cosideaApi';
+import * as api from 'lib/backendApi';
 export default {
       name: 'sigmaRoom',
       data () {
@@ -36,9 +36,6 @@ export default {
       },
       mounted(){
 
-          let proj = this.project;
-          api.initRoom(this, proj)
-              .then(() => console.log(this.projectId));
       }
 }
 </script>

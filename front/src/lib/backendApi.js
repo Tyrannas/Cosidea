@@ -1,8 +1,44 @@
-/**
+import * as request from 'browser-request';
+
+/** request.get as promise.
+ * @param option
+ * @returns body
+ */
+
+let get = function(option) {
+    return new Promise((resolve, reject) => {
+        request.get(option, (err, res, body) => {
+            if(err) {
+                reject(err);
+            }
+            else {
+                resolve(JSON.parse(body));
+            }
+        })
+    })
+};
+
+/** request.post as promise.
+ * @param option
+ * @returns body
+ */
+let post = function(option) {
+    return new Promise((resolve, reject) => {
+        request.post(option, (err, res, body) => {
+            if(err) {
+                reject(err);
+            }
+            else {
+                resolve(JSON.parse(body));
+            }
+        });
+    });
+};
+
+/*
  * local api to communicate with backend
  * add ideas, tags, create new projects and many more...
  */
-
 
 /**
  * get Ideas associated to a project
@@ -11,12 +47,12 @@
  * @returns {Promise.<void>}
  */
 
-export async function getIdeas( vue, params) {
+// export async function getIdeas( vue, params) {
 
-    let request = `/api/info/idea/${params.projectId}`
-    let ideas = await vue.$http.get(request);
-    return JSON.parse(ideas.bodyText);
-}
+//     let request = `/api/info/idea/${params.projectId}`
+//     let ideas = await vue.$http.get(request);
+//     return JSON.parse(ideas.bodyText);
+// }
 
 /**
  * add a new Idea to a project
@@ -63,45 +99,70 @@ export async function addProject( vue, params={ protected: false }){
  * @param vue
  * @param projectName
  */
-export async function initRoom(vue, projectName) {
+export async function getProject(projectName) {
 
-    let query = { title: projectName };
+    let params = { title: projectName };
+    let query = {url: '/api/info/project', qs: params };
 
-    let req = await vue.$http.get('/api/info/project/', {params: query});
-    let body = req.body;
+    let body = await get(query);
 
     if(body.err) {
         //TODO Handle project does not exist
         return;
     }
 
-    vue.projectId   = body.id;
-    vue.description = body.description;
-    vue.isProtected = body.isProtected;
-
-    if(vue.isProtected) {
-
-    }
+    return body;
 }
 
 /**
- * Connect vue componenet to some password protected project
- * @param vue
+ * Get connection Token for project
  * @param projectId
  * @param password
+ * @returns token
  */
-async function connect(vue, projectId, password) {
+async function getToken(projectId, password) {
 
-    let req = await vue.$http.get('/api/auth/' + projectId + '/' + password);
-    
-    if(req === undefined) {
-        // TODO Handle request fail.
-    }
+    let parmas = {projectId: projectId, pwd: password};
+    let query = {url: '/api/auth/project', qs: parmas };
 
-    let body = req.body;
+    let body = await get(query);
+
     if(body === undefined || body.err) {
         //  TODO Handle wrong password
+        return undefined;
     }
 
-    vue.token = body.token;
+    return body.token;
+}
+
+/**
+ * Get all Ideas in some project
+ * @param projectId
+ * @param token
+ * @returns ideas[]
+ */
+export async function getIdeas(projectId, token) {
+
+    let params = { projectId: projectId, token: token }
+    let query = {url: '/api/info/idea', qs: params};
+
+    let body = await request.get(query);
+
+    if (body === undefined || body.err) {
+        throw new Error('request failed');
+    }
+
+    return body;
+}
+
+/**
+ * Get all projects
+ * @returns projects[]
+ */
+export async function getProjects() {
+        console.log('request..');
+        let query = {url: '/api/info/project/all'};
+        let body = await get(query);
+
+        return body;
 }
