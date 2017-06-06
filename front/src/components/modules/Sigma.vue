@@ -12,7 +12,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
     import _ from 'lodash'
 
     let sigmaSettings = {
-        scalingMode : "inside",
+        scalingMode : "outside",
         hideEdgesOnMove : true,
         zoomMin : 0
     };
@@ -33,12 +33,12 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 defaultParameters:{
                     nodeColor: "#ff951a",
                     edgeColor: "#3997ff",
-                    size: 0.1
+                    size: 1
                 },
                 forceAtlasParameters: {
                     linLogMode: true,
-                    edgeWeightInfluence: 1,
-                    scalingRatio: 1,
+                    edgeWeightInfluence: 1.2,
+                    scalingRatio: 0.8,
                     gravity: 1
                 }
             }
@@ -117,8 +117,8 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                                         type: 'curve'
                                     });
                                 // a node related to others is bigger
-//                                this.sigmaInstance.graph.nodes(newNode.id).size += 0.1;
-//                                node.size += 0.1;
+                                this.sigmaInstance.graph.nodes(newNode.id).size += 0.2;
+                                node.size += 0.2;
                             }
                         });
                     }
