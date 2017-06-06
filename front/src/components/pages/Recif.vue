@@ -30,12 +30,41 @@ export default {
             isAuth:         false
         }
     },
+    watch: {
+        $route: function(route) {
+            let newName = route.params.project;
+            if(newName !== this.name) {
+                this.name = newName;
+                this.init();
+            }
+        }
+    },
     methods: {
         toggleForceAtlas: function(){
             this.$refs.sigma.toggleForceAtlas();
         },
         addNode: function( node ){
             this.$refs.sigma.addNode( node )
+        },
+        init: async function() {
+            let proj = await api.getProject(this.name);
+        
+            if (proj === undefined) { 
+                console.log('project === undefined'); 
+                this.isValid = false; return; 
+            }
+            console.log(proj);
+
+            this.id = proj.id;
+            this.description = proj.description;
+            this.isProtected = proj.protect;
+
+            if (this.connected)
+            {
+                let taggedIdeas = await api.getIdeas(this.id); 
+                console.log(taggedIdeas);
+                 //TODO build graph }
+            }
         }
     },
     computed: {
@@ -44,26 +73,7 @@ export default {
         }
     },
     async mounted(){
-        let proj = await api.getProject(this.name);
-        
-        if(proj === undefined) {
-            console.log('project === undefined');
-            this.isValid = false;
-            return;
-        }
-
-        console.log(proj);
-
-        this.id = proj.id;
-        this.description = proj.description;
-        this.isProtected = proj.protect;
-
-        if(this.connected) {
-            let taggedIdeas = await api.getIdeas(this.id);
-            console.log(taggedIdeas);
-            //TODO build graph
-        }
-
+        this.init();
     },
     components: {
         'sideBar': Menu,
