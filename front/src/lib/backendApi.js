@@ -54,9 +54,10 @@ let post = function(option) {
 
 export async function addIdea( params ){
 
+    let query = { url: '/api/create/idea', qs: params };
+    let body = await post(query);
 
-    let request = `/api/create/idea/${params.projectId}/${params.idea.title}?desc=${params.idea.description}&token=${params.token}`;
-    return await vue.$http.post(request);
+    return body.id;
 }
 
 

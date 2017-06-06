@@ -95,36 +95,41 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
             addEdge: function( newNode ){
 
                 this.sigmaInstance.graph.nodes().forEach(node => {
+
                     // check if current node is not itself
-                    if(node.id !== newNode.id){
-                        node.data.tags.forEach(t => {
-                            // if two nodes have a tag in common
-                            if(newNode.data.tags.some((tag) => tag.name === t.name)){
-                                let id = "E" + newNode.id + "-" + node.id;
+                    if(node.id == newNode.id || node.data.tags == null) 
+                        return true;
+                    
+                    node.data.tags.forEach(t => {
+                        if(newNode.data.tags == null)
+                            return true;
 
-                                // if there is already an existing edge increase it
-                                if(this.sigmaInstance.graph.edges(id) !== undefined){
-                                    this.sigmaInstance.graph.edges(id).weight *= 1.05;
-                                }
+                        // if two nodes have a tag in common
+                        if(newNode.data.tags.some((tag) => tag.name === t.name)){
+                            let id = "E" + newNode.id + "-" + node.id;
 
-                                // otherwise just create it
-                                else
-                                    this.sigmaInstance.graph.addEdge({
-                                        id : id,
-                                        source: newNode.id,
-                                        target: node.id,
-                                        label: [t],
-                                        size: 0.5,
-                                        color: "#3997ff",
-                                        weight: 1,
-                                        type: 'curve'
-                                    });
-                                // a node related to others is bigger
-                                this.sigmaInstance.graph.nodes(newNode.id).size += 0.2;
-                                node.size += 0.2;
+                            // if there is already an existing edge increase it
+                            if(this.sigmaInstance.graph.edges(id) !== undefined){
+                                this.sigmaInstance.graph.edges(id).weight *= 1.05;
                             }
-                        });
-                    }
+
+                            // otherwise just create it
+                            else
+                                this.sigmaInstance.graph.addEdge({
+                                    id : id,
+                                    source: newNode.id,
+                                    target: node.id,
+                                    label: [t],
+                                    size: 0.5,
+                                    color: "#3997ff",
+                                    weight: 1,
+                                    type: 'curve'
+                                });
+                            // a node related to others is bigger
+                            this.sigmaInstance.graph.nodes(newNode.id).size += 0.2;
+                            node.size += 0.2;
+                        }
+                    });
                 });
             },
             /**
