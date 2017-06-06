@@ -90,11 +90,26 @@ router.post('/idea', async (req, res) => {
     let projId  = req.query.projectId;
     let title   = req.query.title;
     let desc    = req.query.desc;
+    let tags    = req.query.tags;
+    
+    let insertTags: number[] = [];
+    let id: number = -1;
 
-    idea.addIdea(projId, title, desc)
+    if(tags !== undefined && tags !== '') {
+        insertTags = tags.split(',').map(Number);
+    }
 
-    .then((id) => res.json( new ReqSucces(id) ))
-    .catch((err) => res.json( new ReqError(err) ));
+    try{
+        id = await idea.addIdea(projId, title, desc);
+        insertTags.forEach((tagId) => idea.addTag(id, tagId));
+        res.json( new ReqSucces(id) );
+    }
+    catch(err){
+        res.json( new ReqError(err) )
+        if(id >= 0) {
+            //TODO remove idea
+        }
+    }
 });
 
 

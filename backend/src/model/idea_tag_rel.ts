@@ -33,7 +33,8 @@ export function removeIdeaTagRel(ideaId: IdeaId, tagId: TagId): Promise<any> {
         'idea_id': ideaId,
         'tag_id': tagId
     })
-    .del();
+    .del()
+    .then(() => {});
 
     return query;
 }
