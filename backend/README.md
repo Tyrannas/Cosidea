@@ -34,6 +34,7 @@ POST: /create/idea
 query: {
     projectId: <projectId>,
     title: <projectTitle>,
+    tags:  <tagId1,tagId2,...>, //  Optional
     desc: <projectDescription>, //  Optional
     token: <projectToken>       //  Only if project is protected. See /auth.
 }
