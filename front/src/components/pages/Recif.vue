@@ -45,6 +45,7 @@ export default {
         },
 
         addNode: function( node ){
+            
             let newNode = this.$refs.sigma.addNode( node )
         },
         clickNode: function( node ){

@@ -39,6 +39,11 @@ export default {
     computed: {
         tagsValues: function() {
             return this.tags.map((tag) => tag.name);
+        },
+        tagsIndex: function() {
+            let index = {};
+            this.tags.forEach((tag) => index[tag.name] = tag);
+            return index; 
         }
     },
     methods: {
@@ -47,9 +52,14 @@ export default {
 	        this.forceAtlasStatus = this.forceAtlasStatus === "Start" ? "Stop" : "Start";
         },
         addNode: function(){
-	        this.$emit("addNode", this.nodeParameters);
+
+            let node = Object.assign({}, this.nodeParameters);
+            node.tags = node.tags.map((tag) => this.tagsIndex[tag]);
+	        this.$emit("addNode", node);
+
         },
         clickNode: function( node ){
+            
             this.nodeParameters.title = node.data.title;
             this.nodeParameters.tags = node.data.tags;
             this.nodeParameters.description = node.data.description;
