@@ -35,7 +35,7 @@ export default {
             this.$refs.sigma.toggleForceAtlas();
         },
         addNode: function( node ){
-            this.$refs.sigma.addNode( node )
+            let newNode = this.$refs.sigma.addNode( node )
         },
         testApplication: function(){
             let arr = this.$refs.addIdea.tagsValues;
@@ -74,7 +74,7 @@ export default {
         if(this.connected) {
             let taggedIdeas = await api.getIdeas(this.id);
             console.log(taggedIdeas);
-            //TODO build graph
+            this.$refs.sigma.buildGraph( taggedIdeas )
         }
 
     },
