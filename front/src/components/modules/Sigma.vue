@@ -1,15 +1,23 @@
+<!--
+Sigma Menu component, allows to create nodes, modify the graph and force atlas.
+-->
+
 <template>
+    <!--Sigma container-->
     <div id="graph-container">
     </div>
 </template>
 
 <script>
+    import _ from 'lodash'
 
-    sigma.settings = {
-        scalingMode : "outside",
+    let sigmaSettings = {
+        scalingMode : "inside",
         hideEdgesOnMove : true,
         zoomMin : 0
     };
+
+    _.assign(sigma.settings, sigmaSettings)
 
     export default {
         name: 'sigma',
@@ -28,7 +36,7 @@
                 forceAtlasParameters: {
                     linLogMode: true,
                     edgeWeightInfluence: 0.8,
-                    scalingRatio: 1.5,
+                    scalingRatio: 15,
                     gravity: 0.2
                 }
             }
@@ -37,7 +45,7 @@
             /**
              toggle Force Atlas 2
              */
-            toggleFA: function(){
+            toggleForceAtlas: function(){
                 if(this.sigmaInstance.isForceAtlas2Running()){
                     this.sigmaInstance.stopForceAtlas2();
                 }
@@ -49,7 +57,6 @@
              add a Node to the graph, and create links if common tags
              */
             addNode: function( params ){
-
                 // init Node
                 let newNode = {
                     id : "N" + this.sigmaInstance.graph.nodes().length + 1,
@@ -62,19 +69,19 @@
                     description: params.description
                 };
 
-                // add the node to the grph
+                // add the node to the graph
                 this.sigmaInstance.graph.addNode(newNode);
 
                 // create links between new Node and previously existing ones
-                this.addEge(newNode);
-
+                this.addEdge(newNode);
+                console.log(this.sigmaInstance.graph.nodes());
                 this.sigmaInstance.refresh();
             },
             /**
              * create links between a node and the rest of the graph if they share tags
              * @param newNode
              */
-            addEge: function( newNode ){
+            addEdge: function( newNode ){
 
                 this.sigmaInstance.graph.nodes().forEach(node => {
                     // check if current node is not itself
@@ -110,14 +117,31 @@
         },
         props:null,
         mounted (){
-            s.addRenderer({
+            this.sigmaInstance.addRenderer({
                 type: "canvas",
                 container: "graph-container"
             }).settings({
                 'maxNodeSize': 35
             });
 
-            s.refresh();
+            this.sigmaInstance.refresh();
         }
     }
 </script>
+
+<style>
+
+    .sigma-scene, .sigma-labels, .sigma-mouse {
+        left: 0;
+    }
+
+    #graph-container {
+        position: absolute;
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
+
+</style>

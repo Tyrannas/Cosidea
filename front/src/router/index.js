@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import Home from '../components/pages/Home.vue'
-import SigmaRoom from '../components/pages/SigmaRoom.vue'
+import Recif from '../components/pages/Recif.vue'
 
 Vue.use(Router)
 
@@ -15,8 +15,8 @@ export default new Router({
     },
     {
       path: '/room/:project',
-      name: 'SigmaRoom',
-      component: SigmaRoom
+      name: 'recif',
+      component: Recif
     }
   ]
 })

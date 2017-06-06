@@ -1,5 +1,4 @@
 <!--
-Sigma Menu component, allows to create nodes, modify the graph and force atlas.
 Created by Orion 2017
 -->
 
@@ -31,7 +30,6 @@ export default {
 			forceAtlasStatus: "Start",
 			nodeParameters: {
 				label: "",
-				color : "#ff951a",
 				tags: null,
 				description : ""
 			},
