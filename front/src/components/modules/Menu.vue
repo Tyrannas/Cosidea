@@ -33,8 +33,8 @@ export default {
 				title: "",
 				tags: null,
 				description : ""
-			}
-			//tagsValues: ['art', 'informatic', 'philosophy', 'politic', 'sociology', 'action', 'game', 'sport', 'society', 'anarchism', 'agriculture', 'education']
+			},
+			//testTagsValues: ['art', 'informatic', 'philosophy', 'politic', 'sociology', 'action', 'game', 'sport', 'society', 'anarchism', 'agriculture', 'education']
 		}
 	},
     computed: {
