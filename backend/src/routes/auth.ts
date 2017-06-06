@@ -71,7 +71,7 @@ export async function secureProject(req: express.Request, res: express.Response,
     let id      = req.query.projectId;
 
     let proj = await project.find(id);
-
+    
     if (proj === undefined) {
         res.json(new ReqError('Project not found'));
         return;
