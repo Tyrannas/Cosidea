@@ -78,7 +78,7 @@ export default {
             if (this.connected)
             {
                 let taggedIdeas = await api.getIdeas(this.id);
-                await api.getTags(this.id);
+                this.tags = await api.getTags(this.id);
 
                 console.log(taggedIdeas);
                 this.$refs.sigma.buildGraph( taggedIdeas );
