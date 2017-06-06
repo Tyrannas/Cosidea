@@ -4,7 +4,7 @@ Created by Orion 2017
 
 <template>
 	<nav class="sideBar">
-		<input type="text" class="myInput" placeholder="Idée" v-model="nodeParameters.label"/>
+		<input type="text" class="myInput" placeholder="Idée" v-model="nodeParameters.title"/>
 		<multiselect class="myInput"
 				v-model="nodeParameters.tags"
 				:options="tagsValues"
@@ -29,7 +29,7 @@ export default {
 		return {
 			forceAtlasStatus: "Start",
 			nodeParameters: {
-				label: "",
+				title: "",
 				tags: null,
 				description : ""
 			},

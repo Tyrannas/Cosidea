@@ -17,9 +17,10 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
         zoomMin : 0
     };
 
-    _.assign(sigma.settings, sigmaSettings)
+    _.assign(sigma.settings, sigmaSettings);
 
     export default {
+
         name: 'sigma',
         data (){
             return {
@@ -31,7 +32,8 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 }),
                 defaultParameters:{
                     nodeColor: "#ff951a",
-                    edgeColor: "#3997ff"
+                    edgeColor: "#3997ff",
+                    size: 0.1
                 },
                 forceAtlasParameters: {
                     linLogMode: true,
@@ -46,6 +48,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
              toggle Force Atlas 2
              */
             toggleForceAtlas: function(){
+
                 if(this.sigmaInstance.isForceAtlas2Running()){
                     this.sigmaInstance.stopForceAtlas2();
                 }
@@ -55,18 +58,20 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
             },
             /**
              add a Node to the graph, and create links if common tags
+             * @returns new node
              */
             addNode: function( params ){
+
                 // init Node
+                params.tags = params.tags.map(w => w.toLowerCase())
                 let newNode = {
                     id : "N" + this.sigmaInstance.graph.nodes().length + 1,
-                    label: params.label,
+                    label: params.title,
                     color: this.defaultParameters.nodeColor,
                     x: Math.random(),
                     y: Math.random(),
-                    size: 1,
-                    tags: params.tags.map(w => w.toLowerCase()),
-                    description: params.description
+                    size: this.defaultParameters.size,
+                    data: params
                 };
 
                 // add the node to the graph
@@ -76,6 +81,9 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 this.addEdge(newNode);
                 console.log(this.sigmaInstance.graph.nodes());
                 this.sigmaInstance.refresh();
+
+                // returns the newly created node
+                return this.sigmaInstance.graph.nodes(newNode.id);
             },
             /**
              * create links between a node and the rest of the graph if they share tags
@@ -86,15 +94,16 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 this.sigmaInstance.graph.nodes().forEach(node => {
                     // check if current node is not itself
                     if(node.id !== newNode.id){
-                        node.tags.forEach(t => {
+                        node.data.tags.forEach(t => {
                             // if two nodes have a tag in common
-                            if(newNode.tags.includes(t)){
+                            if(newNode.data.tags.includes(t)){
                                 let id = "E" + newNode.id + "-" + node.id;
+
                                 // if there is already an existing edge increase it
                                 if(this.sigmaInstance.graph.edges(id) !== undefined){
-                                    console.log('coucou')
-                                    //this.sigmaInstance.graph.edges(id).weight *= 1.05;
+                                    this.sigmaInstance.graph.edges(id).weight *= 1.05;
                                 }
+
                                 // otherwise just create it
                                 else
                                     this.sigmaInstance.graph.addEdge({
@@ -107,14 +116,19 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                                         weight: 1
                                     });
                                 // a node related to others is bigger
-                                this.sigmaInstance.graph.nodes(newNode.id).size *= 1.1;
-                                node.size *= 1.1;
+                                this.sigmaInstance.graph.nodes(newNode.id).size += 0.1;
+                                node.size += 0.1;
                             }
                         });
                     }
                 });
             },
+            /**
+             * builds the graph with a array of nodes
+             * @param nodesArray
+             */
             buildGraph: function( nodesArray ){
+
                 nodesArray.forEach(node => {
                     this.addNode( node );
                 })
@@ -122,11 +136,12 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
         },
         props:null,
         mounted (){
+
             this.sigmaInstance.addRenderer({
                 type: "canvas",
                 container: "graph-container"
             }).settings({
-                'maxNodeSize': 35
+                'maxNodeSize': 30
             });
 
             this.sigmaInstance.refresh();
