@@ -26,6 +26,20 @@ router.get('/project', async (req, res) => {
 
 });
 
+router.get('/project/all', async (req, res) => {
+
+    let projs = await project.findAll();
+
+    if(projs === undefined) {
+        res.json( new ReqError('No projects found..') );
+        return;
+    }
+
+    projs.forEach((proj) => delete proj.hash);
+    res.json(projs);
+    
+});
+
 
 router.use('/idea', auth.secureProject);
 router.get('/idea', async (req, res) => {
