@@ -1,5 +1,4 @@
 <!--
-Sigma Menu component, allows to create nodes, modify the graph and force atlas.
 Created by Orion 2017
 -->
 

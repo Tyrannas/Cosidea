@@ -1,4 +1,9 @@
+<!--
+Sigma Menu component, allows to create nodes, modify the graph and force atlas.
+-->
+
 <template>
+    <!--Sigma container-->
     <div id="graph-container">
     </div>
 </template>
@@ -37,7 +42,7 @@
             /**
              toggle Force Atlas 2
              */
-            toggleFA: function(){
+            toggleForceAtlas: function(){
                 if(this.sigmaInstance.isForceAtlas2Running()){
                     this.sigmaInstance.stopForceAtlas2();
                 }
@@ -121,3 +126,20 @@
         }
     }
 </script>
+
+<style>
+
+    .sigma-scene, .sigma-labels, .sigma-mouse {
+        left: 0;
+    }
+
+    #graph-container {
+        position: absolute;
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
+
+</style>
