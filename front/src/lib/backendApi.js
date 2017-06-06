@@ -4,7 +4,6 @@ import * as request from 'browser-request';
  * @param option
  * @returns body
  */
-
 let get = function(option) {
     return new Promise((resolve, reject) => {
         request.get(option, (err, res, body) => {

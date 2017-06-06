@@ -20,7 +20,7 @@ export default {
     name: 'recif',
     data () {
         return {
-            name:           this.$route.params.project,
+            title:           this.$route.params.project,
             id:             undefined,
             description:    undefined,
             isProtected:    false,
@@ -32,9 +32,9 @@ export default {
     },
     watch: {
         $route: function(route) {
-            let newName = route.params.project;
-            if(newName !== this.name) {
-                this.name = newName;
+            let newTitle = route.params.project;
+            if(newTitle !== this.title) {
+                this.title = newTitle;
                 this.init();
             }
         }
@@ -47,7 +47,7 @@ export default {
             this.$refs.sigma.addNode( node )
         },
         init: async function() {
-            let proj = await api.getProject(this.name);
+            let proj = await api.getProject(this.title);
         
             if (proj === undefined) { 
                 console.log('project === undefined'); 
