@@ -52,9 +52,17 @@ export default {
 	        this.forceAtlasStatus = this.forceAtlasStatus === "Start" ? "Stop" : "Start";
         },
         addNode: function(){
+
             let node = Object.assign({}, this.nodeParameters);
             node.tags = node.tags.map((tag) => this.tagsIndex[tag]);
 	        this.$emit("addNode", node);
+
+        },
+        clickNode: function( node ){
+            
+            this.nodeParameters.title = node.data.title;
+            this.nodeParameters.tags = node.data.tags;
+            this.nodeParameters.description = node.data.description;
         }
     }
 }

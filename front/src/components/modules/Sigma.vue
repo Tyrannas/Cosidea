@@ -14,7 +14,6 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
     let sigmaSettings = {
         scalingMode : "outside",
         hideEdgesOnMove : true,
-        zoomMin : 0,
         nodesPowRatio: 1,
         autoRescale: false
     };
@@ -156,6 +155,16 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 'maxNodeSize': 30
             });
 
+            // store this reference to access it inside the event binding
+            // otherwise the event is 'this'
+            let parent = this;
+            
+            // send node to menu when clicked on
+            this.sigmaInstance.bind('clickNode', function( event ){
+               let node = event.data.node;
+               console.log(parent);
+               parent.$emit('clickNode', node);
+            });
             this.sigmaInstance.refresh();
         }
     }

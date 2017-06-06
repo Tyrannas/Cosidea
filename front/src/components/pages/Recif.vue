@@ -8,8 +8,13 @@
              v-bind:tags="tags"
     ></sideBar>
     <div v-if="connected">Project: {{ title }} <br /> {{ description }} </div>
-    <div v-else>Create room? <input type="text" v-model="description" placeholder="description" /><button type="submit" v-on:click="addProject">YES!</button></div>
-    <sigma ref="sigma"></sigma>
+    <div v-else>Create room?
+        <input type="text" v-model="description" placeholder="description" />
+        <button type="submit" v-on:click="addProject">YES!</button>
+    </div>
+    <sigma ref="sigma"
+           v-on:clickNode="clickNode"
+    ></sigma>
   </div>
 </template>
 
@@ -42,6 +47,9 @@ export default {
         addNode: function( node ){
             
             let newNode = this.$refs.sigma.addNode( node )
+        },
+        clickNode: function( node ){
+            this.$refs.addIdea.clickNode(node);
         },
         testApplication: function(){
             let arr = this.$refs.addIdea.tagsValues;
