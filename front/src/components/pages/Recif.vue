@@ -6,7 +6,7 @@
              v-on:toggleForceAtlas="toggleForceAtlas"
              v-on:addNode="addNode"
     ></sideBar>
-    <div v-if="connected">Project: {{ name }} <br /> {{ description }}</div>
+    <div v-if="connected">Project: {{ title }} <br /> {{ description }}</div>
     <sigma ref="sigma"></sigma>
   </div>
 </template>
@@ -20,7 +20,7 @@ export default {
     name: 'recif',
     data () {
         return {
-            name:           this.$route.params.project,
+            title:           this.$route.params.project,
             id:             undefined,
             description:    undefined,
             isProtected:    false,
@@ -49,6 +49,26 @@ export default {
                     tags: tags
                 });
             }
+        },
+        init: async function() {
+            let proj = await api.getProject(this.title);
+
+            if (proj === undefined) {
+                console.log('project === undefined');
+                this.isValid = false; return;
+            }
+            console.log(proj);
+
+            this.id = proj.id;
+            this.description = proj.description;
+            this.isProtected = proj.protect;
+
+            if (this.connected)
+            {
+                let taggedIdeas = await api.getIdeas(this.id);
+                console.log(taggedIdeas);
+                this.$refs.sigma.buildGraph( taggedIdeas );
+            }
         }
     },
     computed: {
@@ -57,31 +77,21 @@ export default {
         }
     },
     async mounted(){
-        let proj = await api.getProject(this.name);
-        
-        if(proj === undefined) {
-            console.log('project === undefined');
-            this.isValid = false;
-            return;
-        }
-
-        console.log(proj);
-
-        this.id = proj.id;
-        this.description = proj.description;
-        this.isProtected = proj.protect;
-
-        if(this.connected) {
-            let taggedIdeas = await api.getIdeas(this.id);
-            console.log(taggedIdeas);
-            this.$refs.sigma.buildGraph( taggedIdeas )
-        }
-
+        this.init();
     },
     components: {
         'sideBar': Menu,
         'sigma': Sigma
     },
+    watch: {
+        $route: function(route) {
+            let newTitle = route.params.project;
+            if(newTitle !== this.title) {
+                this.title = newTitle;
+                this.init();
+            }
+        }
+    }
 }
 </script>
 

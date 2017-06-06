@@ -21,10 +21,10 @@
       <file leaf-file-name="Recif.vue" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/front/src/components/pages/Recif.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="337">
-              <caret line="37" column="56" lean-forward="true" selection-start-line="37" selection-start-column="56" selection-end-line="37" selection-end-column="56" />
+            <state relative-caret-position="694">
+              <caret line="69" column="59" lean-forward="false" selection-start-line="69" selection-start-column="59" selection-end-line="69" selection-end-column="59" />
               <folding>
-                <element signature="e#380#418#0" expanded="true" />
+                <element signature="e#381#419#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -43,9 +43,40 @@
       <file leaf-file-name="backendApi.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/front/src/lib/backendApi.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3192">
-              <caret line="152" column="5" lean-forward="true" selection-start-line="152" selection-start-column="5" selection-end-line="152" selection-end-column="5" />
-              <folding />
+            <state relative-caret-position="3171">
+              <caret line="151" column="5" lean-forward="true" selection-start-line="151" selection-start-column="5" selection-end-line="151" selection-end-column="5" />
+              <folding>
+                <marker date="1496767644915" expanded="true" signature="138:396" ph="{...}" />
+                <marker date="1496767644915" expanded="true" signature="184:393" ph="{...}" />
+                <marker date="1496767644915" expanded="true" signature="234:386" ph="{...}" />
+                <marker date="1496767644915" expanded="true" signature="256:300" ph="{...}" />
+                <marker date="1496767644915" expanded="true" signature="318:376" ph="{...}" />
+                <marker date="1496767644915" expanded="true" signature="399:465" ph="/** request.post as promise. ...*/" />
+                <marker date="1496767644915" expanded="true" signature="494:755" ph="{...}" />
+                <marker date="1496767644915" expanded="true" signature="540:751" ph="{...}" />
+                <marker date="1496767644915" expanded="true" signature="591:743" ph="{...}" />
+                <marker date="1496767644915" expanded="true" signature="613:657" ph="{...}" />
+                <marker date="1496767644915" expanded="true" signature="675:733" ph="{...}" />
+                <marker date="1496767644915" expanded="true" signature="758:862" ph="/*...*/" />
+                <marker date="1496767644915" expanded="true" signature="864:990" ph="/** get Ideas associated to a project ...*/" />
+                <marker date="1496767644915" expanded="true" signature="1198:1377" ph="/** add a new Idea to a project ...*/" />
+                <marker date="1496767644915" expanded="true" signature="1423:1602" ph="{...}" />
+                <marker date="1496767644915" expanded="true" signature="1605:1741" ph="/** add a new Tag to a project ...*/" />
+                <marker date="1496767644915" expanded="true" signature="1785:1924" ph="{...}" />
+                <marker date="1496767644915" expanded="true" signature="1927:2015" ph="/** Create a new project ...*/" />
+                <marker date="1496767644915" expanded="true" signature="2083:2269" ph="{...}" />
+                <marker date="1496767644915" expanded="true" signature="2272:2365" ph="/** Initialise the Room with the given projectName ...*/" />
+                <marker date="1496767644915" expanded="true" signature="2412:2657" ph="{...}" />
+                <marker date="1496767644915" expanded="true" signature="2569:2637" ph="{...}" />
+                <marker date="1496767644915" expanded="true" signature="2659:2759" ph="/** Get connection Token for project ...*/" />
+                <marker date="1496767644915" expanded="true" signature="2805:3093" ph="{...}" />
+                <marker date="1496767644915" expanded="true" signature="2995:3067" ph="{...}" />
+                <marker date="1496767644915" expanded="true" signature="3095:3191" ph="/** Get all Ideas in some project ...*/" />
+                <marker date="1496767644915" expanded="true" signature="3241:3506" ph="{...}" />
+                <marker date="1496767644915" expanded="true" signature="3432:3482" ph="{...}" />
+                <marker date="1496767644915" expanded="true" signature="3508:3558" ph="/** Get all projects ...*/" />
+                <marker date="1496767644915" expanded="true" signature="3595:3743" ph="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -423,12 +454,12 @@
       <workItem from="1496608582074" duration="211000" />
       <workItem from="1496609367031" duration="3628000" />
       <workItem from="1496618215823" duration="8644000" />
-      <workItem from="1496656623060" duration="51327000" />
+      <workItem from="1496656623060" duration="51564000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="64623000" />
+    <option name="totallyTimeSpent" value="64860000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1060" extended-state="6" />
@@ -479,7 +510,7 @@
         <state relative-caret-position="462">
           <caret line="22" column="39" lean-forward="false" selection-start-line="22" selection-start-column="39" selection-end-line="22" selection-end-column="39" />
           <folding>
-            <element signature="e#380#418#0" expanded="true" />
+            <element signature="e#381#419#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -717,18 +748,49 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/front/src/lib/backendApi.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3192">
-          <caret line="152" column="5" lean-forward="true" selection-start-line="152" selection-start-column="5" selection-end-line="152" selection-end-column="5" />
-          <folding />
+        <state relative-caret-position="3171">
+          <caret line="151" column="5" lean-forward="true" selection-start-line="151" selection-start-column="5" selection-end-line="151" selection-end-column="5" />
+          <folding>
+            <marker date="1496767644915" expanded="true" signature="138:396" ph="{...}" />
+            <marker date="1496767644915" expanded="true" signature="184:393" ph="{...}" />
+            <marker date="1496767644915" expanded="true" signature="234:386" ph="{...}" />
+            <marker date="1496767644915" expanded="true" signature="256:300" ph="{...}" />
+            <marker date="1496767644915" expanded="true" signature="318:376" ph="{...}" />
+            <marker date="1496767644915" expanded="true" signature="399:465" ph="/** request.post as promise. ...*/" />
+            <marker date="1496767644915" expanded="true" signature="494:755" ph="{...}" />
+            <marker date="1496767644915" expanded="true" signature="540:751" ph="{...}" />
+            <marker date="1496767644915" expanded="true" signature="591:743" ph="{...}" />
+            <marker date="1496767644915" expanded="true" signature="613:657" ph="{...}" />
+            <marker date="1496767644915" expanded="true" signature="675:733" ph="{...}" />
+            <marker date="1496767644915" expanded="true" signature="758:862" ph="/*...*/" />
+            <marker date="1496767644915" expanded="true" signature="864:990" ph="/** get Ideas associated to a project ...*/" />
+            <marker date="1496767644915" expanded="true" signature="1198:1377" ph="/** add a new Idea to a project ...*/" />
+            <marker date="1496767644915" expanded="true" signature="1423:1602" ph="{...}" />
+            <marker date="1496767644915" expanded="true" signature="1605:1741" ph="/** add a new Tag to a project ...*/" />
+            <marker date="1496767644915" expanded="true" signature="1785:1924" ph="{...}" />
+            <marker date="1496767644915" expanded="true" signature="1927:2015" ph="/** Create a new project ...*/" />
+            <marker date="1496767644915" expanded="true" signature="2083:2269" ph="{...}" />
+            <marker date="1496767644915" expanded="true" signature="2272:2365" ph="/** Initialise the Room with the given projectName ...*/" />
+            <marker date="1496767644915" expanded="true" signature="2412:2657" ph="{...}" />
+            <marker date="1496767644915" expanded="true" signature="2569:2637" ph="{...}" />
+            <marker date="1496767644915" expanded="true" signature="2659:2759" ph="/** Get connection Token for project ...*/" />
+            <marker date="1496767644915" expanded="true" signature="2805:3093" ph="{...}" />
+            <marker date="1496767644915" expanded="true" signature="2995:3067" ph="{...}" />
+            <marker date="1496767644915" expanded="true" signature="3095:3191" ph="/** Get all Ideas in some project ...*/" />
+            <marker date="1496767644915" expanded="true" signature="3241:3506" ph="{...}" />
+            <marker date="1496767644915" expanded="true" signature="3432:3482" ph="{...}" />
+            <marker date="1496767644915" expanded="true" signature="3508:3558" ph="/** Get all projects ...*/" />
+            <marker date="1496767644915" expanded="true" signature="3595:3743" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/front/src/components/pages/Recif.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="337">
-          <caret line="37" column="56" lean-forward="true" selection-start-line="37" selection-start-column="56" selection-end-line="37" selection-end-column="56" />
+        <state relative-caret-position="694">
+          <caret line="69" column="59" lean-forward="false" selection-start-line="69" selection-start-column="59" selection-end-line="69" selection-end-column="59" />
           <folding>
-            <element signature="e#380#418#0" expanded="true" />
+            <element signature="e#381#419#0" expanded="true" />
           </folding>
         </state>
       </provider>
