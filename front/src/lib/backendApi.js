@@ -7,7 +7,7 @@
 /**
  * get Ideas associated to a project
  * @param params : project ID
- * @param vue instance of Vue
+ * @param vue s of Vue
  * @returns {Promise.<void>}
  */
 

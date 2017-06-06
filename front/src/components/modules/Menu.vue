@@ -13,92 +13,22 @@ Created by Orion 2017
 		</multiselect>
 		<textarea class="myInput" placeholder="Description" v-model="nodeParameters.description"></textarea>
 		<a class="myButton" v-on:click="addNode">addNode</a>
-        <a class="myButton" v-on:click="toggleFA">{{forceAtlasStatus}}</a>
+        <a class="myButton" v-on:click="toggleForceAtlas">{{forceAtlasStatus}}</a>
 	</nav>
 </template>
 
 
 <script>
-import * as api from '../../lib/cosideaApi';
+import * as api from '../../lib/backendApi';
 import multiselect from 'vue-multiselect'
 export default {
 	name: 'menu',
 	components: {
 	    'multiselect': multiselect
 	},
-	methods : {
-		/**
-		toggle Force Atlas 2
-		 */
-		toggleFA: function(){
-		  if(this.instance.isForceAtlas2Running()){
-			  this.instance.stopForceAtlas2();
-			  this.forceAtlasStatus = "Start FA2"
-		  }
-		  else{
-			  this.instance.startForceAtlas2({
-                  linLogMode: true,
-                  edgeWeightInfluence: 0.8,
-                  scalingRatio: 1.5,
-                  gravity: 1.3
-              });
-			  this.forceAtlasStatus = "Stop FA2"
-		  }
-		},
-		/**
-		add a Node to the graph, and create links if common tags
-		 */
-		addNode: function(){
-			// init Node
-			let newNode = {
-				id : "N" + this.instance.graph.nodes().length + 1,
-				label: this.nodeParameters.label,
-				color: this.nodeParameters.color,
-				x: Math.random(),
-				y: Math.random(),
-				size: 1,
-				tags: this.nodeParameters.tags.map(w => w.toLowerCase()),
-				description: this.nodeParameters.description
-			};
-			this.instance.graph.addNode(newNode);
-
-			// create links between new Node and previously existing ones
-			this.instance.graph.nodes().forEach(node => {
-				// check if current node is not itself
-				if(node.id !== newNode.id){
-					node.tags.forEach(t => {
-						// if two nodes have a tag in common
-					   if(newNode.tags.includes(t)){
-						   let id = "E" + newNode.id + "-" + node.id;
-						   // if there is already an existing edge increase it
-						   if(this.instance.graph.edges(id) !== undefined){
-						       console.log('coucou')
-							   //this.instance.graph.edges(id).weight *= 1.05;
-						   }
-						   // otherwise just create it
-						   else
-							   this.instance.graph.addEdge({
-								   id : id,
-								   source: newNode.id,
-								   target: node.id,
-								   label: [t],
-								   size: 0.5,
-								   color: "#3997ff",
-								   weight: 1
-							   });
-						   // a node related to others is bigger
-						   this.instance.graph.nodes(newNode.id).size *= 1.1;
-						   node.size *= 1.1;
-					   }
-					});
-				}
-			});
-			this.instance.refresh();
-		}
-	},
 	data (){
 		return {
-			forceAtlasStatus: "Start FA2",
+			forceAtlasStatus: "Start",
 			nodeParameters: {
 				label: "",
 				color : "#ff951a",
@@ -108,10 +38,16 @@ export default {
 			tagsValues: ['art', 'informatic', 'philosophy', 'politic', 'sociology', 'action', 'game', 'sport', 'society', 'anarchism', 'agriculture', 'education']
 		}
 	},
-	/**
-	sigma instance inherited from SigmaRoom
-	 */
-	props:['instance']
+    methods: {
+	    toggleForceAtlas: function(){
+	        this.$emit("toggleForceAtlas");
+	        this.forceAtlasStatus = this.forceAtlasStatus === "Start" ? "Stop" : "Start";
+        },
+        addNode: function(){
+	        this.$emit("addNode", this.nodeParameters)
+        }
+    },
+	props: null
 }
 </script>
 

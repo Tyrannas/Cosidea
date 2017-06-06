@@ -1,15 +1,13 @@
 <template>
   <div id="test">
-    <sideBar ref="add_idea" id="add_idea" :instance="instance"></sideBar>
+    <sideBar ref="add_idea" id="add_idea" :instance="s"></sideBar>
     <div id="graph-container"></div>
   </div>
 </template>
 
 <script>
 import Menu from '../modules/Menu.vue'
-sigma.settings.scalingMode = "outside";
-sigma.settings.hideEdgesOnMove = true;
-sigma.settings.zoomMin = 0;
+
 //sigma.canvas.edges.def = sigma.canvas.edges.curve;
 
 let s = new sigma({
@@ -25,7 +23,7 @@ export default {
       data () {
             return {
                 lorem: 'Lorem ipsum sit dolor.',
-                instance:       s,
+                s:       s,
                 project:        this.$route.params.project,
                 projectId:      undefined,
                 description:    undefined,
@@ -37,14 +35,7 @@ export default {
         'sideBar': Menu
       },
       mounted(){
-          s.addRenderer({
-              type: "canvas",
-              container: "graph-container"
-          }).settings({
-              'maxNodeSize': 35
-          });
 
-          s.refresh();
           let proj = this.project;
           api.initRoom(this, proj)
               .then(() => console.log(this.projectId));
