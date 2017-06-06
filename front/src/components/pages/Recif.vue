@@ -7,6 +7,7 @@
              v-on:addNode="addNode"
     ></sideBar>
     <div v-if="connected">Project: {{ title }} <br /> {{ description }} </div>
+    <div v-else>Create room? <button type="submit" v-on:click="addProject">YES!</button></div>
     <sigma ref="sigma"></sigma>
   </div>
 </template>
@@ -36,7 +37,7 @@ export default {
         },
 
         addNode: function( node ){
-            
+            console.log(node);
             let newNode = this.$refs.sigma.addNode( node )
         },
         testApplication: function(){
@@ -60,6 +61,7 @@ export default {
                 this.isValid = false; 
                 return;
             }
+            this.isValid = true;
             console.log(proj);
 
             this.id = proj.id;
@@ -71,6 +73,21 @@ export default {
                 let taggedIdeas = await api.getIdeas(this.id);
                 console.log(taggedIdeas);
                 this.$refs.sigma.buildGraph( taggedIdeas );
+            }
+        },
+        addProject: async function() {
+            
+            let params = {
+                title: this.title,
+                desc: this.description,
+            };
+
+            let id = await api.addProject(params);
+            if(id === undefined) {
+                alert('Error creating Project..');
+            }
+            else {
+                this.init();
             }
         }
     },

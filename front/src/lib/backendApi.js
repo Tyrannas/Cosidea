@@ -70,14 +70,18 @@ export async function addTag( vue, params ){
 
 /**
  * Create a new project
- * @param vue
- * @param params
+ * @param params: { title, description?, protected?, owner?, password?}
  * @returns {Promise.<*>}
  */
-export async function addProject( vue, params={ protected: false }){
+export async function addProject( params ){
 
-    let request = `api/create/project/${params.name}/${params.protected}?desc=${params.description}&owner=${params.owner}&pwd=${params.id}`
-    return await vue.$http.post(request);
+    let query = { url: '/api/create/project', qs: params };
+    let body = await post(query);
+    
+    if(body === undefined || body.err) {
+        return undefined;
+    }
+    return body.msg;
 }
 
 
