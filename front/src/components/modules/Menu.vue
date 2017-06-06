@@ -33,13 +33,17 @@ export default {
 				title: "",
 				tags: null,
 				description : ""
-			},
-			//testTagsValues: ['art', 'informatic', 'philosophy', 'politic', 'sociology', 'action', 'game', 'sport', 'society', 'anarchism', 'agriculture', 'education']
+			}
 		}
 	},
     computed: {
         tagsValues: function() {
             return this.tags.map((tag) => tag.name);
+        },
+        tagsIndex: function() {
+            let index = {};
+            this.tags.forEach((tag) => index[tag.name] = tag);
+            return index; 
         }
     },
     methods: {
@@ -48,7 +52,9 @@ export default {
 	        this.forceAtlasStatus = this.forceAtlasStatus === "Start" ? "Stop" : "Start";
         },
         addNode: function(){
-	        this.$emit("addNode", this.nodeParameters)
+            let node = Object.assign({}, this.nodeParameters);
+            node.tags = node.tags.map((tag) => this.tagsIndex[tag]);
+	        this.$emit("addNode", node);
         }
     }
 }
