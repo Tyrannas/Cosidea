@@ -28,10 +28,10 @@ export default {
     },
     methods: {
         toggleForceAtlas: function(){
-            this.$refs.sigma.methods.toggleForceAtlas();
+            this.$refs.sigma.toggleForceAtlas();
         },
         addNode: function( node ){
-            this.$refs.sigma.methods.addNode( node )
+            this.$refs.sigma.addNode( node )
         }
     },
     mounted(){

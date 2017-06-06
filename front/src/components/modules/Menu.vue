@@ -30,7 +30,6 @@ export default {
 			forceAtlasStatus: "Start",
 			nodeParameters: {
 				label: "",
-				color : "#ff951a",
 				tags: null,
 				description : ""
 			},

@@ -9,12 +9,15 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
 </template>
 
 <script>
+    import _ from 'lodash'
 
-    sigma.settings = {
-        scalingMode : "outside",
+    let sigmaSettings = {
+        scalingMode : "inside",
         hideEdgesOnMove : true,
         zoomMin : 0
     };
+
+    _.assign(sigma.settings, sigmaSettings)
 
     export default {
         name: 'sigma',
@@ -33,7 +36,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 forceAtlasParameters: {
                     linLogMode: true,
                     edgeWeightInfluence: 0.8,
-                    scalingRatio: 1.5,
+                    scalingRatio: 15,
                     gravity: 0.2
                 }
             }
@@ -54,7 +57,6 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
              add a Node to the graph, and create links if common tags
              */
             addNode: function( params ){
-
                 // init Node
                 let newNode = {
                     id : "N" + this.sigmaInstance.graph.nodes().length + 1,
@@ -67,19 +69,19 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                     description: params.description
                 };
 
-                // add the node to the grph
+                // add the node to the graph
                 this.sigmaInstance.graph.addNode(newNode);
 
                 // create links between new Node and previously existing ones
-                this.addEge(newNode);
-
+                this.addEdge(newNode);
+                console.log(this.sigmaInstance.graph.nodes());
                 this.sigmaInstance.refresh();
             },
             /**
              * create links between a node and the rest of the graph if they share tags
              * @param newNode
              */
-            addEge: function( newNode ){
+            addEdge: function( newNode ){
 
                 this.sigmaInstance.graph.nodes().forEach(node => {
                     // check if current node is not itself
@@ -115,14 +117,14 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
         },
         props:null,
         mounted (){
-            s.addRenderer({
+            this.sigmaInstance.addRenderer({
                 type: "canvas",
                 container: "graph-container"
             }).settings({
                 'maxNodeSize': 35
             });
 
-            s.refresh();
+            this.sigmaInstance.refresh();
         }
     }
 </script>
