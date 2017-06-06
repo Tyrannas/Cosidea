@@ -20,7 +20,7 @@ Add Project:
 POST: /create/project
 query: {
     title: <projectTitle>,
-    protected: <isProtected>,
+    protected: <isProtected>,   //  Optional, default: false
     desc: <description>,        //  Optional
     owner: <ownerUserId>,       //  Only if is protected
     pwd: <projectPassword>      //  Only if is protected

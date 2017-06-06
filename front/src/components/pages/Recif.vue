@@ -6,7 +6,8 @@
              v-on:toggleForceAtlas="toggleForceAtlas"
              v-on:addNode="addNode"
     ></sideBar>
-    <div v-if="connected">Project: {{ title }} <br /> {{ description }}</div>
+    <div v-if="connected">Project: {{ title }} <br /> {{ description }} </div>
+    <div v-else>Create room? <input type="text" v-model="description" placeholder="description" /><button type="submit" v-on:click="addProject">YES!</button></div>
     <sigma ref="sigma"></sigma>
   </div>
 </template>
@@ -22,7 +23,7 @@ export default {
         return {
             title:           this.$route.params.project,
             id:             undefined,
-            description:    undefined,
+            description:    '',
             isProtected:    false,
             token:          undefined,
 
@@ -31,10 +32,12 @@ export default {
         }
     },
     methods: {
-        toggleForceAtlas: function(){
+        toggleForceAtlas: function() {
             this.$refs.sigma.toggleForceAtlas();
         },
+
         addNode: function( node ){
+            console.log(node);
             let newNode = this.$refs.sigma.addNode( node )
         },
         testApplication: function(){
@@ -56,19 +59,39 @@ export default {
             if (proj === undefined) {
                 console.log('project === undefined');
                 this.isValid = false;
+
                 return;
             }
+            this.isValid = true;
             console.log(proj);
 
             this.id = proj.id;
             this.description = proj.description;
             this.isProtected = proj.protect;
 
+            if(this.description == null) 
+                this.description = '';
+
             if (this.connected)
             {
                 let taggedIdeas = await api.getIdeas(this.id);
                 console.log(taggedIdeas);
                 this.$refs.sigma.buildGraph( taggedIdeas );
+            }
+        },
+        addProject: async function() {
+            
+            let params = {
+                title: this.title,
+                desc: this.description,
+            };
+
+            let id = await api.addProject(params);
+            if(id === undefined) {
+                alert('Error creating Project..');
+            }
+            else {
+                this.init();
             }
         }
     },

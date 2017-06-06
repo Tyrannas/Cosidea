@@ -18,23 +18,23 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="Recif.vue" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Recif.vue" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/front/src/components/pages/Recif.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="987">
-              <caret line="47" column="35" lean-forward="true" selection-start-line="47" selection-start-column="35" selection-end-line="47" selection-end-column="35" />
+            <state relative-caret-position="1302">
+              <caret line="62" column="23" lean-forward="true" selection-start-line="62" selection-start-column="23" selection-end-line="62" selection-end-column="23" />
               <folding>
-                <element signature="e#381#419#0" expanded="true" />
+                <element signature="e#546#584#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Sigma.vue" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Sigma.vue" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/front/src/components/modules/Sigma.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="35" column="28" lean-forward="false" selection-start-line="35" selection-start-column="28" selection-end-line="35" selection-end-column="28" />
+            <state relative-caret-position="819">
+              <caret line="59" column="31" lean-forward="false" selection-start-line="59" selection-start-column="31" selection-end-line="59" selection-end-column="31" />
               <folding />
             </state>
           </provider>
@@ -43,9 +43,12 @@
       <file leaf-file-name="backendApi.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/front/src/lib/backendApi.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2541">
-              <caret line="151" column="5" lean-forward="true" selection-start-line="151" selection-start-column="5" selection-end-line="151" selection-end-column="5" />
-              <folding />
+            <state relative-caret-position="2394">
+              <caret line="144" column="5" lean-forward="true" selection-start-line="144" selection-start-column="5" selection-end-line="144" selection-end-column="5" />
+              <folding>
+                <marker date="1496769810246" expanded="true" signature="3253:3257" ph="/** Get all projects ...*/" />
+                <marker date="1496769810246" expanded="true" signature="3294:3442" ph="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -102,8 +105,8 @@
         <option value="$PROJECT_DIR$/front/src/router/index.js" />
         <option value="$PROJECT_DIR$/front/index.html" />
         <option value="$PROJECT_DIR$/front/src/components/modules/Menu.vue" />
-        <option value="$PROJECT_DIR$/front/src/components/pages/Recif.vue" />
         <option value="$PROJECT_DIR$/front/src/components/modules/Sigma.vue" />
+        <option value="$PROJECT_DIR$/front/src/components/pages/Recif.vue" />
       </list>
     </option>
   </component>
@@ -423,12 +426,12 @@
       <workItem from="1496608582074" duration="211000" />
       <workItem from="1496609367031" duration="3628000" />
       <workItem from="1496618215823" duration="8644000" />
-      <workItem from="1496656623060" duration="53491000" />
+      <workItem from="1496656623060" duration="53599000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="66787000" />
+    <option name="totallyTimeSpent" value="66895000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1060" extended-state="6" />
@@ -479,7 +482,7 @@
         <state relative-caret-position="462">
           <caret line="22" column="39" lean-forward="false" selection-start-line="22" selection-start-column="39" selection-end-line="22" selection-end-column="39" />
           <folding>
-            <element signature="e#381#419#0" expanded="true" />
+            <element signature="e#546#584#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -696,16 +699,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/front/src/components/pages/Recif.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="987">
-          <caret line="47" column="35" lean-forward="true" selection-start-line="47" selection-start-column="35" selection-end-line="47" selection-end-column="35" />
-          <folding>
-            <element signature="e#381#419#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/front/src/components/modules/Menu.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="63">
@@ -719,17 +712,30 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/front/src/lib/backendApi.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2541">
-          <caret line="151" column="5" lean-forward="true" selection-start-line="151" selection-start-column="5" selection-end-line="151" selection-end-column="5" />
-          <folding />
+        <state relative-caret-position="2394">
+          <caret line="144" column="5" lean-forward="true" selection-start-line="144" selection-start-column="5" selection-end-line="144" selection-end-column="5" />
+          <folding>
+            <marker date="1496769810246" expanded="true" signature="3253:3257" ph="/** Get all projects ...*/" />
+            <marker date="1496769810246" expanded="true" signature="3294:3442" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/front/src/components/modules/Sigma.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="35" column="28" lean-forward="false" selection-start-line="35" selection-start-column="28" selection-end-line="35" selection-end-column="28" />
+        <state relative-caret-position="819">
+          <caret line="59" column="31" lean-forward="false" selection-start-line="59" selection-start-column="31" selection-end-line="59" selection-end-column="31" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front/src/components/pages/Recif.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1302">
+          <caret line="62" column="23" lean-forward="true" selection-start-line="62" selection-start-column="23" selection-end-line="62" selection-end-column="23" />
+          <folding>
+            <element signature="e#546#584#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
