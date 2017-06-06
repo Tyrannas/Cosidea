@@ -39,28 +39,16 @@ let post = function(option) {
  * add ideas, tags, create new projects and many more...
  */
 
-/**
- * get Ideas associated to a project
- * @param params : project ID
- * @param vue s of Vue
- * @returns {Promise.<void>}
- */
 
-// export async function getIdeas( vue, params) {
-
-//     let request = `/api/info/idea/${params.projectId}`
-//     let ideas = await vue.$http.get(request);
-//     return JSON.parse(ideas.bodyText);
-// }
 
 /**
  * add a new Idea to a project
- * @param vue
  * @param params : project Id, idea with title and description, optional: token
  * @returns {Promise.<*>} with created idea id
  */
 
-export async function addIdea( vue, params ){
+export async function addIdea( params ){
+
 
     let request = `/api/create/idea/${params.projectId}/${params.idea.title}?desc=${params.idea.description}&token=${params.token}`;
     return await vue.$http.post(request);
@@ -94,9 +82,9 @@ export async function addProject( vue, params={ protected: false }){
 
 
 /**
- * Initialise the Room with the given projectName
- * @param vue
+ * Get project
  * @param projectName
+ * @returns Promise<project[]>
  */
 export async function getProject(projectName) {
     
@@ -117,7 +105,7 @@ export async function getProject(projectName) {
  * Get connection Token for project
  * @param projectId
  * @param password
- * @returns token
+ * @returns Promise<token: string>
  */
 async function getToken(projectId, password) {
 
@@ -134,11 +122,12 @@ async function getToken(projectId, password) {
     return body.token;
 }
 
+
 /**
- * Get all Ideas in some project
+ * Get Ideas associated to a project
  * @param projectId
  * @param token
- * @returns ideas[]
+ * @returns Promise<ideas[]>
  */
 export async function getIdeas(projectId, token) {
 
@@ -156,7 +145,7 @@ export async function getIdeas(projectId, token) {
 
 /**
  * Get all projects
- * @returns projects[]
+ * @returns Promise<projects[]>
  */
 export async function getProjects() {
         console.log('request..');

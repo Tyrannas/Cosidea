@@ -6,7 +6,7 @@
              v-on:toggleForceAtlas="toggleForceAtlas"
              v-on:addNode="addNode"
     ></sideBar>
-    <div v-if="connected">Project: {{ title }} <br /> {{ description }}</div>
+    <div v-if="connected">Project: {{ title }} <br /> {{ description }} </div>
     <sigma ref="sigma"></sigma>
   </div>
 </template>
@@ -40,10 +40,10 @@ export default {
         }
     },
     methods: {
-        toggleForceAtlas: function(){
+        toggleForceAtlas: function() {
             this.$refs.sigma.toggleForceAtlas();
         },
-        addNode: function( node ){
+        addNode: function( node ) {
             this.$refs.sigma.addNode( node )
         },
         init: async function() {
