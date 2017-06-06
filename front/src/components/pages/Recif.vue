@@ -6,7 +6,7 @@
              v-on:toggleForceAtlas="toggleForceAtlas"
              v-on:addNode="addNode"
     ></sideBar>
-    <div v-if="connected">Project: {{ name }} <br /> {{ description }}</div>
+    <div v-if="connected">Project: {{ title }} <br /> {{ description }}</div>
     <sigma ref="sigma"></sigma>
   </div>
 </template>
