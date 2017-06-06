@@ -1,5 +1,7 @@
 import {db} from './db';
 import * as table from '../config/tables';
+import * as def   from '../config/default';
+import * as tag   from './tag';
 
 export type ProjectId = number;
 
@@ -11,7 +13,7 @@ export class Project {
 }
 
 
-export function addProject( title: string, description: string, ownerId?: number, 
+export async function addProject( title: string, description: string, ownerId?: number, 
                             isProtected?: boolean, hash?: string): Promise<ProjectId> {
 
     if(title == null || title.length < 1){
@@ -24,10 +26,14 @@ export function addProject( title: string, description: string, ownerId?: number
 
     let proj = new Project(title, description, ownerId, isProtected, hash);
 
-    let query = db(table.project)
+    let query = await db(table.project)
     .insert(proj)
     .returning('id')
     .then((arr) => arr[0]);
+
+    def.tags.forEach( async (t:string) => {
+        await tag.addTag(query, t);
+    });
 
     return query;
 }
