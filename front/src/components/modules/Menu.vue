@@ -33,8 +33,7 @@ export default {
 				title: "",
 				tags: null,
 				description : ""
-			},
-			//testTagsValues: ['art', 'informatic', 'philosophy', 'politic', 'sociology', 'action', 'game', 'sport', 'society', 'anarchism', 'agriculture', 'education']
+			}
 		}
 	},
     computed: {
@@ -48,7 +47,12 @@ export default {
 	        this.forceAtlasStatus = this.forceAtlasStatus === "Start" ? "Stop" : "Start";
         },
         addNode: function(){
-	        this.$emit("addNode", this.nodeParameters)
+	        this.$emit("addNode", this.nodeParameters);
+        },
+        clickNode: function( node ){
+            this.nodeParameters.title = node.data.title;
+            this.nodeParameters.tags = node.data.tags;
+            this.nodeParameters.description = node.data.description;
         }
     }
 }
