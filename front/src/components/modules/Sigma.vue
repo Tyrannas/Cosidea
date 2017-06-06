@@ -113,6 +113,11 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                         });
                     }
                 });
+            },
+            buildGraph: function( nodesArray ){
+                nodesArray.forEach(node => {
+                    this.addNode( node );
+                })
             }
         },
         props:null,
