@@ -7,7 +7,7 @@
              v-on:addNode="addNode"
     ></sideBar>
     <div v-if="connected">Project: {{ title }} <br /> {{ description }} </div>
-    <div v-else>Create room? <button type="submit" v-on:click="addProject">YES!</button></div>
+    <div v-else>Create room? <input type="text" v-model="description" placeholder="description" /><button type="submit" v-on:click="addProject">YES!</button></div>
     <sigma ref="sigma"></sigma>
   </div>
 </template>
@@ -23,7 +23,7 @@ export default {
         return {
             title:           this.$route.params.project,
             id:             undefined,
-            description:    undefined,
+            description:    '',
             isProtected:    false,
             token:          undefined,
 
@@ -67,6 +67,9 @@ export default {
             this.id = proj.id;
             this.description = proj.description;
             this.isProtected = proj.protect;
+
+            if(this.description == null) 
+                this.description = '';
 
             if (this.connected)
             {
