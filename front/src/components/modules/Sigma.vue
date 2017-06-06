@@ -28,7 +28,10 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 sigmaInstance: new sigma({
                     g : {
                         nodes: [],
-                        edges: []
+                        edges: [],
+                        settings: {
+                            clone: true
+                        }
                     }
                 }),
                 defaultParameters:{
@@ -64,7 +67,6 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
             addNode: function( params ){
 
                 // init Node
-                //params.tags = params.tags.map(w => { if(typeof(w) === String) w.toLowerCase()});
                 let newNode = {
                     id : "N" + this.sigmaInstance.graph.nodes().length + 1,
                     label: params.title,
@@ -119,7 +121,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                                     });
                                 // a node related to others is bigger
                                 this.sigmaInstance.graph.nodes(newNode.id).size += 0.2;
-                                node.size += 0.5;
+                                node.size += 0.2;
                             }
                         });
                     }
@@ -153,6 +155,10 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                     parent.$emit('clickNode', node);
                 });
 
+                // empty menu when clicked on canvas
+                this.sigmaInstance.bind('clickStage', function ( event ){
+                   parent.$emit('clickStage');
+                });
                 // dragListener
                 let dragListener = sigma.plugins.dragNodes(this.sigmaInstance, this.sigmaInstance.renderers[0]);
                 this.sigmaInstance.refresh();
@@ -163,9 +169,11 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
 
             this.sigmaInstance.addRenderer({
                 type: "canvas",
-                container: "graph-container"
+                container: "graph-container",
+                nodeHoverColor: "default",
+                defaultNodeHoverColor: this.defaultParameters.edgeColor
             }).settings({
-                'maxNodeSize': 30
+                'maxNodeSize': 30,
             });
 
             this.init();

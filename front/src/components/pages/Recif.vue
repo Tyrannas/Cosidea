@@ -51,6 +51,9 @@ export default {
         clickNode: function( node ){
             this.$refs.addIdea.clickNode(node);
         },
+        clickStage: function(){
+            this.$refs.addIdea.reset();
+        },
         testApplication: function(){
             let arr = this.$refs.addIdea.tagsValues;
             for(let i = 0; i < 150; ++i){
