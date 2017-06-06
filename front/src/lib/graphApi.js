@@ -44,7 +44,9 @@ graphApi.buildGraph = function( data ){
                         size: 0.5,
                         color: "#3997ff",
                         weight: 1,
-                        type: 'curve'
+                        type: 'curve',
+                        x: Math.random() * 10,
+                        y: Math.random() * 10,
                     }
                 }
             }

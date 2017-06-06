@@ -8,6 +8,8 @@
 <script>
 import Menu from '../modules/Menu.vue'
 sigma.settings.scalingMode = "outside";
+sigma.settings.hideEdgesOnMove = true;
+sigma.settings.zoomMin = 0;
 //sigma.canvas.edges.def = sigma.canvas.edges.curve;
 
 let s = new sigma({
@@ -34,19 +36,18 @@ export default {
       components: {
         'sideBar': Menu
       },
-      created() {
+      mounted(){
+          s.addRenderer({
+              type: "canvas",
+              container: "graph-container"
+          }).settings({
+              'maxNodeSize': 35
+          });
+
+          s.refresh();
           let proj = this.project;
           api.initRoom(this, proj)
-          .then(() => console.log(this.projectId));
-      },
-      mounted(){
-        s.addRenderer({
-            type: "canvas",
-            container: "graph-container"
-        }).settings({
-            'maxNodeSize': 35
-        });
-        s.refresh();
+              .then(() => console.log(this.projectId));
       }
 }
 </script>
