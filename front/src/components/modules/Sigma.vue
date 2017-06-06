@@ -83,7 +83,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 // create links between new Node and previously existing ones
                 this.addEdge(newNode);
                 //console.log(this.sigmaInstance.graph.nodes());
-                this.init();
+                this.bindEvents();
 
                 // returns the newly created node
                 return this.sigmaInstance.graph.nodes(newNode.id);
@@ -142,13 +142,19 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                     this.addNode( node );
                 })
             },
+            /**
+             * reset the graph
+             */
             resetGraph: function (){
                 this.sigmaInstance.graph = {
                     nodes: [],
                     edges: []
                 }
             },
-            init: function(){
+            /**
+             * bind the events to the graph
+             */
+            bindEvents: function(){
                 // store this reference to access it inside the event binding
                 // otherwise the event is 'this'
                 let parent = this;
@@ -164,6 +170,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 this.sigmaInstance.bind('clickStage', function ( event ){
                    parent.$emit('clickStage');
                 });
+
                 // dragListener
                 let dragListener = sigma.plugins.dragNodes(this.sigmaInstance, this.sigmaInstance.renderers[0]);
                 this.sigmaInstance.refresh();
@@ -181,7 +188,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 'maxNodeSize': 30,
             });
 
-            this.init();
+            this.bindEvents();
         }
     }
 </script>
