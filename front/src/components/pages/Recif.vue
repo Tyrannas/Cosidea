@@ -6,6 +6,7 @@
              v-on:toggleForceAtlas="toggleForceAtlas"
              v-on:addNode="addNode"
     ></sideBar>
+    <div v-if="connected">Project: {{ name }} <br /> {{ description }}</div>
     <sigma ref="sigma"></sigma>
   </div>
 </template>
@@ -19,11 +20,14 @@ export default {
     name: 'recif',
     data () {
         return {
-            project:        this.$route.params.project,
-            projectId:      undefined,
+            name:           this.$route.params.project,
+            id:             undefined,
             description:    undefined,
             isProtected:    false,
-            token:          undefined
+            token:          undefined,
+
+            isValid:        true,
+            isAuth:         false
         }
     },
     methods: {
@@ -47,10 +51,32 @@ export default {
             }
         }
     },
-    mounted(){
-      let proj = this.project;
-      api.initRoom(this, proj)
-          .then(() => console.log(this.projectId));
+    computed: {
+        connected: function() {
+            return (!this.isProtected || this.isAuth) && this.isValid;
+        }
+    },
+    async mounted(){
+        let proj = await api.getProject(this.name);
+        
+        if(proj === undefined) {
+            console.log('project === undefined');
+            this.isValid = false;
+            return;
+        }
+
+        console.log(proj);
+
+        this.id = proj.id;
+        this.description = proj.description;
+        this.isProtected = proj.protect;
+
+        if(this.connected) {
+            let taggedIdeas = await api.getIdeas(this.id);
+            console.log(taggedIdeas);
+            //TODO build graph
+        }
+
     },
     components: {
         'sideBar': Menu,

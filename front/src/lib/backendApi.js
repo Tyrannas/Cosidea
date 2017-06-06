@@ -100,7 +100,7 @@ export async function addProject( vue, params={ protected: false }){
  * @param projectName
  */
 export async function getProject(projectName) {
-
+    
     let params = { title: projectName };
     let query = {url: '/api/info/project', qs: params };
 
@@ -145,13 +145,13 @@ export async function getIdeas(projectId, token) {
 
     let params = { projectId: projectId, token: token }
     let query = {url: '/api/info/idea', qs: params};
-
-    let body = await request.get(query);
+    
+    let body = await get(query);
 
     if (body === undefined || body.err) {
         throw new Error('request failed');
     }
-
+    
     return body;
 }
 
