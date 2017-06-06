@@ -44,9 +44,24 @@ export default {
             this.$refs.sigma.toggleForceAtlas();
         },
 
-        addNode: function( node ){
+        addNode: async function( node ){
             console.log(node);
-            let newNode = this.$refs.sigma.addNode( node )
+            let newNode = this.$refs.sigma.addNode( node );
+            
+            let params = {
+                title: node.title,
+                desc: node.description,
+                projectId: this.id,
+                tags: ''
+            };
+
+            if(node.tags != null) {
+                params.tags = node.tags.map((t) => t.id).join(',');
+            }
+
+            let id = await api.addIdea(params);
+            newNode.data.id = id;
+
         },
         clickNode: function( node ){
             this.$refs.addIdea.clickNode(node);

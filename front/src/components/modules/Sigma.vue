@@ -94,12 +94,12 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
 
                 this.sigmaInstance.graph.nodes().forEach(node => {
                     // check if current node is not itself
-                    if(node.id !== newNode.id || node.data.tags == null) 
-                        return;
+                    if(node.id == newNode.id || node.data.tags == null) 
+                        return true;
                     
                     node.data.tags.forEach(t => {
                         if(newNode.data.tags == null)
-                            return;
+                            return true;
 
                         // if two nodes have a tag in common
                         if(newNode.data.tags.some((tag) => tag.name === t.name)){
