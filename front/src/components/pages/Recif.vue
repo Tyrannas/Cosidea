@@ -45,7 +45,7 @@ export default {
                     tags.push(arr[Math.floor(Math.random()*arr.length)])
                 }
                 this.$refs.sigma.addNode({
-                    label: 'n' + i,
+                    title: 'n' + i,
                     tags: tags
                 });
             }
@@ -55,7 +55,8 @@ export default {
 
             if (proj === undefined) {
                 console.log('project === undefined');
-                this.isValid = false; return;
+                this.isValid = false;
+                return;
             }
             console.log(proj);
 

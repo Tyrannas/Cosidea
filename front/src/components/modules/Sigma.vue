@@ -37,9 +37,9 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 },
                 forceAtlasParameters: {
                     linLogMode: true,
-                    edgeWeightInfluence: 0.8,
-                    scalingRatio: 15,
-                    gravity: 0.2
+                    edgeWeightInfluence: 1,
+                    scalingRatio: 1,
+                    gravity: 1
                 }
             }
         },
@@ -113,11 +113,12 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                                         label: [t],
                                         size: 0.5,
                                         color: "#3997ff",
-                                        weight: 1
+                                        weight: 1,
+                                        type: 'curve'
                                     });
                                 // a node related to others is bigger
-                                this.sigmaInstance.graph.nodes(newNode.id).size += 0.1;
-                                node.size += 0.1;
+//                                this.sigmaInstance.graph.nodes(newNode.id).size += 0.1;
+//                                node.size += 0.1;
                             }
                         });
                     }
