@@ -31,7 +31,7 @@ export async function addProject( title: string, description: string, ownerId?: 
     .returning('id')
     .then((arr) => arr[0]);
 
-    def.tags.forEach( async (t) => {
+    def.tags.forEach( async (t:string) => {
         await tag.addTag(query, t);
     });
 
