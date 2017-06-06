@@ -62,7 +62,10 @@ export default {
         addNode: function(){
 
             let node = Object.assign({}, this.nodeParameters);
-            node.tags = node.tags.map((tag) => this.tagsIndex[tag]);
+            
+            if(node.tags != null)
+                node.tags = node.tags.map((tag) => this.tagsIndex[tag]);
+
 	        this.$emit("addNode", node);
             this.reset();
 
