@@ -25,6 +25,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
         name: 'sigma',
         data (){
             return {
+                tagCounter: {},
                 sigmaInstance: new sigma({
                     g : {
                         nodes: [],
@@ -34,10 +35,12 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                         }
                     }
                 }),
-                defaultParameters:{
+                config:{
                     nodeColor: "#ff951a",
                     edgeColor: "#3997ff",
-                    size: 1
+                    nodeSize: 1,
+                    edgeSize: 0.5,
+                    edgeWeight: 1
                 },
                 forceAtlasParameters: {
                     linLogMode: false,
@@ -48,6 +51,24 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
             }
         },
         methods : {
+            /**
+             * Fast accesor for Edges
+             * @param id
+             * @returns edge
+             * */
+            edges(id) {
+                if(!id) return this.sigmaInstance.graph.edges();
+                return this.sigmaInstance.graph.edges(id);
+            },
+            /**
+             * Fast accesor for dragNodes
+             * @param id
+             * @returns node
+             * */
+            nodes(id) {
+                if(!id) return this.sigmaInstance.graph.nodes();
+                return this.sigmaInstance.graph.nodes(id);
+            },
             /**
              toggle Force Atlas 2
              */
@@ -68,25 +89,26 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
 
                 // init Node
                 let newNode = {
-                    id : "N" + this.sigmaInstance.graph.nodes().length + 1,
+                    id : params.id,
                     label: params.title,
-                    color: this.defaultParameters.nodeColor,
+                    color: this.config.nodeColor,
                     x: Math.random(),
                     y: Math.random(),
-                    size: this.defaultParameters.size,
-                    data: params
+                    size: this.config.nodeSize,
+                    data: params,
+                    realSize: 0
                 };
 
                 // add the node to the graph
                 this.sigmaInstance.graph.addNode(newNode);
-
+                newNode = this.nodes(newNode.id);
                 // create links between new Node and previously existing ones
                 this.addEdge(newNode);
                 //console.log(this.sigmaInstance.graph.nodes());
                 this.bindEvents();
 
                 // returns the newly created node
-                return this.sigmaInstance.graph.nodes(newNode.id);
+                return newNode;
             },
             /**
              * create links between a node and the rest of the graph if they share tags
@@ -94,43 +116,142 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
              */
             addEdge: function( newNode ){
 
-                this.sigmaInstance.graph.nodes().forEach(node => {
-
-                    // check if current node is not itself
-                    if(node.id == newNode.id || node.data.tags == null) 
-                        return true;
+                newNode.data.tags.forEach((tag) => {
                     
-                    node.data.tags.forEach(t => {
-                        if(newNode.data.tags == null)
-                            return true;
+                    if(this.tagCounter[tag.name] == null || !this.tagCounter[tag.name].length) {
+                        this.tagCounter[tag.name] = [];
+                    }
+                    else {
 
-                        // if two nodes have a tag in common
-                        if(newNode.data.tags.some((tag) => tag.name === t.name)){
-                            let id = "E" + newNode.id + "-" + node.id;
+                        let nodes = this.tagCounter[tag.name];
+                        nodes.forEach((node) => {
+
+                            let id = this.createId(newNode.id, node.id);
 
                             // if there is already an existing edge increase it
-                            if(this.sigmaInstance.graph.edges(id) !== undefined){
-                                this.sigmaInstance.graph.edges(id).weight *= 1.05;
+                            if(this.edges(id) !== undefined){
+                                this.resizeEdge(this.edges(id), 1);
                             }
-
-                            // otherwise just create it
-                            else
+                            // else add new edge
+                            else {
                                 this.sigmaInstance.graph.addEdge({
                                     id : id,
                                     source: newNode.id,
                                     target: node.id,
-                                    label: [t],
-                                    size: 0.5,
+                                    label: [tag.name    ],
+                                    size: this.config.edgeSize,
                                     color: "#3997ff",
-                                    weight: 1,
-                                    type: 'curve'
+                                    weight: this.config.edgeWeight,
+                                    type: 'curve',
+                                    realSize: 1
                                 });
+                            }
                             // a node related to others is bigger
-                            this.sigmaInstance.graph.nodes(newNode.id).size += 0.2;
-                            node.size += 0.2;
-                        }
-                    });
+                            this.resizeNode(newNode, 1);
+                            this.resizeNode(node, 1);
+                        });
+                    }
+                    // insert node into tagCounter
+                    this.tagCounter[tag.name].push(newNode);
                 });
+            },
+            //     this.nodes().forEach(node => {
+
+            //         // check if current node is not itself
+            //         if(node.id == newNode.id || node.data.tags == null) 
+            //             return true;
+                    
+            //         node.data.tags.forEach(t => {
+            //             if(newNode.data.tags == null)
+            //                 return true;
+
+            //             // if two nodes have a tag in common
+            //             if(newNode.data.tags.some((tag) => tag.name === t.name)){
+            //                 let id = this.createId(newNode.id, node.id);
+
+            //                 // if there is already an existing edge increase it
+            //                 if(this.edges(id) !== undefined){
+            //                     this.resizeEdge(this.edges(id), 1);
+            //                 }
+
+            //                 // otherwise just create it
+            //                 else
+            //                     this.sigmaInstance.graph.addEdge({
+            //                         id : id,
+            //                         source: newNode.id,
+            //                         target: node.id,
+            //                         label: [t],
+            //                         size: this.config.edgeSize,
+            //                         color: "#3997ff",
+            //                         weight: this.config.edgeWeight,
+            //                         type: 'curve',
+            //                         realSize: 0
+            //                     });
+            //                 // a node related to others is bigger
+                            
+            //                 this.resizeNode(this.nodes(newNode.id), 1);
+            //                 this.resizeNode(node, 1);
+            //             }
+            //         });
+            //     });
+            // },
+            /**
+             * Resize Node by value
+             * @param value
+             **/
+            resizeNode( node, value ) {
+                node.realSize += value;
+                node.size = this.config.nodeSize + node.realSize * 0.2;
+            },
+            /**
+             * Resize Edge by value
+             * @param value
+             * */
+            resizeEdge( edge, value ) {
+                edge.realSize += value;
+                edge.weight = this.config.edgeWeight * Math.pow(1.05, edge.realSize);
+            },
+            /**
+             * Remove Edges from Graph
+             * @param node
+             * */
+            removeEdge: function( node ) {
+                //for each tag to be removed look into tagCounter lower edges
+                node.data.tags.forEach((tag) => {
+
+                    let nodes = this.tagCounter[tag.name];
+                    let index = -1, size = nodes.length;
+
+                    for(let i = 0; i < size; i++) {
+                        // if we found our node in the tagCounter remember index for delete
+                        if(nodes[i].id === node.id) {
+                            index = i;
+                            break;
+                        }
+                        // if we found another node, resize existing edge
+                        let id = this.createId(nodes[i].id, node.id);
+                        if(this.edges(id) !== undefined) {
+
+                            if(this.edges(id).realSize === 1)
+                                this.sigmaInstance.graph.dropEdge(id);
+                            else 
+                                this.resizeEdge(this.edges(id), -1);
+                        }
+                        // also resize nodes
+                        this.resizeNode(node, -1);
+                        this.resizeNode(nodes[i], -1);
+                    }
+                    // remove node from tagCounter
+                    this.tagCounter[tag.name].splice(index, 1);
+                });
+            },
+            /**
+             * update node data field
+             * @param node
+             * */
+            updateNode( node ) {
+                this.nodes(node.id).data = node.data;
+                this.nodes(node.id).label = node.title;
             },
             /**
              * builds the graph with a array of nodes
@@ -174,7 +295,20 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 // dragListener
                 let dragListener = sigma.plugins.dragNodes(this.sigmaInstance, this.sigmaInstance.renderers[0]);
                 this.sigmaInstance.refresh();
-            }
+            },
+            /**
+             * Creates Unique EdgeId
+             * @param nodeId1
+             * @param nodeId2
+             * @return id: string
+             * */
+            createId(nodeId1, nodeId2) {
+                nodeId1 = Number(nodeId1);
+                nodeId2 = Number(nodeId2);
+                if(nodeId1 < nodeId2) return '' + nodeId1 + nodeId2;
+                else if(nodeId2 < nodeId1) return '' + nodeId2 + nodeId1;
+                throw new Error('Edge between same nodes!');
+            },
         },
         props:null,
         mounted (){
@@ -183,7 +317,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 type: "canvas",
                 container: "graph-container",
                 nodeHoverColor: "default",
-                defaultNodeHoverColor: this.defaultParameters.edgeColor
+                defaultNodeHoverColor: this.config.edgeColor
             }).settings({
                 'maxNodeSize': 30,
             });
