@@ -46,7 +46,8 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                     edgeWeightInfluence: 1,
                     scalingRatio: 10,
                     gravity: 1
-                }
+                },
+                nodesId: 0
             }
         },
         methods : {
@@ -65,7 +66,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
              * @returns node
              * */
             nodes(id) {
-                if(!id) return this.sigmaInstance.graph.nodes();
+                if(id === undefined) return this.sigmaInstance.graph.nodes();
                 return this.sigmaInstance.graph.nodes(id);
             },
             /**
@@ -86,10 +87,15 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
              */
             addNode: function( params ){
 
+                console.log(params);
+                if(params.alges === undefined) {
+                    params.alges = [];
+                }
+
                 // init Node
                 let newNode = {
-                    id : params.id,
                     label: params.name,
+                    id : this.nodesId++,
                     color: this.config.nodeColor,
                     x: Math.random(),
                     y: Math.random(),
@@ -118,11 +124,12 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
              * @param newNode
              */
             addEdge: function( newNode ){
-
-                newNode.data.alges.forEach((alge) => {
+              console.log(newNode);
+              newNode.data.alges.forEach((alge) => {
  
                     if(this.algeCounter[alge.name] == null || !this.algeCounter[alge.name].length) {
                         this.algeCounter[alge.name] = [];
+
                     }
                     else {
 
@@ -225,7 +232,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
              * @param nodesArray
              */
             buildGraph: function( nodesArray ){
-
+                //console.log(nodesArray);
                 nodesArray.forEach(node => {
                     this.addNode( node );
                 })

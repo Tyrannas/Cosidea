@@ -31,7 +31,6 @@ export default {
 			forceAtlasStatus: "Start",
 			nodeParameters: {},
             oldCorail: undefined,
-			nodesId: 0
 		}
 	},
     mounted: function() {
