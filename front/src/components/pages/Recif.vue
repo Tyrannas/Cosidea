@@ -70,8 +70,9 @@ export default {
             this.$refs.sigma.removeEdge( coral.rm );
             //update node data
             this.$refs.sigma.updateNode( coral.new );
+
             //backend update
-            api.updateIdea(this.id, coral.new.id, coral.new.data.title, coral.new.data.description, this.token);
+            api.updateIdea(this.id, coral.new.data.id, coral.new.data.title, coral.new.data.description, this.token);
             coral.add.data.tags.forEach((tag) => api.addLink(this.id, coral.new.id, tag.id, this.token));
             coral.rm.data.tags.forEach((tag) => api.rmLink(this.id, coral.new.id, tag.id, this.token));
         },

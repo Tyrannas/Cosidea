@@ -118,7 +118,9 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
              * @param newNode
              */
             addEdge: function( newNode ){
-
+                console.log("popopop");
+                console.log(newNode);
+                
                 newNode.data.tags.forEach((tag) => {
                     
                     if(this.tagCounter[tag.name] == null || !this.tagCounter[tag.name].length) {
@@ -141,7 +143,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                                     id : id,
                                     source: newNode.id,
                                     target: node.id,
-                                    label: [tag.name    ],
+                                    label: [tag.name],
                                     size: this.config.edgeSize,
                                     color: "#3997ff",
                                     weight: this.config.edgeWeight,
@@ -273,8 +275,8 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
             createId(nodeId1, nodeId2) {
                 nodeId1 = Number(nodeId1);
                 nodeId2 = Number(nodeId2);
-                if(nodeId1 < nodeId2) return '' + nodeId1 + nodeId2;
-                else if(nodeId2 < nodeId1) return '' + nodeId2 + nodeId1;
+                if(nodeId1 < nodeId2) return '' + nodeId1 + '-' + nodeId2;
+                else if(nodeId2 < nodeId1) return '' + nodeId2 + '-' + nodeId1;
                 throw new Error('Edge between same nodes!');
             },
         },
