@@ -126,7 +126,9 @@ export default {
 
         },
         removeNode: function() {
-
+            let node = Object.assign({}, this.oldNode);
+            this.$emit('removeNode', node);
+            this.reset();
         },
         clickNode: function( node ){
             this.reset();
