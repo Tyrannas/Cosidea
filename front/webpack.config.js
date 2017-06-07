@@ -50,6 +50,7 @@ module.exports = {
     proxy: {
         "/api/**": {
         target: "http://93.113.206.83:3000/",
+        //target: "http://localhost:3000/",
         pathRewrite: {
                     "^/api": ""
         }

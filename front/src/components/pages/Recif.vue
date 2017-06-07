@@ -60,18 +60,20 @@ export default {
             if(node.tags != null) {
                 params.tags = node.tags.map((t) => t.id).join(',');
             }
-
+            
             let id = await api.addIdea(params);
             newNode.data.id = id;
 
         },
-        updateNode(info) {
-            this.$refs.sigma.addEdge( info.add );
-            this.$refs.sigma.removeEdge( info.rm );
+        updateNode(coral) {
+            this.$refs.sigma.addEdge( coral.add );
+            this.$refs.sigma.removeEdge( coral.rm );
             //update node data
-            this.$refs.sigma.updateNode( info.new );
+            this.$refs.sigma.updateNode( coral.new );
             //backend update
-            api.updateIdea(this.id, this.token, info.new.id, info.new.data.title, info.new.data.description);
+            api.updateIdea(this.id, coral.new.id, coral.new.data.title, coral.new.data.description, this.token);
+            coral.add.data.tags.forEach((tag) => api.addLink(this.id, coral.new.id, tag.id, this.token));
+            coral.rm.data.tags.forEach((tag) => api.rmLink(this.id, coral.new.id, tag.id, this.token));
         },
         clickNode: function( node ){
             this.$refs.addIdea.clickNode(node);

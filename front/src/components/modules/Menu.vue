@@ -107,11 +107,17 @@ export default {
         },
         addNode: function(){
 
+            // copy node params and assign default id
             let node = Object.assign({}, this.nodeParameters);
-            
-            if(node.tags != null)
-                node.tags = node.tags.map((tagName) => this.tagsIndex[tagName]);
+            node.id = 'default_tmp_id';
 
+            // Get full tag object from tagName
+            if(node.tags !== null && node.tags !== undefined)
+                node.tags = node.tags.map((tagName) => this.tagsIndex[tagName]);
+            else
+                node.tags = [];
+
+            // emit update event
 	        this.$emit("addNode", node);
             this.reset();
 
