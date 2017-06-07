@@ -10,22 +10,33 @@ Created by Orion 2017
 				:options="tagsNames"
                 @tag="addTag"
                 :taggable="true"
-                :multiple="true">
+                :multiple="true"
+                tag-placeholder="Creer nouveau tag"
+                placeholder="Ajouter tag"
+                selectLabel="Selectionner"
+        >
 		</multiselect>
 		<textarea class="myInput" placeholder="Description" v-model="nodeParameters.description"></textarea>
 		<a class="myButton" v-on:click="submitNode"><span v-if="!charged">addNode</span><span v-else>updateNode</span></a>
         <a class="myButton" v-on:click="toggleForceAtlas">{{forceAtlasStatus}}</a>
+        <taginput
+                v-model="nodeParameters.tags"
+                tagValues="tagsNames"
+        ></taginput>
 	</nav>
 </template>
 
 
 <script>
 import * as api from '../../lib/backendApi';
-import multiselect from 'vue-multiselect'
+import multiselect from '../../../node_modules/vue-multiselect/src/Multiselect.vue'
+import taginput from '../modules/TagInput.vue'
+
 export default {
 	name: 'menu',
 	components: {
-	    'multiselect': multiselect
+	    'multiselect': multiselect,
+        'taginput': taginput
 	},
     props: ['tags'],
 	data (){
@@ -479,6 +490,11 @@ export default {
         background: #ededed;
         pointer-events: none;
     }
-
+    .deleteTag{
+        background: indianred;
+        padding: 0.5rem;
+        color: white;
+        float: left;
+    }
 
 </style>
