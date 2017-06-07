@@ -119,8 +119,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
              * @param newNode
              */
             addEdge: function( newNode ){
-                console.log("popopop");
-                console.log(newNode);
+                newNode = newNode[0];
 
                 newNode.data.tags.forEach((tag) => {
                     
@@ -229,10 +228,9 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
              * @param nodesArray
              */
             buildGraph: function( nodesArray ){
-
                 nodesArray.forEach(node => {
                     this.addNode( node );
-                })
+                });
             },
             /**
              * reset the graph
