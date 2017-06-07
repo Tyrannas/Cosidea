@@ -5,6 +5,7 @@
     <sideBar ref="addIdea" id="addIdea"
              v-on:toggleForceAtlas="toggleForceAtlas"
              v-on:addNode="addNode"
+             v-on:updateNode="updateNode"
              v-bind:tags="tags"
     ></sideBar>
     <div v-if="connected">Project: {{ title }} <br /> {{ description }} </div>
@@ -63,6 +64,11 @@ export default {
             let id = await api.addIdea(params);
             newNode.data.id = id;
 
+        },
+        updateNode(info) {
+            this.$refs.sigma.addEdge( info.add );
+            this.$refs.sigma.removeEdge( info.rm );
+            this.$refs.sigma.updateNode( info.new );
         },
         clickNode: function( node ){
             this.$refs.addIdea.clickNode(node);

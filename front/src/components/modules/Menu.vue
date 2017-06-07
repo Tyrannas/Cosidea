@@ -11,7 +11,7 @@ Created by Orion 2017
                 :multiple="true">
 		</multiselect>
 		<textarea class="myInput" placeholder="Description" v-model="nodeParameters.description"></textarea>
-		<a class="myButton" v-on:click="addNode">addNode</a>
+		<a class="myButton" v-on:click="submitNode"><span v-if="!charged">addNode</span><span v-else>updateNode</span></a>
         <a class="myButton" v-on:click="toggleForceAtlas">{{forceAtlasStatus}}</a>
 	</nav>
 </template>
@@ -30,7 +30,7 @@ export default {
 		return {
 			forceAtlasStatus: "Start",
 			nodeParameters: {},
-            isNew: true
+            oldCorail: undefined
 		}
 	},
     mounted: function() {
@@ -44,6 +44,9 @@ export default {
             let index = {};
             this.tags.forEach((tag) => index[tag.name] = tag);
             return index; 
+        },
+        charged: function() {
+            return this.oldCorail !== undefined;
         }
     },
     methods: {
@@ -53,25 +56,69 @@ export default {
 				tags: null,
 				description : ""
             };
-            this.isNew = true;
+            this.oldCorail = undefined;
         },
 	    toggleForceAtlas: function(){
 	        this.$emit("toggleForceAtlas");
 	        this.forceAtlasStatus = this.forceAtlasStatus === "Start" ? "Stop" : "Start";
+        },
+        submitNode: function() {
+            // if is not charged, its a new node
+            if(!this.charged) {
+                this.addNode();
+                return;
+            }
+
+            let corail = Object.assign({}, this.nodeParameters);
+            if(corail.tags != null)
+                corail.tags = corail.tags.map((tagName) => this.tagsIndex[tagName]);
+            
+            let toAdd = { id: this.oldCorail.id, data: {tags: [] }};
+            let toRem = { id: this.oldCorail.id, data: {tags: [] }};
+            let updated = { id: this.oldCorail.id, data: corail };
+
+            let indexer = {};
+            // for each tag that we had before mark true
+            this.oldCorail.data.tags.forEach((tag) => {
+                indexer[tag.name] = true;
+            });
+            // for each node delete key if is not new, else add node
+            this.nodeParameters.tags.forEach((tagName) => {
+                // is old
+                if(indexer[tagName] !== undefined) {
+                    delete indexer[tagName];
+                }
+                // is new
+                else {
+                    toAdd.data.tags.push(this.tagsIndex[tagName]);
+                }
+            });
+
+            // The key in indexer now gives us the deleted tags
+            Object.keys(indexer).forEach((tagName) => {
+                toRem.data.tags.push(this.tagsIndex[tagName]);
+            });
+
+            console.log(toAdd);
+            console.log(toRem);
+            this.$emit('updateNode', { new: updated, add: toAdd, rm: toRem });
+            
+            this.reset();
         },
         addNode: function(){
 
             let node = Object.assign({}, this.nodeParameters);
             
             if(node.tags != null)
-                node.tags = node.tags.map((tag) => this.tagsIndex[tag]);
+                node.tags = node.tags.map((tagName) => this.tagsIndex[tagName]);
 
 	        this.$emit("addNode", node);
             this.reset();
 
         },
         clickNode: function( node ){
-            this.isNew = false;
+            this.reset();
+            this.oldCorail = Object.assign( {}, node );
             this.nodeParameters.title = node.data.title;
             this.nodeParameters.tags = node.data.tags.map((t) => t.name);
             this.nodeParameters.description = node.data.description;
