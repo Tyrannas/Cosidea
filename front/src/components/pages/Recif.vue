@@ -74,10 +74,10 @@ export default {
             
             //backend update
             console.log(corail.new.data);
-            
+
             api.updateCorail(this.id, corail.new.data.id, corail.new.data.name, corail.new.data.description, this.token);
-            corail.add.data.tags.forEach((tag) => api.addLink(this.id, corail.new.id, tag.id, this.token));
-            corail.rm.data.tags.forEach((tag) => api.rmLink(this.id, corail.new.id, tag.id, this.token));
+            corail.add.data.tags.forEach((tag) => api.addLink(this.id, corail.new.data.id, tag.id, this.token));
+            corail.rm.data.tags.forEach((tag) => api.rmLink(this.id, corail.new.data.id, tag.id, this.token));
 
         },
         clickNode: function( node ){
