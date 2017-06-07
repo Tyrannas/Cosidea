@@ -85,7 +85,8 @@ export default {
                 }
                 this.$refs.sigma.addNode({
                     title: 'n' + i,
-                    tags: tags
+                    tags: tags,
+                    id: Math.random()
                 });
             }
         },
