@@ -48,3 +48,18 @@ export function getByRecif(recifId: RecifId): Promise<Tag[]> {
 
     return query;
 }
+
+/**
+ * Remove Tag from Recif
+ * @param recifId
+ * @param tagId
+ */
+export function remove(recifId: RecifId, tagId: TagId) {
+
+    let query = db(table.tag).where({
+        recif_id: recifId,
+        id: tagId
+    }).del();
+
+    return query;
+}

@@ -53,10 +53,11 @@ export async function removeCorail(recifId: RecifId, corailId: CorailId): Promis
         return Promise.reject("RecifId and CorailId needed for delete");
     }
     try {
-        //  Delete relation between corail and tags
-        await db(table.corail_tag_rel).where('corail_id', corailId).del();
-        //  Delete corail
-        await db(table.corail).where('id', corailId).del();
+        // //  Delete corail
+        await db(table.corail).where({
+            id: corailId,
+            recif_id: recifId
+        }).del();
         
         return true;
     }
