@@ -122,6 +122,7 @@ async function getToken(recifId, password) {
     let parmas = {recifId: recifId, pwd: password};
     let query = {url: '/api/auth/recif', qs: parmas };
 
+
     let body = await get(query);
 
     if(body === undefined || body.err) {

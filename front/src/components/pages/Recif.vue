@@ -68,12 +68,15 @@ export default {
         updateNode(corail) {
             this.$refs.sigma.addEdge( corail.add );
             this.$refs.sigma.removeEdge( corail.rm );
+
             //update node data
             this.$refs.sigma.updateNode( corail.new );
+            
             //backend update
             api.updateCorail(this.id, corail.new.id, corail.new.data.name, corail.new.data.description, this.token);
             corail.add.data.alges.forEach((alge) => api.addLink(this.id, corail.new.id, alge.id, this.token));
             corail.rm.data.alges.forEach((alge) => api.rmLink(this.id, corail.new.id, alge.id, this.token));
+
         },
         clickNode: function( node ){
             this.$refs.addCorail.clickNode(node);

@@ -30,7 +30,8 @@ export default {
 		return {
 			forceAtlasStatus: "Start",
 			nodeParameters: {},
-            oldCorail: undefined
+            oldCorail: undefined,
+			nodesId: 0
 		}
 	},
     mounted: function() {
@@ -109,11 +110,12 @@ export default {
 
             // copy node params and assign default id
             let node = Object.assign({}, this.nodeParameters);
-            node.id = 'default_tmp_id';
 
+            node.id = this.nodesId++;
             // Get full alge object from algeName
             if(node.alges !== null && node.alges !== undefined)
                 node.alges = node.alges.map((algeName) => this.algesIndex[algeName]);
+            
             else
                 node.alges = [];
 
