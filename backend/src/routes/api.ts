@@ -5,14 +5,16 @@ import * as info        from './info';
 import * as rm          from './rm';
 import * as update      from './update';
 
+//  Default message for request errors
 export class ReqError {
     err:boolean = true;
-    constructor(public msg: string){}
+    constructor( public msg: any ) {}
 }
 
-export class ReqSucces {
+//  Default message for request success
+export class ReqSuccess {
     succes: boolean = true;
-    constructor(public msg: any) {}
+    constructor( public msg: any ) {}
 }
 
 //  Initialise API Router

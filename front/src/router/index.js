@@ -14,8 +14,8 @@ export default new Router({
       component: Home
     },
     {
-      path: '/:project',
-      name: 'recif',
+      path: '/:recif',
+      name: 'Recif',
       component: Recif
     }
   ]

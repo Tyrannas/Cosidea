@@ -1,21 +1,21 @@
-<!--Recif Component, a recif is a room instance of a project-->
+<!--Recif Component, a recif is a room instance of a recif-->
 
 <template>
   <div id="test">
-    <sideBar ref="addIdea" id="addIdea"
+    <sideBar ref="addCorail" id="addCorail"
              v-on:toggleForceAtlas="toggleForceAtlas"
              v-on:addNode="addNode"
              v-on:updateNode="updateNode"
-             v-bind:tags="tags"
+             v-bind:alges="alges"
     ></sideBar>
-    <div v-if="connected">Project: {{ title }} <br /> {{ description }} </div>
+    <div v-if="connected">Recif: {{ name }} <br /> {{ description }} </div>
     <div v-else>Create room?
         <input type="text" v-model="description" placeholder="description" />
-        <button type="submit" v-on:click="addProject">YES!</button>
+        <button type="submit" v-on:click="addRecif">YES!</button>
     </div>
     <sigma ref="sigma"
            v-on:clickNode="clickNode"
-           v-on:clickStage="clickStage"
+           v-on:clickSalgee="clickSalgee"
     ></sigma>
   </div>
 </template>
@@ -29,13 +29,13 @@ export default {
     name: 'recif',
     data () {
         return {
-            title:           this.$route.params.project,
+            name:           this.$route.params.recif,
             id:             undefined,
             description:    '',
             isProtected:    false,
             token:          undefined,
 
-            tags: [],
+            alges: [],
 
             isValid:        true,
             isAuth:         false
@@ -51,89 +51,90 @@ export default {
             let newNode = this.$refs.sigma.addNode( node );
             
             let params = {
-                title: node.title,
-                desc: node.description,
-                projectId: this.id,
-                tags: ''
+                name: node.name,
+                description: node.description,
+                recifId: this.id,
+                alges: ''
             };
 
-            if(node.tags != null) {
-                params.tags = node.tags.map((t) => t.id).join(',');
+            if(node.alges != null) {
+                params.alges = node.alges.map((t) => t.id).join(',');
             }
             
-            let id = await api.addIdea(params);
+            let id = await api.addCorail(params);
             newNode.data.id = id;
 
         },
-        updateNode(coral) {
-            this.$refs.sigma.addEdge( coral.add );
-            this.$refs.sigma.removeEdge( coral.rm );
-            //update node data
-            this.$refs.sigma.updateNode( coral.new );
+        updateNode(corail) {
+            this.$refs.sigma.addEdge( corail.add );
+            this.$refs.sigma.removeEdge( corail.rm );
 
+            //update node data
+            this.$refs.sigma.updateNode( corail.new );
+            
             //backend update
-            api.updateIdea(this.id, coral.new.data.id, coral.new.data.title, coral.new.data.description, this.token);
-            coral.add.data.tags.forEach((tag) => api.addLink(this.id, coral.new.id, tag.id, this.token));
-            coral.rm.data.tags.forEach((tag) => api.rmLink(this.id, coral.new.id, tag.id, this.token));
+            api.updateCorail(this.id, corail.new.id, corail.new.data.name, corail.new.data.description, this.token);
+            corail.add.data.alges.forEach((alge) => api.addLink(this.id, corail.new.id, alge.id, this.token));
+            corail.rm.data.alges.forEach((alge) => api.rmLink(this.id, corail.new.id, alge.id, this.token));
+
         },
         clickNode: function( node ){
-            this.$refs.addIdea.clickNode(node);
+            this.$refs.addCorail.clickNode(node);
         },
-        clickStage: function(){
-            this.$refs.addIdea.reset();
+        clickSalgee: function(){
+            this.$refs.addCorail.reset();
         },
         testApplication: function(){
-            let arr = this.$refs.addIdea.tagsValues;
+            let arr = this.$refs.addCorail.algesValues;
             for(let i = 0; i < 150; ++i){
-                let tags = [];
+                let alges = [];
                 for(let i = 0; i < Math.floor(Math.random() * 3); ++i){
-                    tags.push(arr[Math.floor(Math.random()*arr.length)])
+                    alges.push(arr[Math.floor(Math.random()*arr.length)])
                 }
                 this.$refs.sigma.addNode({
-                    title: 'n' + i,
-                    tags: tags,
+                    name: 'n' + i,
+                    alges: alges,
                     id: Math.random()
                 });
             }
         },
         init: async function() {
-            let proj = await api.getProject(this.title);
+            let recif = await api.getRecif(this.name);
 
-            if (proj === undefined) {
-                console.log('project === undefined');
+            if (recif === undefined) {
+                console.log('recif === undefined');
                 this.isValid = false;
 
                 return;
             }
             this.isValid = true;
-            console.log(proj);
+            console.log(recif);
 
-            this.id = proj.id;
-            this.description = proj.description;
-            this.isProtected = proj.protect;
+            this.id = recif.id;
+            this.description = recif.description;
+            this.isProtected = recif.isProtected;
 
             if(this.description == null) 
                 this.description = '';
 
             if (this.connected)
             {
-                let taggedIdeas = await api.getIdeas(this.id);
-                this.tags = await api.getTags(this.id);
+                let corails = await api.getCorails(this.id);
+                this.alges = await api.getAlges(this.id);
 
-                console.log(taggedIdeas);
-                this.$refs.sigma.buildGraph( taggedIdeas );
+                this.$refs.sigma.buildGraph( corails );
             }
         },
-        addProject: async function() {
+        addRecif: async function() {
             
             let params = {
-                title: this.title,
-                desc: this.description,
+                name: this.name,
+                description: this.description,
             };
 
-            let id = await api.addProject(params);
+            let id = await api.addRecif(params);
             if(id === undefined) {
-                alert('Error creating Project..');
+                alert('Error creating Recif..');
             }
             else {
                 this.init();
@@ -161,10 +162,10 @@ export default {
     },
     watch: {
         $route: function(route) {
-            let newTitle = route.params.project;
-            if(newTitle !== this.title) {
+            let newTitle = route.params.recif;
+            if(newTitle !== this.name) {
                 this.clear();
-                this.title = newTitle;
+                this.name = newTitle;
                 this.init();
             }
         }
@@ -175,7 +176,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
 
-#addIdea {
+#addCorail {
     float: right;
     z-index: 2;
 }
