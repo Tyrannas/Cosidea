@@ -2,29 +2,29 @@ import {db} from './db';
 import * as table from '../config/tables';
 import {RecifId} from './recif';
 
-export type AlgeId = number;
+export type TagId = number;
 
-export class Alge {
-    id: AlgeId;
+export class Tag {
+    id: TagId;
     constructor(public recif_id: RecifId, public name: string) {}
 }
 
 /**
- * Add an Alge to a Recif
+ * Add an Tag to a Recif
  * @param recifId
  * @param name
- * @return {Promise.<AlgeId>}
+ * @return {Promise.<TagId>}
  */
-export function addAlge(recifId: RecifId, name: string): Promise<AlgeId> {
+export function addTag(recifId: RecifId, name: string): Promise<TagId> {
 
     if(name == undefined || name.length < 1) {
-        return Promise.reject("Alge needs name");
+        return Promise.reject("Tag needs name");
     }
 
-    let alge = new Alge(recifId, name);
+    let tag = new Tag(recifId, name);
 
-    let query = db(table.alge)
-    .insert(alge)
+    let query = db(table.tag)
+    .insert(tag)
     .returning('id')
     .then((arr) => arr[0]);
 
@@ -32,17 +32,17 @@ export function addAlge(recifId: RecifId, name: string): Promise<AlgeId> {
 }
 
 /**
- * Get all Alges in some Recif
+ * Get all Tags in some Recif
  * @param recifId
- * @returns {Promise.<Alge[]>}
+ * @returns {Promise.<Tag[]>}
  */
-export function getByRecif(recifId: RecifId): Promise<Alge[]> {
+export function getByRecif(recifId: RecifId): Promise<Tag[]> {
 
     if(recifId === undefined) {
         return Promise.reject("recif undefined");
     }
 
-    let query = db(table.alge)
+    let query = db(table.tag)
     .select('*')
     .where('recif_id', recifId);
 

@@ -1,7 +1,7 @@
 import {db}             from './db';
 import * as table       from '../config/tables';
 import * as defaults    from '../config/default';
-import * as alge         from './alge';
+import * as tag         from './tag';
 
 export type RecifId = number;
 
@@ -41,9 +41,9 @@ export async function addRecif( name: string, description: string, isProtected?:
     .returning('id')
     .then((arr) => arr[0]);
 
-    // Add default Alges to Recif
-    defaults.alges.forEach( async (a:string) => {
-        await alge.addAlge(query, a);
+    // Add default Tags to Recif
+    defaults.tags.forEach( async (a:string) => {
+        await tag.addTag(query, a);
     });
 
     return query;

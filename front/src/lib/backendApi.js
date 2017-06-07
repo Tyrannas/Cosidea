@@ -41,7 +41,7 @@ let post = function(option) {
 
 /*
  * local api to communicate with backend
- * add corails, alges, create new recifs and many more...
+ * add corails, tags, create new recifs and many more...
  */
 
 
@@ -62,14 +62,14 @@ export async function addCorail( params ){
 
 
 /**
- * add a new Alge to a recif
+ * add a new Tag to a recif
  * @param vue
- * @param params : recif corail, alge name, optional: token
+ * @param params : recif corail, tag name, optional: token
  * @returns {Promise.<*>}
  */
-export async function addAlge( vue, params ){
+export async function addTag( vue, params ){
 
-    let request = `/api/create/alge/${params.recifId}/${params.alge}?token=${params.token}`;
+    let request = `/api/create/tag/${params.recifId}/${params.tag}?token=${params.token}`;
     return await vue.$http.post(request);
 }
 
@@ -155,7 +155,7 @@ export async function getCorails(recifId, token) {
 }
 
 export async function updateCorail(recifId, corailId, name, description, token) {
-    console.log('new description: ' + description);
+    console.log('corail id: ' + corailId);
     let params = {
         recifId: recifId,
         corailId: corailId,
@@ -174,18 +174,18 @@ export async function updateCorail(recifId, corailId, name, description, token) 
     return body.msg;
 }
 /**
- * add link between coral and alge
+ * add link between coral and tag
  * @param recifId
  * @param corailId
- * @param algeId
+ * @param tagId
  * @param token
  */
-export async function addLink( recifId, corailId, algeId, token ) {
-    console.log(recifId + ' ' + corailId + ' ' + algeId);
+export async function addLink( recifId, corailId, tagId, token ) {
+    console.log(recifId + ' ' + corailId + ' ' + tagId);
     let params = {
         recifId: recifId,
         corailId: corailId,
-        algeId: algeId,
+        tagId: tagId,
         token: token
     };
     let query = { url: '/api/create/link', qs: params };
@@ -199,18 +199,18 @@ export async function addLink( recifId, corailId, algeId, token ) {
     return body.msg;
 }
 /**
- * remove link between coral and alge
+ * remove link between coral and tag
  * @param recifId
  * @param corailId
- * @param algeId
+ * @param tagId
  * @param token
  */
-export async function rmLink(  recifId, corailId, algeId, token ) {
+export async function rmLink(  recifId, corailId, tagId, token ) {
 
     let params = {
         recifId: recifId,
         corailId: corailId,
-        algeId: algeId,
+        tagId: tagId,
         token: token
     };
     let query = { url: '/api/rm/link', qs: params };
@@ -232,14 +232,14 @@ export async function getRecifs() {
 }
 
 /**
- * Get Alges from Recif 
+ * Get Tags from Recif 
  * @param recifId
- * @returns Alges[]
+ * @returns Tags[]
  */
-export async function getAlges(recifId) {
+export async function getTags(recifId) {
 
     let params = { recifId: recifId };
-    let query = { url: '/api/info/alge', qs: params};
+    let query = { url: '/api/info/tag', qs: params};
 
     let body = await get(query).catch(() => undefined);
 

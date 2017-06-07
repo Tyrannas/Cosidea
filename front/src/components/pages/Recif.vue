@@ -6,7 +6,7 @@
              v-on:toggleForceAtlas="toggleForceAtlas"
              v-on:addNode="addNode"
              v-on:updateNode="updateNode"
-             v-bind:alges="alges"
+             v-bind:tags="tags"
     ></sideBar>
     <div v-if="connected">Recif: {{ name }} <br /> {{ description }} </div>
     <div v-else>Create room?
@@ -15,7 +15,7 @@
     </div>
     <sigma ref="sigma"
            v-on:clickNode="clickNode"
-           v-on:clickSalgee="clickSalgee"
+           v-on:clickStage="clickStage"
     ></sigma>
   </div>
 </template>
@@ -35,7 +35,7 @@ export default {
             isProtected:    false,
             token:          undefined,
 
-            alges: [],
+            tags: [],
 
             isValid:        true,
             isAuth:         false
@@ -54,11 +54,11 @@ export default {
                 name: node.name,
                 description: node.description,
                 recifId: this.id,
-                alges: ''
+                tags: ''
             };
 
-            if(node.alges != null) {
-                params.alges = node.alges.map((t) => t.id).join(',');
+            if(node.tags != null) {
+                params.tags = node.tags.map((t) => t.id).join(',');
             }
             
             let id = await api.addCorail(params);
@@ -73,27 +73,29 @@ export default {
             this.$refs.sigma.updateNode( corail.new );
             
             //backend update
-            api.updateCorail(this.id, corail.new.id, corail.new.data.name, corail.new.data.description, this.token);
-            corail.add.data.alges.forEach((alge) => api.addLink(this.id, corail.new.id, alge.id, this.token));
-            corail.rm.data.alges.forEach((alge) => api.rmLink(this.id, corail.new.id, alge.id, this.token));
+            console.log(corail.new.data);
+
+            api.updateCorail(this.id, corail.new.data.id, corail.new.data.name, corail.new.data.description, this.token);
+            corail.add.data.tags.forEach((tag) => api.addLink(this.id, corail.new.data.id, tag.id, this.token));
+            corail.rm.data.tags.forEach((tag) => api.rmLink(this.id, corail.new.data.id, tag.id, this.token));
 
         },
         clickNode: function( node ){
             this.$refs.addCorail.clickNode(node);
         },
-        clickSalgee: function(){
+        clickStage: function(){
             this.$refs.addCorail.reset();
         },
         testApplication: function(){
-            let arr = this.$refs.addCorail.algesValues;
+            let arr = this.$refs.addCorail.tagsValues;
             for(let i = 0; i < 150; ++i){
-                let alges = [];
+                let tags = [];
                 for(let i = 0; i < Math.floor(Math.random() * 3); ++i){
-                    alges.push(arr[Math.floor(Math.random()*arr.length)])
+                    tags.push(arr[Math.floor(Math.random()*arr.length)])
                 }
                 this.$refs.sigma.addNode({
                     name: 'n' + i,
-                    alges: alges,
+                    tags: tags,
                     id: Math.random()
                 });
             }
@@ -120,7 +122,7 @@ export default {
             if (this.connected)
             {
                 let corails = await api.getCorails(this.id);
-                this.alges = await api.getAlges(this.id);
+                this.tags = await api.getTags(this.id);
 
                 this.$refs.sigma.buildGraph( corails );
             }

@@ -1,5 +1,5 @@
 export let recif = 'recif';
 export let corail = 'corail';
-export let alge = 'alge';
-export let corail_alge_rel = 'corail_alge_rel';
+export let tag = 'tag';
+export let corail_tag_rel = 'corail_tag_rel';
 export let user = 'user';
