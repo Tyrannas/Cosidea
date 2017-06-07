@@ -1,21 +1,25 @@
 import * as express from 'express';
-import * as project from '../model/project';
-import * as idea    from '../model/idea';
+import * as recif from '../model/recif';
+import * as corail    from '../model/corail';
 import * as user    from '../model/user';
 import * as bcrypt  from 'bcrypt';
 import * as jwt     from 'jsonwebtoken';
-import {ReqError}   from './api';
+import {ReqError, ReqSuccess}   from './api';
 
 
 export let router = express.Router();
 
+/**
+ * Auth Recif route
+ * @param recifId
+ * @param pwd
+ */
+router.get('/recif/', async (req, res) => {
 
-router.get('/project/', async (req, res) => {
-
-    let id   = req.query.projectId;
+    let id   = req.query.recifId;
     let pwd  = req.query.pwd;
 
-    let proj = await project.find(id);
+    let proj = await recif.find(id);
     
     if(proj === undefined) {
         res.json(new ReqError('Project not found'));
@@ -33,12 +37,17 @@ router.get('/project/', async (req, res) => {
         return;
     }
 
-    let token = jwt.sign({ project: proj.id } as any, req.app.get('secret'), { expiresIn: '24h' });
+    let token = jwt.sign({ recif: proj.id } as any, req.app.get('secret'), { expiresIn: '24h' });
 
-    res.json({projectId: proj.id, token: token});
+    res.json( new ReqSuccess({recifId: proj.id, token: token}));
  
 });
 
+/**
+ * Auth user route
+ * @param name
+ * @param pwd
+ */
 router.get('/user', async (req, res) => {
 
     let name = req.query.name;
@@ -60,46 +69,52 @@ router.get('/user', async (req, res) => {
 
     let token = jwt.sign({ data: usr.id } as any, req.app.get('secret'), { expiresIn: '24h' });
     
-    res.json({ id: usr.id, token: token });
+    res.json( new ReqSuccess({ id: usr.id, token: token }) );
 });
 
+/**
+ * middleware for route auth by recifId and token
+ */
+export async function secureRecif(req: express.Request, res: express.Response, next: express.NextFunction) {
 
-export async function secureProject(req: express.Request, res: express.Response, next: express.NextFunction) {
-
-    //console.log('secure project');
+    //console.log('secure recif');
     let token   = req.query.token;
-    let id      = req.query.projectId;
+    let id      = req.query.recifId;
 
     if(id === undefined) {
-        res.json(new ReqError('Needs projectId'));
+        res.json(new ReqError('Needs recifId'));
         return;
     }
 
-    let proj = await project.find(id);
+    let rec = await recif.find(id);
     
-    if (proj === undefined) {
+    //  if recif doesn't exist
+    if (rec === undefined) {
         res.json(new ReqError('Project not found'));
         return;
     }
 
-    if (proj.isProtected) {
+    // if Recif is protected
+    if (rec.isProtected) {
         if (token === undefined) {
             res.json(new ReqError('Project is protected, no connection token found'));
             return;
         }
 
-
+        // verify token
         jwt.verify(token, req.app.get('secret'), (err: any, decode: any) => {
 
-            if (err || decode.project !== proj.id) {
-                res.json(new ReqError('Wrong token, please connect to the project first'));
+            if (err || decode.recif !== rec.id) {
+                res.json(new ReqError('Wrong token, please connect to the recif first'));
                 return;
             }
+            // token is ok, we can go to route
             else {
                 next();
             }
         });
     }
+    // Recif is not protected, we can go to route
     else {
         next();
     }

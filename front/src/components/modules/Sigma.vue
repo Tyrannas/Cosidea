@@ -24,7 +24,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
         name: 'sigma',
         data (){
             return {
-                tagCounter: {},
+                algeCounter: {},
                 sigmaInstance: new sigma({
                     g : {
                         nodes: [],
@@ -81,7 +81,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 }
             },
             /**
-             add a Node to the graph, and create links if common tags
+             add a Node to the graph, and create links if common alges
              * @returns new node
              */
             addNode: function( params ){
@@ -89,7 +89,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 // init Node
                 let newNode = {
                     id : params.id,
-                    label: params.title,
+                    label: params.name,
                     color: this.config.nodeColor,
                     x: Math.random(),
                     y: Math.random(),
@@ -114,19 +114,19 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 return newNode;
             },
             /**
-             * create links between a node and the rest of the graph if they share tags
+             * create links between a node and the rest of the graph if they share alges
              * @param newNode
              */
             addEdge: function( newNode ){
 
-                newNode.data.tags.forEach((tag) => {
+                newNode.data.alges.forEach((alge) => {
                     
-                    if(this.tagCounter[tag.name] == null || !this.tagCounter[tag.name].length) {
-                        this.tagCounter[tag.name] = [];
+                    if(this.algeCounter[alge.name] == null || !this.algeCounter[alge.name].length) {
+                        this.algeCounter[alge.name] = [];
                     }
                     else {
 
-                        let nodes = this.tagCounter[tag.name];
+                        let nodes = this.algeCounter[alge.name];
                         nodes.forEach((node) => {
 
                             let id = this.createId(newNode.id, node.id);
@@ -141,7 +141,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                                     id : id,
                                     source: newNode.id,
                                     target: node.id,
-                                    label: [tag.name    ],
+                                    label: [alge.name    ],
                                     size: this.config.edgeSize,
                                     color: "#3997ff",
                                     weight: this.config.edgeWeight,
@@ -154,10 +154,10 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                             this.resizeNode(node, 1);
                         });
                     }
-                    // insert node into tagCounter
-                    this.tagCounter[tag.name].push(newNode);
-                    console.log('new tagCounter');
-                    console.log(this.tagCounter);
+                    // insert node into algeCounter
+                    this.algeCounter[alge.name].push(newNode);
+                    console.log('new algeCounter');
+                    console.log(this.algeCounter);
                 });
             },
             /**
@@ -182,20 +182,20 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
              * @param node
              * */
             removeEdge: function( node ) {
-                //for each tag to be removed look into tagCounter lower edges
-                node.data.tags.forEach((tag) => {
+                //for each alge to be removed look into algeCounter lower edges
+                node.data.alges.forEach((alge) => {
 
-                    let nodes = this.tagCounter[tag.name];
+                    let nodes = this.algeCounter[alge.name];
                     let index = -1, size = nodes.length;
 
                     for(let i = 0; i < size; i++) {
 
-                        // if we found our node in the tagCounter remember index for delete
+                        // if we found our node in the algeCounter remember index for delete
                         if(nodes[i].id === node.id) {
                             index = i;
                             continue;
                         }
-                        console.log(nodes[i].data.title);
+                        console.log(nodes[i].data.name);
                         // if we found another node, resize existing edge
                         let id = this.createId(nodes[i].id, node.id);
                         if(this.edges(id) !== undefined) {
@@ -209,8 +209,8 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                         this.resizeNode(node, -1);
                         this.resizeNode(nodes[i], -1);
                     }
-                    // remove node from tagCounter
-                    this.tagCounter[tag.name].splice(index, 1);
+                    // remove node from algeCounter
+                    this.algeCounter[alge.name].splice(index, 1);
                 });
             },
             /**
@@ -219,7 +219,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
              * */
             updateNode( node ) {
                 this.nodes(node.id).data = node.data;
-                this.nodes(node.id).label = node.data.title;
+                this.nodes(node.id).label = node.data.name;
             },
             /**
              * builds the graph with a array of nodes
@@ -256,8 +256,8 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 });
 
                 // empty menu when clicked on canvas
-                this.sigmaInstance.bind('clickStage', function ( event ){
-                   parent.$emit('clickStage');
+                this.sigmaInstance.bind('clickSalgee', function ( event ){
+                   parent.$emit('clickSalgee');
                 });
 
                 // dragListener

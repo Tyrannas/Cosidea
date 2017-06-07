@@ -1,17 +1,22 @@
 import * as express from 'express';
-import * as project from '../model/project';
-import * as idea    from '../model/idea';
+import * as recif from '../model/recif';
+import * as corail    from '../model/corail';
 import * as user    from '../model/user';
-import * as tag     from '../model/tag';
+import * as alge     from '../model/alge';
 import * as bcrypt  from 'bcrypt';
 import * as jwt     from 'jsonwebtoken';
 import * as auth    from './auth';
 
-import {ReqError, ReqSucces}   from './api';
+import {ReqError, ReqSuccess}   from './api';
 
 
 export let router = express.Router();
 
+/**
+ * Route create user
+ * @param name
+ * @param pwd
+ */
 router.post('/user', async (req, res) => {
 
     let name    = req.query.name as string;
@@ -31,38 +36,41 @@ router.post('/user', async (req, res) => {
     let hash = await bcrypt.hash(pwd, req.app.get('saltRounds'));
     
     user.addUser(name, hash)
-    .then((id) => res.json( new ReqSucces(id) ))
+    .then((id) => res.json( new ReqSuccess(id) ))
     .catch(() => res.json( new ReqError('Add User failed') ));
 
 });
 
-router.post('/project', async(req, res) => {
+/**
+ * Route create recif
+ */
+router.post('/recif', async(req, res) => {
 
-    let title   = req.query.title as string;
-    let protect = req.query.protected == true as boolean;
-    let desc    = req.query.desc as string;
-    let owner   = req.query.owner as number;
-    let pwd     = req.query.pwd as string;
-    let hash    = '';
+    let name        = req.query.name as string;
+    let isProtected = req.query.isProtected == true as boolean;
+    let description        = req.query.description as string;
+    let owner       = req.query.owner as number;
+    let pwd         = req.query.pwd as string;
+    let hash        = '';
 
-    if(title === undefined || protect === undefined) {
-        res.json( new ReqError('title and protected params needed'));
+    if(name === undefined || isProtected === undefined) {
+        res.json( new ReqError('name and isProtecteded params needed'));
         return;
     }
 
-    let proj = await project.findByTitle(title);
+    let proj = await recif.findByName(name);
 
     if(proj !== undefined) {
-        res.json( new ReqError('Project name already exist') );
+        res.json( new ReqError('Recif name already exist') );
         return;
     }
 
-    if(protect && owner === undefined) {
-        res.json( new ReqError('Protected Project needs an Owner') );
+    if(isProtected && owner === undefined) {
+        res.json( new ReqError('Protected Recif needs an Owner') );
         return;
     }
 
-    if(protect) {
+    if(isProtected) {
         let usr = await user.findById(owner);
 
         if(usr === undefined) {
@@ -77,61 +85,69 @@ router.post('/project', async(req, res) => {
         hash = await bcrypt.hash(pwd, req.app.get('saltRounds'));
     }
 
-    project.addProject(title, desc, owner, protect, hash)
-    .then((id) => res.json( new ReqSucces(id) ))
-    .catch(() => res.json( new ReqError('Project creation failed') ));
+    recif.addRecif(name, description, isProtected, hash, owner)
+    .then((id) => res.json( new ReqSuccess(id) ))
+    .catch(() => res.json( new ReqError('Recif creation failed') ));
 
 });
 
 
-router.use('/idea', auth.secureProject);
-router.post('/idea', async (req, res) => {
+/**
+ * Route create corail
+ */
+router.use('/corail', auth.secureRecif);
+router.post('/corail', async (req, res) => {
 
-    let projId  = req.query.projectId;
-    let title   = req.query.title;
-    let desc    = req.query.desc;
-    let tags    = req.query.tags;
+    let recifId  = req.query.recifId;
+    let name   = req.query.name;
+    let description    = req.query.description;
+    let alges    = req.query.alges;
     
-    let insertTags: number[] = [];
+    let insertAlges: number[] = [];
     let id: number = -1;
 
-    if(tags !== undefined && tags !== '') {
-        insertTags = tags.split(',').map(Number);
+    // parse AlgeIds
+    if(alges !== undefined && alges !== '') {
+        insertAlges = alges.split(',').map(Number);
     }
 
     try{
-        id = await idea.addIdea(projId, title, desc);
-        insertTags.forEach((tagId) => idea.addTag(id, tagId));
-        res.json( new ReqSucces(id) );
+        id = await corail.addCorail(recifId, name, description);
+        insertAlges.forEach((algeId) => corail.addAlge(id, algeId));
+        res.json( new ReqSuccess(id) );
     }
     catch(err){
         res.json( new ReqError(err) )
         if(id >= 0) {
-            //TODO remove idea
+            //TODO remove corail
         }
     }
 });
 
+/**
+ * Route create alge
+ */
+router.use('/alge', auth.secureRecif);
+router.post('/alge', (req, res) => {
 
-router.use('/tag', auth.secureProject);
-router.post('/tag', (req, res) => {
-
-    let projId = req.query.projectId;
+    let recifId = req.query.recifId;
     let name = req.query.name;
 
-    tag.addTag(projId, name)
-    .then((id) => res.json( new ReqSucces(id) ))
+    alge.addAlge(recifId, name)
+    .then((id) => res.json( new ReqSuccess(id) ))
     .catch((err) => res.json( new ReqError(err) ));
 });
 
-
-router.use('/link', auth.secureProject);
+/**
+ * Route create link between Corail and Alge
+ */
+router.use('/link', auth.secureRecif);
 router.post('/link', (req, res) => {
 
-    let ideaId = req.query.ideaId;
-    let tagId  = req.query.tagId;
+    let corailId = req.query.corailId;
+    let algeId  = req.query.algeId;
 
-    idea.addTag(ideaId, tagId)
-    .then(() => res.json( new ReqSucces('Link added') ))
+    corail.addAlge(corailId, algeId)
+    .then(() => res.json( new ReqSuccess('Link added') ))
     .catch((err) => res.json( new ReqError(err) ));
 });

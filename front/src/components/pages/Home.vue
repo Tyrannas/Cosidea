@@ -1,6 +1,6 @@
 <template>
   <div id="test">
-    <div v-for="proj in projects" class="messageBox">Project {{proj.title}} is {{ proj.protect}}
+    <div v-for="proj in projects" class="messageBox">Project {{proj.name}} is
       <span v-if="!proj.isProtected" >not</span> protected
     </div>
   </div>
@@ -17,7 +17,7 @@ export default {
     }
   },
   mounted() {
-    api.getProjects()
+    api.getRecifs()
     .then((projs) => { 
         if (projs != undefined) { 
             this.projects = projs; 

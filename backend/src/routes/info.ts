@@ -1,73 +1,85 @@
 import * as express from 'express';
-import * as project from '../model/project';
-import * as idea    from '../model/idea';
+import * as recif from '../model/recif';
+import * as corail    from '../model/corail';
 import * as user    from '../model/user';
 import * as bcrypt  from 'bcrypt';
 import * as jwt     from 'jsonwebtoken';
 import * as auth    from './auth';
-import * as tag     from '../model/tag';
+import * as alge     from '../model/alge';
 
-import {ReqError, ReqSucces}   from './api';
+import {ReqError, ReqSuccess}   from './api';
 
 export let router = express.Router();
 
-router.get('/project', async (req, res) => {
-    
-    let title = req.query.title;
+/**
+ * Route info Recif
+ */
+router.get('/recif', async (req, res) => {
+    console.log('ask recif: ' + req.query.name)
+    let name = req.query.name;
 
-    let proj = await project.findByTitle(title);
+    let rec = await recif.findByName(name);
 
-    if(proj === undefined) {
-        res.json( new ReqError('Project not found') );
+    if(rec === undefined) {
+        res.json( new ReqError('Recif not found') );
         return;
     }
 
-    delete proj.hash;
-    res.json(proj);
+    // dont send hash to user
+    delete rec.hash;
+    res.json( new ReqSuccess(rec) );
 
 });
 
-router.get('/project/all', async (req, res) => {
+/**
+ * Route info all recifs
+ */
+router.get('/recif/all', async (req, res) => {
 
-    let projs = await project.findAll();
+    let projs = await recif.findAll();
 
     if(projs === undefined) {
-        res.json( new ReqError('No projects found..') );
+        res.json( new ReqError('No recifs found..') );
         return;
     }
-
+    // dont send hash to user
     projs.forEach((proj) => delete proj.hash);
-    res.json(projs);
+    res.json( new ReqSuccess(projs));
     
 });
 
+/**
+ * Route info corail, is auth secure
+ */
+router.use('/corail', auth.secureRecif);
+router.get('/corail', async (req, res) => {
 
-router.use('/idea', auth.secureProject);
-router.get('/idea', async (req, res) => {
+    let recifId = req.query.recifId;
 
-    let projId = req.query.projectId;
+    let corails = await corail.findByRecif(recifId);
 
-    let ideas = await idea.findByProjectId(projId);
-
-    if(ideas === undefined) {
+    if(corails === undefined) {
         res.json( new ReqError('get Idea failed') );
         return;
     }
     
-    res.json(ideas);
+    res.json( new ReqSuccess(corails));
 });
 
-router.use('/tag', auth.secureProject);
-router.use('/tag', async (req, res) => {
+/**
+ * Route info alge in Recif is auth secure
+ */
+router.use('/alge', auth.secureRecif);
+router.use('/alge', async (req, res) => {
 
-    let projId = req.query.projectId;
+    let recifId = req.query.recifId;
 
-    let tags = await tag.getByProject(projId);
+    let alges = await alge.getByRecif(recifId);
 
-    if(tags === undefined) {
+    if(alges === undefined) {
         res.json( new ReqError('get Tags failed') );
         return;
     }
 
-    res.json(tags);
+    res.json( new ReqSuccess(alges) );
 });

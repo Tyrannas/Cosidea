@@ -41,47 +41,47 @@ let post = function(option) {
 
 /*
  * local api to communicate with backend
- * add ideas, tags, create new projects and many more...
+ * add corails, alges, create new recifs and many more...
  */
 
 
 
 /**
- * add a new Idea to a project
- * @param params : project Id, idea with title and description, optional: token
- * @returns {Promise.<*>} with created idea id
+ * add a new Corail to a recif
+ * @param params : recif Id, corail with name and description, optional: token
+ * @returns {Promise.<*>} with created corail id
  */
 
-export async function addIdea( params ){
+export async function addCorail( params ){
 
-    let query = { url: '/api/create/idea', qs: params };
+    let query = { url: '/api/create/corail', qs: params };
     let body = await post(query);
 
-    return body.id;
+    return body.msg.id;
 }
 
 
 /**
- * add a new Tag to a project
+ * add a new Alge to a recif
  * @param vue
- * @param params : project idea, tag name, optional: token
+ * @param params : recif corail, alge name, optional: token
  * @returns {Promise.<*>}
  */
-export async function addTag( vue, params ){
+export async function addAlge( vue, params ){
 
-    let request = `/api/create/tag/${params.projectId}/${params.tag}?token=${params.token}`;
+    let request = `/api/create/alge/${params.recifId}/${params.alge}?token=${params.token}`;
     return await vue.$http.post(request);
 }
 
 
 /**
- * Create a new project
- * @param params: { title, description?, protected?, owner?, password?}
+ * Create a new recif
+ * @param params: { name, description?, protected?, owner?, password?}
  * @returns {Promise.<*>}
  */
-export async function addProject( params ){
+export async function addRecif( params ){
 
-    let query = { url: '/api/create/project', qs: params };
+    let query = { url: '/api/create/recif', qs: params };
     let body = await post(query);
     
     if(body === undefined || body.err) {
@@ -92,35 +92,35 @@ export async function addProject( params ){
 
 
 /**
- * Get project
- * @param projectName
- * @returns Promise<project[]>
+ * Get recif
+ * @param recifName
+ * @returns Promise<recif[]>
  */
-export async function getProject(projectName) {
+export async function getRecif(recifName) {
     
-    let params = { title: projectName };
-    let query = {url: '/api/info/project', qs: params };
+    let params = { name: recifName };
+    let query = {url: '/api/info/recif', qs: params };
 
     let body = await get(query);
 
     if(body.err) {
-        //TODO Handle project does not exist
+        //TODO Handle recif does not exist
         return;
     }
 
-    return body;
+    return body.msg;
 }
 
 /**
- * Get connection Token for project
- * @param projectId
+ * Get connection Token for recif
+ * @param recifId
  * @param password
  * @returns Promise<token: string>
  */
-async function getToken(projectId, password) {
+async function getToken(recifId, password) {
 
-    let parmas = {projectId: projectId, pwd: password};
-    let query = {url: '/api/auth/project', qs: parmas };
+    let parmas = {recifId: recifId, pwd: password};
+    let query = {url: '/api/auth/recif', qs: parmas };
 
     let body = await get(query);
 
@@ -129,20 +129,20 @@ async function getToken(projectId, password) {
         return undefined;
     }
 
-    return body.token;
+    return body.msg.token;
 }
 
 
 /**
- * Get Ideas associated to a project
- * @param projectId
+ * Get Corails associated to a recif
+ * @param recifId
  * @param token
- * @returns Promise<ideas[]>
+ * @returns Promise<corails[]>
  */
-export async function getIdeas(projectId, token) {
+export async function getCorails(recifId, token) {
 
-    let params = { projectId: projectId, token: token }
-    let query = {url: '/api/info/idea', qs: params};
+    let params = { recifId: recifId, token: token }
+    let query = {url: '/api/info/corail', qs: params};
     
     let body = await get(query);
 
@@ -150,41 +150,41 @@ export async function getIdeas(projectId, token) {
         throw new Error('request failed');
     }
     
-    return body;
+    return body.msg;
 }
 
-export async function updateIdea(projectId, ideaId, title, description, token) {
-    console.log('new desc: ' + description);
+export async function updateCorail(recifId, corailId, name, description, token) {
+    console.log('new description: ' + description);
     let params = {
-        projectId: projectId,
-        ideaId: ideaId,
+        recifId: recifId,
+        corailId: corailId,
         token: token,
-        title: title,
-        desc: description
+        name: name,
+        description: description
     };
-    let query = { url: '/api/update/idea', qs: params };
+    let query = { url: '/api/update/corail', qs: params };
 
     let body = await post(query);
 
     if(body === undefined || body.err) {
-        throw new Error('update idea failed');
+        throw new Error('update corail failed');
     }
 
     return body.msg;
 }
 /**
- * add link between coral and tag
- * @param projectId
- * @param ideaId
- * @param tagId
+ * add link between coral and alge
+ * @param recifId
+ * @param corailId
+ * @param algeId
  * @param token
  */
-export async function addLink( projectId, ideaId, tagId, token ) {
-    console.log(projectId + ' ' + ideaId + ' ' + tagId);
+export async function addLink( recifId, corailId, algeId, token ) {
+    console.log(recifId + ' ' + corailId + ' ' + algeId);
     let params = {
-        projectId: projectId,
-        ideaId: ideaId,
-        tagId: tagId,
+        recifId: recifId,
+        corailId: corailId,
+        algeId: algeId,
         token: token
     };
     let query = { url: '/api/create/link', qs: params };
@@ -195,50 +195,50 @@ export async function addLink( projectId, ideaId, tagId, token ) {
         throw new Error(body.msg);
     }
 
-    return body;
+    return body.msg;
 }
 /**
- * remove link between coral and tag
- * @param projectId
- * @param ideaId
- * @param tagId
+ * remove link between coral and alge
+ * @param recifId
+ * @param corailId
+ * @param algeId
  * @param token
  */
-export async function rmLink(  projectId, ideaId, tagId, token ) {
+export async function rmLink(  recifId, corailId, algeId, token ) {
 
     let params = {
-        projectId: projectId,
-        ideaId: ideaId,
-        tagId: tagId,
+        recifId: recifId,
+        corailId: corailId,
+        algeId: algeId,
         token: token
     };
     let query = { url: '/api/rm/link', qs: params };
 
     let body = await post(query);
 
-    return body;
+    return body.msg;
 }
 /**
- * Get all projects
- * @returns Promise<projects[]>
+ * Get all recifs
+ * @returns Promise<recifs[]>
  */
-export async function getProjects() {
+export async function getRecifs() {
         console.log('request..');
-        let query = {url: '/api/info/project/all'};
+        let query = {url: '/api/info/recif/all'};
         let body = await get(query);
 
-        return body;
+        return body.msg;
 }
 
 /**
- * Get Tags from Project 
- * @param projectId
- * @returns Tags[]
+ * Get Alges from Recif 
+ * @param recifId
+ * @returns Alges[]
  */
-export async function getTags(projectId) {
+export async function getAlges(recifId) {
 
-    let params = { projectId: projectId };
-    let query = { url: '/api/info/tag', qs: params};
+    let params = { recifId: recifId };
+    let query = { url: '/api/info/alge', qs: params};
 
     let body = await get(query).catch(() => undefined);
 
@@ -246,5 +246,5 @@ export async function getTags(projectId) {
         return undefined;
     }
 
-    return body;
+    return body.msg;
 }

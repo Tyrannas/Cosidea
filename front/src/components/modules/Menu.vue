@@ -4,10 +4,10 @@ Created by Orion 2017
 
 <template>
 	<nav class="sideBar">
-		<input type="text" class="myInput" placeholder="Idée" v-model="nodeParameters.title"/>
+		<input type="text" class="myInput" placeholder="Corail" v-model="nodeParameters.name"/>
 		<multiselect class="myInput"
-				v-model="nodeParameters.tags"
-				:options="tagsValues"
+				v-model="nodeParameters.alges"
+				:options="algesNames"
                 :multiple="true">
 		</multiselect>
 		<textarea class="myInput" placeholder="Description" v-model="nodeParameters.description"></textarea>
@@ -25,38 +25,38 @@ export default {
 	components: {
 	    'multiselect': multiselect
 	},
-    props: ['tags'],
+    props: ['alges'],
 	data (){
 		return {
 			forceAtlasStatus: "Start",
 			nodeParameters: {},
-            oldCoral: undefined
+            oldCorail: undefined
 		}
 	},
     mounted: function() {
         this.reset();
     },
     computed: {
-        tagsValues: function() {
-            return this.tags.map((tag) => tag.name);
+        algesNames: function() {
+            return this.alges.map((alge) => alge.name);
         },
-        tagsIndex: function() {
+        algesIndex: function() {
             let index = {};
-            this.tags.forEach((tag) => index[tag.name] = tag);
+            this.alges.forEach((alge) => index[alge.name] = alge);
             return index; 
         },
         charged: function() {
-            return this.oldCoral !== undefined;
+            return this.oldCorail !== undefined;
         }
     },
     methods: {
         reset: function() {
             this.nodeParameters = {
-                title: "",
-				tags: null,
+                name: "",
+				alges: null,
 				description : ""
             };
-            this.oldCoral = undefined;
+            this.oldCorail = undefined;
         },
 	    toggleForceAtlas: function(){
 	        this.$emit("toggleForceAtlas");
@@ -70,33 +70,33 @@ export default {
             }
 
             let coral = Object.assign({}, this.nodeParameters);
-            if(coral.tags != null)
-                coral.tags = coral.tags.map((tagName) => this.tagsIndex[tagName]);
+            if(coral.alges != null)
+                coral.alges = coral.alges.map((algeName) => this.algesIndex[algeName]);
             
-            let toAdd = { id: this.oldCoral.id, data: {tags: [] }};
-            let toRem = { id: this.oldCoral.id, data: {tags: [] }};
-            let updated = { id: this.oldCoral.id, data: coral };
+            let toAdd = { id: this.oldCorail.id, data: {alges: [] }};
+            let toRem = { id: this.oldCorail.id, data: {alges: [] }};
+            let updated = { id: this.oldCorail.id, data: coral };
 
             let indexer = {};
-            // for each tag that we had before mark true
-            this.oldCoral.data.tags.forEach((tag) => {
-                indexer[tag.name] = true;
+            // for each alge that we had before mark true
+            this.oldCorail.data.alges.forEach((alge) => {
+                indexer[alge.name] = true;
             });
             // for each node delete key if is not new, else add node
-            this.nodeParameters.tags.forEach((tagName) => {
+            this.nodeParameters.alges.forEach((algeName) => {
                 // is old
-                if(indexer[tagName] !== undefined) {
-                    delete indexer[tagName];
+                if(indexer[algeName] !== undefined) {
+                    delete indexer[algeName];
                 }
                 // is new
                 else {
-                    toAdd.data.tags.push(this.tagsIndex[tagName]);
+                    toAdd.data.alges.push(this.algesIndex[algeName]);
                 }
             });
 
-            // The key in indexer now gives us the deleted tags
-            Object.keys(indexer).forEach((tagName) => {
-                toRem.data.tags.push(this.tagsIndex[tagName]);
+            // The key in indexer now gives us the deleted alges
+            Object.keys(indexer).forEach((algeName) => {
+                toRem.data.alges.push(this.algesIndex[algeName]);
             });
 
             console.log(toAdd);
@@ -111,11 +111,11 @@ export default {
             let node = Object.assign({}, this.nodeParameters);
             node.id = 'default_tmp_id';
 
-            // Get full tag object from tagName
-            if(node.tags !== null && node.tags !== undefined)
-                node.tags = node.tags.map((tagName) => this.tagsIndex[tagName]);
+            // Get full alge object from algeName
+            if(node.alges !== null && node.alges !== undefined)
+                node.alges = node.alges.map((algeName) => this.algesIndex[algeName]);
             else
-                node.tags = [];
+                node.alges = [];
 
             // emit update event
 	        this.$emit("addNode", node);
@@ -124,9 +124,9 @@ export default {
         },
         clickNode: function( node ){
             this.reset();
-            this.oldCoral = Object.assign( {}, node );
-            this.nodeParameters.title = node.data.title;
-            this.nodeParameters.tags = node.data.tags.map((t) => t.name);
+            this.oldCorail = Object.assign( {}, node );
+            this.nodeParameters.name = node.data.name;
+            this.nodeParameters.alges = node.data.alges.map((t) => t.name);
             this.nodeParameters.description = node.data.description;
         }
     }
