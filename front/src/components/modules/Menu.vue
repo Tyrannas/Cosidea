@@ -17,12 +17,14 @@ Created by Orion 2017
         >
 		</multiselect>
 		<textarea class="myInput" placeholder="Description" v-model="nodeParameters.description"></textarea>
-		<a class="myButton" v-on:click="submitNode"><span v-if="!charged">addNode</span><span v-else>updateNode</span></a>
-        <a class="myButton" v-on:click="toggleForceAtlas">{{forceAtlasStatus}}</a>
         <taginput
                 v-model="nodeParameters.tags"
                 tagValues="tagsNames"
         ></taginput>
+		<a class="myButton" v-on:click="addNode" v-if="!charged" >addNode</a>
+        <a class="myButton" v-on:click="updateNode" v-if="charged">updateNode</a>
+        <a class="myButton" v-on:click="removeNode" v-if="charged" >RemoveNode</a>
+        <a class="myButton" v-on:click="toggleForceAtlas" >{{forceAtlasStatus}}</a>
 	</nav>
 </template>
 
@@ -66,7 +68,7 @@ export default {
         reset: function() {
             this.nodeParameters = {
                 name: "",
-				tags: null,
+				tags: [],
 				description : ""
             };
             this.oldNode = undefined;
@@ -75,12 +77,7 @@ export default {
 	        this.$emit("toggleForceAtlas");
 	        this.forceAtlasStatus = this.forceAtlasStatus === "Start" ? "Stop" : "Start";
         },
-        submitNode: function() {
-            // if is not charged, its a new node
-            if(!this.charged) {
-                this.addNode();
-                return;
-            }
+        updateNode: function() {
 
             let corail = Object.assign({}, this.nodeParameters);
             corail.id = this.oldNode.data.id;
@@ -138,6 +135,11 @@ export default {
 	        this.$emit("addNode", node);
             this.reset();
 
+        },
+        removeNode: function() {
+            let node = Object.assign({}, this.oldNode);
+            this.$emit('removeNode', node);
+            this.reset();
         },
         clickNode: function( node ){
             this.reset();

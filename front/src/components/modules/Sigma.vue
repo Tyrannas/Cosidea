@@ -182,6 +182,17 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 edge.weight = this.config.edgeWeight * Math.pow(1.05, edge.realSize);
             },
             /**
+             * Remove Node
+             * @param node
+             * */
+            removeNode: function( node ) {
+
+                this.removeEdge( node );
+
+                this.sigmaInstance.graph.dropNode(node.id);
+                this.sigmaInstance.refresh();
+            },
+            /**
              * Remove Edges from Graph
              * @param node
              * */
@@ -199,7 +210,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                             index = i;
                             continue;
                         }
-                        console.log(nodes[i].data.name);
+                        
                         // if we found another node, resize existing edge
                         let id = this.createId(nodes[i].id, node.id);
                         if(this.edges(id) !== undefined) {

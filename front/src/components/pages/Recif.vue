@@ -6,6 +6,7 @@
              v-on:toggleForceAtlas="toggleForceAtlas"
              v-on:addNode="addNode"
              v-on:updateNode="updateNode"
+             v-on:removeNode="removeNode"
              v-on:addTag="addTag"
              v-bind:tags="tags"
     ></sideBar>
@@ -80,6 +81,10 @@ export default {
             corail.add.data.tags.forEach((tag) => api.addLink(this.id, corail.new.data.id, tag.id, this.token));
             corail.rm.data.tags.forEach((tag) => api.rmLink(this.id, corail.new.data.id, tag.id, this.token));
 
+        },
+        removeNode( node ) {
+            this.$refs.sigma.removeNode(node);
+            api.removeCorail(this.id, node.data.id, this.token);
         },
         addTag( tag ){
             api.addTag({recifId: this.id, name: tag});
