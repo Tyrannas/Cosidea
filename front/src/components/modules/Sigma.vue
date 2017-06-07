@@ -156,6 +156,8 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                     }
                     // insert node into tagCounter
                     this.tagCounter[tag.name].push(newNode);
+                    console.log('new tagCounter');
+                    console.log(this.tagCounter);
                 });
             },
             /**
@@ -187,11 +189,13 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                     let index = -1, size = nodes.length;
 
                     for(let i = 0; i < size; i++) {
+
                         // if we found our node in the tagCounter remember index for delete
                         if(nodes[i].id === node.id) {
                             index = i;
-                            break;
+                            continue;
                         }
+                        console.log(nodes[i].data.title);
                         // if we found another node, resize existing edge
                         let id = this.createId(nodes[i].id, node.id);
                         if(this.edges(id) !== undefined) {

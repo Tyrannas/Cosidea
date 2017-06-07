@@ -47,7 +47,7 @@ export default {
         },
 
         addNode: async function( node ){
-            console.log(node);
+
             let newNode = this.$refs.sigma.addNode( node );
             
             let params = {
@@ -68,7 +68,10 @@ export default {
         updateNode(info) {
             this.$refs.sigma.addEdge( info.add );
             this.$refs.sigma.removeEdge( info.rm );
+            //update node data
             this.$refs.sigma.updateNode( info.new );
+            //backend update
+            api.updateIdea(this.id, this.token, info.new.id, info.new.data.title, info.new.data.description);
         },
         clickNode: function( node ){
             this.$refs.addIdea.clickNode(node);

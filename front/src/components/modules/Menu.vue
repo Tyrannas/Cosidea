@@ -30,7 +30,7 @@ export default {
 		return {
 			forceAtlasStatus: "Start",
 			nodeParameters: {},
-            oldCorail: undefined
+            oldCoral: undefined
 		}
 	},
     mounted: function() {
@@ -46,7 +46,7 @@ export default {
             return index; 
         },
         charged: function() {
-            return this.oldCorail !== undefined;
+            return this.oldCoral !== undefined;
         }
     },
     methods: {
@@ -56,7 +56,7 @@ export default {
 				tags: null,
 				description : ""
             };
-            this.oldCorail = undefined;
+            this.oldCoral = undefined;
         },
 	    toggleForceAtlas: function(){
 	        this.$emit("toggleForceAtlas");
@@ -69,17 +69,17 @@ export default {
                 return;
             }
 
-            let corail = Object.assign({}, this.nodeParameters);
-            if(corail.tags != null)
-                corail.tags = corail.tags.map((tagName) => this.tagsIndex[tagName]);
+            let coral = Object.assign({}, this.nodeParameters);
+            if(coral.tags != null)
+                coral.tags = coral.tags.map((tagName) => this.tagsIndex[tagName]);
             
-            let toAdd = { id: this.oldCorail.id, data: {tags: [] }};
-            let toRem = { id: this.oldCorail.id, data: {tags: [] }};
-            let updated = { id: this.oldCorail.id, data: corail };
+            let toAdd = { id: this.oldCoral.id, data: {tags: [] }};
+            let toRem = { id: this.oldCoral.id, data: {tags: [] }};
+            let updated = { id: this.oldCoral.id, data: coral };
 
             let indexer = {};
             // for each tag that we had before mark true
-            this.oldCorail.data.tags.forEach((tag) => {
+            this.oldCoral.data.tags.forEach((tag) => {
                 indexer[tag.name] = true;
             });
             // for each node delete key if is not new, else add node
@@ -118,7 +118,7 @@ export default {
         },
         clickNode: function( node ){
             this.reset();
-            this.oldCorail = Object.assign( {}, node );
+            this.oldCoral = Object.assign( {}, node );
             this.nodeParameters.title = node.data.title;
             this.nodeParameters.tags = node.data.tags.map((t) => t.name);
             this.nodeParameters.description = node.data.description;

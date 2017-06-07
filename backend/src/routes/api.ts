@@ -3,6 +3,7 @@ import * as auth        from './auth';
 import * as create      from './create';
 import * as info        from './info';
 import * as rm          from './rm';
+import * as update      from './update';
 
 export class ReqError {
     err:boolean = true;
@@ -22,6 +23,7 @@ router.use('/auth', auth.router);
 router.use('/create', create.router);
 router.use('/info', info.router);
 router.use('/rm', rm.router);
+router.use('/update', update.router);
 
 
 export let api = router;

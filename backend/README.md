@@ -65,6 +65,20 @@ query: {
 }
 ```  
 
+### Update
+
+Update Idea:  
+```
+POST: /update/idea
+query: {
+    projectId: <projectId>,
+    ideaId: <ideaId>,
+    title: <title>,
+    desc: <description>,
+    token: <projectToken>   //  Only if project is protected. See /auth.
+}
+```  
+
 ### Info
 
 Project Info:  

@@ -153,6 +153,26 @@ export async function getIdeas(projectId, token) {
     return body;
 }
 
+export async function updateIdea(projectId, token, ideaId, title, description) {
+    console.log('new desc: ' + description);
+    let params = {
+        projectId: projectId,
+        ideaId: ideaId,
+        token: token,
+        title: title,
+        desc: description
+    };
+    let query = { url: '/api/update/idea', qs: params };
+
+    let body = await post(query);
+
+    if(body === undefined || body.err) {
+        throw new Error('update idea failed');
+    }
+
+    return body.msg;
+}
+
 /**
  * Get all projects
  * @returns Promise<projects[]>
