@@ -142,7 +142,7 @@ export default {
             };
             this.$emit('addTag', newTag);
             this.tags.push(tag);
-            this.nodeParameters.push(tag);
+            this.nodeParameters.tags.push(tag);
         },
     }
 }
