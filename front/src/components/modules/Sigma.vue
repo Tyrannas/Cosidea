@@ -156,8 +156,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                     }
                     // insert node into algeCounter
                     this.algeCounter[alge.name].push(newNode);
-                    console.log('new algeCounter');
-                    console.log(this.algeCounter);
+                    
                 });
             },
             /**
