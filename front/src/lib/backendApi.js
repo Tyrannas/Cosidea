@@ -119,8 +119,8 @@ export async function getProject(projectName) {
  */
 async function getToken(projectId, password) {
 
-    let parmas = {projectId: projectId, pwd: password};
-    let query = {url: '/api/auth/project', qs: parmas };
+    let params = {projectId: projectId, pwd: password};
+    let query = {url: '/api/auth/project', qs: params };
 
     let body = await get(query);
 
