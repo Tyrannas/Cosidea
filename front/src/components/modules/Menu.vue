@@ -8,6 +8,8 @@ Created by Orion 2017
 		<multiselect class="myInput"
 				v-model="nodeParameters.tags"
 				:options="tagsNames"
+                @tag="addTag"
+                :taggable="true"
                 :multiple="true">
 		</multiselect>
 		<textarea class="myInput" placeholder="Description" v-model="nodeParameters.description"></textarea>
@@ -132,7 +134,16 @@ export default {
             this.nodeParameters.name = node.data.name;
             this.nodeParameters.tags = node.data.tags.map((t) => t.name);
             this.nodeParameters.description = node.data.description;
-        }
+        },
+        addTag: function (newTag) {
+            const tag = {
+                name: newTag,
+                code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
+            };
+            this.$emit('addTag', newTag);
+            this.tags.push(tag);
+            this.nodeParameters.push(tag);
+        },
     }
 }
 </script>

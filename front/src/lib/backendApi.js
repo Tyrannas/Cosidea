@@ -63,14 +63,17 @@ export async function addCorail( params ){
 
 /**
  * add a new Tag to a recif
- * @param vue
  * @param params : recif corail, tag name, optional: token
  * @returns {Promise.<*>}
  */
-export async function addTag( vue, params ){
+export async function addTag( params ){
+    let query = {url: '/api/create/tag', qs: params};
+    let body = await post(query);
 
-    let request = `/api/create/tag/${params.recifId}/${params.tag}?token=${params.token}`;
-    return await vue.$http.post(request);
+    if(body === undefined || body.err) {
+        return undefined;
+    }
+    return body.msg;
 }
 
 

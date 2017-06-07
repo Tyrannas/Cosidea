@@ -6,6 +6,7 @@
              v-on:toggleForceAtlas="toggleForceAtlas"
              v-on:addNode="addNode"
              v-on:updateNode="updateNode"
+             v-on:addTag="addTag"
              v-bind:tags="tags"
     ></sideBar>
     <div v-if="connected">Recif: {{ name }} <br /> {{ description }} </div>
@@ -79,6 +80,9 @@ export default {
             corail.add.data.tags.forEach((tag) => api.addLink(this.id, corail.new.data.id, tag.id, this.token));
             corail.rm.data.tags.forEach((tag) => api.rmLink(this.id, corail.new.data.id, tag.id, this.token));
 
+        },
+        addTag( tag ){
+            api.addTag({recifId: this.id, name: tag});
         },
         clickNode: function( node ){
             this.$refs.addCorail.clickNode(node);
