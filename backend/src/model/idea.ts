@@ -79,3 +79,20 @@ export function findByProjectId(projectId: number): Promise<TaggedIdea[]> {
 
     return idea;
 }
+
+export function update(projectId: number, ideaId: number, title: string, description: string) {
+
+    let idea = db(table.idea)
+    .where({
+        id: ideaId,
+        project_id: projectId
+    })
+    .update({
+        title: title,
+        description: description
+    })
+    .returning('id')
+    .then((arr) => arr[0]);
+    
+    return ideaId
+}
