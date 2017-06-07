@@ -5,7 +5,7 @@ import * as user    from '../model/user';
 import * as bcrypt  from 'bcrypt';
 import * as jwt     from 'jsonwebtoken';
 import * as auth    from './auth';
-import * as alge     from '../model/alge';
+import * as tag     from '../model/tag';
 
 import {ReqError, ReqSuccess}   from './api';
 
@@ -67,19 +67,19 @@ router.get('/corail', async (req, res) => {
 });
 
 /**
- * Route info alge in Recif is auth secure
+ * Route info tag in Recif is auth secure
  */
-router.use('/alge', auth.secureRecif);
-router.use('/alge', async (req, res) => {
+router.use('/tag', auth.secureRecif);
+router.use('/tag', async (req, res) => {
 
     let recifId = req.query.recifId;
 
-    let alges = await alge.getByRecif(recifId);
+    let tags = await tag.getByRecif(recifId);
 
-    if(alges === undefined) {
+    if(tags === undefined) {
         res.json( new ReqError('get Tags failed') );
         return;
     }
 
-    res.json( new ReqSuccess(alges) );
+    res.json( new ReqSuccess(tags) );
 });

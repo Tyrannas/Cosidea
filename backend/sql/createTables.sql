@@ -20,17 +20,17 @@ CREATE TABLE "corail" (
     "recif_id" INTEGER REFERENCES "recif"("id") NOT NULL
 );
 
-CREATE TABLE "alge" (
+CREATE TABLE "tag" (
     "id" SERIAL PRIMARY KEY,
     "name" VARCHAR(15) NOT NULL,
     "recif_id" INTEGER REFERENCES "recif"("id") NOT NULL,
     UNIQUE ("recif_id", "name")
 );
 
-CREATE TABLE "corail_alge_rel" (
+CREATE TABLE "corail_tag_rel" (
     "corail_id" INTEGER REFERENCES "corail"("id") NOT NULL,
-    "alge_id" INTEGER REFERENCES "alge"("id") NOT NULL,
-    PRIMARY KEY("corail_id", "alge_id") 
+    "tag_id" INTEGER REFERENCES "tag"("id") NOT NULL,
+    PRIMARY KEY("corail_id", "tag_id") 
 );
 
 

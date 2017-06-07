@@ -24,7 +24,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
         name: 'sigma',
         data (){
             return {
-                algeCounter: {},
+                tagCounter: {},
                 sigmaInstance: new sigma({
                     g : {
                         nodes: [],
@@ -82,14 +82,14 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 }
             },
             /**
-             add a Node to the graph, and create links if common alges
+             add a Node to the graph, and create links if common tags
              * @returns new node
              */
             addNode: function( params ){
 
                 console.log(params);
-                if(params.alges === undefined) {
-                    params.alges = [];
+                if(params.tags === undefined) {
+                    params.tags = [];
                 }
 
                 // init Node
@@ -120,20 +120,20 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 return newNode;
             },
             /**
-             * create links between a node and the rest of the graph if they share alges
+             * create links between a node and the rest of the graph if they share tags
              * @param newNode
              */
             addEdge: function( newNode ){
               console.log(newNode);
-              newNode.data.alges.forEach((alge) => {
+              newNode.data.tags.forEach((tag) => {
  
-                    if(this.algeCounter[alge.name] == null || !this.algeCounter[alge.name].length) {
-                        this.algeCounter[alge.name] = [];
+                    if(this.tagCounter[tag.name] == null || !this.tagCounter[tag.name].length) {
+                        this.tagCounter[tag.name] = [];
 
                     }
                     else {
 
-                        let nodes = this.algeCounter[alge.name];
+                        let nodes = this.tagCounter[tag.name];
                         nodes.forEach((node) => {
 
                             let id = this.createId(newNode.id, node.id);
@@ -148,7 +148,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                                     id : id,
                                     source: newNode.id,
                                     target: node.id,
-                                    label: [alge.name],
+                                    label: [tag.name],
                                     size: this.config.edgeSize,
                                     color: "#3997ff",
                                     weight: this.config.edgeWeight,
@@ -161,8 +161,8 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                             this.resizeNode(node, 1);
                         });
                     }
-                    // insert node into algeCounter
-                    this.algeCounter[alge.name].push(newNode);
+                    // insert node into tagCounter
+                    this.tagCounter[tag.name].push(newNode);
                     
                 });
             },
@@ -188,15 +188,15 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
              * @param node
              * */
             removeEdge: function( node ) {
-                //for each alge to be removed look into algeCounter lower edges
-                node.data.alges.forEach((alge) => {
+                //for each tag to be removed look into tagCounter lower edges
+                node.data.tags.forEach((tag) => {
 
-                    let nodes = this.algeCounter[alge.name];
+                    let nodes = this.tagCounter[tag.name];
                     let index = -1, size = nodes.length;
 
                     for(let i = 0; i < size; i++) {
 
-                        // if we found our node in the algeCounter remember index for delete
+                        // if we found our node in the tagCounter remember index for delete
                         if(nodes[i].id === node.id) {
                             index = i;
                             continue;
@@ -215,8 +215,8 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                         this.resizeNode(node, -1);
                         this.resizeNode(nodes[i], -1);
                     }
-                    // remove node from algeCounter
-                    this.algeCounter[alge.name].splice(index, 1);
+                    // remove node from tagCounter
+                    this.tagCounter[tag.name].splice(index, 1);
                 });
             },
             /**
@@ -262,8 +262,8 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 });
 
                 // empty menu when clicked on canvas
-                this.sigmaInstance.bind('clickSalgee', function ( event ){
-                   parent.$emit('clickSalgee');
+                this.sigmaInstance.bind('clickStage', function ( event ){
+                   parent.$emit('clickStage');
                 });
 
                 // dragListener

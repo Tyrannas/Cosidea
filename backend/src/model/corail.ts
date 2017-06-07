@@ -1,8 +1,8 @@
 import {db} from './db';
 import * as table from '../config/tables';
-import {AlgeId, Alge} from './alge';
+import {TagId, Tag} from './tag';
 import {RecifId} from './recif';
-import * as corail_alge_rel from './corailAlgeRel';
+import * as corail_tag_rel from './corailTagRel';
 
 export type CorailId = number;
 
@@ -13,7 +13,7 @@ export class Corail {
 }
 
 export class LivingCorail extends Corail {
-    alges: Alge[];
+    tags: Tag[];
 }
 
 /**
@@ -53,8 +53,8 @@ export async function removeCorail(recifId: RecifId, corailId: CorailId): Promis
         return Promise.reject("RecifId and CorailId needed for delete");
     }
     try {
-        //  Delete relation between corail and alges
-        await db(table.corail_alge_rel).where('corail_id', corailId).del();
+        //  Delete relation between corail and tags
+        await db(table.corail_tag_rel).where('corail_id', corailId).del();
         //  Delete corail
         await db(table.corail).where('id', corailId).del();
         
@@ -66,22 +66,22 @@ export async function removeCorail(recifId: RecifId, corailId: CorailId): Promis
 }
 
 /**
- *  Add Alge to Corail
+ *  Add Tag to Corail
  *  @param corailId
- *  @param algeId
- *  @returns CorailAlgeRel
+ *  @param tagId
+ *  @returns CorailTagRel
  **/
-export function addAlge(corailId: CorailId, algeId: AlgeId) {
-    return corail_alge_rel.addCorailAlgeRel(corailId, algeId);
+export function addTag(corailId: CorailId, tagId: TagId) {
+    return corail_tag_rel.addCorailTagRel(corailId, tagId);
 }
 
 /**
- *  Remove Alge from Corail
+ *  Remove Tag from Corail
  *  @param corailId
- *  @param algeId
+ *  @param tagId
  **/
-export function removeAlge(corailId: CorailId, algeId: AlgeId) {
-    return corail_alge_rel.removeCorailAlgeRel(corailId, algeId);
+export function removeTag(corailId: CorailId, tagId: TagId) {
+    return corail_tag_rel.removeCorailTagRel(corailId, tagId);
 }
 
 /**
@@ -96,9 +96,9 @@ export function findByRecif(recifId: number): Promise<LivingCorail[]> {
     }
 
     let corail = db(table.corail + ' as i')
-    .select('i.*', db.raw('case when count(t) = 0 then \'[]\' else json_agg(t) end as alges'))
-    .leftJoin(table.corail_alge_rel + ' as r', 'i.id', 'r.corail_id')
-    .leftJoin(table.alge + ' as t', 'r.alge_id', 't.id')
+    .select('i.*', db.raw('case when count(t) = 0 then \'[]\' else json_agg(t) end as tags'))
+    .leftJoin(table.corail_tag_rel + ' as r', 'i.id', 'r.corail_id')
+    .leftJoin(table.tag + ' as t', 'r.tag_id', 't.id')
     .where('i.recif_id', recifId)
     .groupBy('i.id');
 
@@ -114,6 +114,7 @@ export function findByRecif(recifId: number): Promise<LivingCorail[]> {
  **/
 export function update(recifId: RecifId, corailId: CorailId, name: string, description: string) {
 
+    console.log(recifId + ' ' + corailId + ' ' + name + ' ' + description);
     let corail = db(table.corail)
     .where({
         id: corailId,

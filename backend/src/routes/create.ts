@@ -2,7 +2,7 @@ import * as express from 'express';
 import * as recif from '../model/recif';
 import * as corail    from '../model/corail';
 import * as user    from '../model/user';
-import * as alge     from '../model/alge';
+import * as tag     from '../model/tag';
 import * as bcrypt  from 'bcrypt';
 import * as jwt     from 'jsonwebtoken';
 import * as auth    from './auth';
@@ -101,19 +101,19 @@ router.post('/corail', async (req, res) => {
     let recifId  = req.query.recifId;
     let name   = req.query.name;
     let description    = req.query.description;
-    let alges    = req.query.alges;
+    let tags    = req.query.tags;
     
-    let insertAlges: number[] = [];
+    let insertTags: number[] = [];
     let id: number = -1;
 
-    // parse AlgeIds
-    if(alges !== undefined && alges !== '') {
-        insertAlges = alges.split(',').map(Number);
+    // parse TagIds
+    if(tags !== undefined && tags !== '') {
+        insertTags = tags.split(',').map(Number);
     }
 
     try{
         id = await corail.addCorail(recifId, name, description);
-        insertAlges.forEach((algeId) => corail.addAlge(id, algeId));
+        insertTags.forEach((tagId) => corail.addTag(id, tagId));
         res.json( new ReqSuccess(id) );
     }
     catch(err){
@@ -125,29 +125,29 @@ router.post('/corail', async (req, res) => {
 });
 
 /**
- * Route create alge
+ * Route create tag
  */
-router.use('/alge', auth.secureRecif);
-router.post('/alge', (req, res) => {
+router.use('/tag', auth.secureRecif);
+router.post('/tag', (req, res) => {
 
     let recifId = req.query.recifId;
     let name = req.query.name;
 
-    alge.addAlge(recifId, name)
+    tag.addTag(recifId, name)
     .then((id) => res.json( new ReqSuccess(id) ))
     .catch((err) => res.json( new ReqError(err) ));
 });
 
 /**
- * Route create link between Corail and Alge
+ * Route create link between Corail and Tag
  */
 router.use('/link', auth.secureRecif);
 router.post('/link', (req, res) => {
 
     let corailId = req.query.corailId;
-    let algeId  = req.query.algeId;
+    let tagId  = req.query.tagId;
 
-    corail.addAlge(corailId, algeId)
+    corail.addTag(corailId, tagId)
     .then(() => res.json( new ReqSuccess('Link added') ))
     .catch((err) => res.json( new ReqError(err) ));
 });
