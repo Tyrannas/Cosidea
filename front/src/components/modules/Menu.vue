@@ -108,9 +108,12 @@ export default {
         addNode: function(){
 
             let node = Object.assign({}, this.nodeParameters);
-            
-            if(node.tags != null)
+            node.id = 'default_tmp_id';
+
+            if(node.tags !== null && node.tags !== undefined)
                 node.tags = node.tags.map((tagName) => this.tagsIndex[tagName]);
+            else
+                node.tags = [];
 
 	        this.$emit("addNode", node);
             this.reset();

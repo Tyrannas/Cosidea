@@ -153,7 +153,7 @@ export async function getIdeas(projectId, token) {
     return body;
 }
 
-export async function updateIdea(projectId, token, ideaId, title, description) {
+export async function updateIdea(projectId, ideaId, title, description, token) {
     console.log('new desc: ' + description);
     let params = {
         projectId: projectId,
@@ -173,6 +173,15 @@ export async function updateIdea(projectId, token, ideaId, title, description) {
     return body.msg;
 }
 
+export async function addLink( projectId, ideaId, tagId, token ) {
+
+    let params = {
+        projectId: projectId,
+        ideaId: ideaId,
+        tagId: tagId,
+        token: token
+    };
+}
 /**
  * Get all projects
  * @returns Promise<projects[]>
