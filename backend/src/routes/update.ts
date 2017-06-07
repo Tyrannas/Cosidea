@@ -24,7 +24,7 @@ router.post('/idea', async (req, res) => {
     let projectId = req.query.projectId;
     let ideaId = req.query.ideaId;
     let title = req.query.title;
-    let desc = req.query.description;
+    let desc = req.query.desc;
 
     try {
         let id = await idea.update(projectId, ideaId, title, desc);
