@@ -30,8 +30,7 @@ export default {
 		return {
 			forceAtlasStatus: "Start",
 			nodeParameters: {},
-            oldCoral: undefined,
-			nodesId: 0
+            oldCoral: undefined
 		}
 	},
     mounted: function() {
@@ -110,7 +109,6 @@ export default {
 
             // copy node params and assign default id
             let node = Object.assign({}, this.nodeParameters);
-            node.id = this.nodesId++;
             // Get full tag object from tagName
             if(node.tags !== null && node.tags !== undefined)
                 node.tags = node.tags.map((tagName) => this.tagsIndex[tagName]);

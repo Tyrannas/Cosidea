@@ -46,7 +46,8 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                     edgeWeightInfluence: 1,
                     scalingRatio: 10,
                     gravity: 1
-                }
+                },
+                nodesId: 0
             }
         },
         methods : {
@@ -88,7 +89,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
 
                 // init Node
                 let newNode = {
-                    id : params.id,
+                    id : this.nodesId++,
                     label: params.title,
                     color: this.config.nodeColor,
                     x: Math.random(),
@@ -120,7 +121,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
             addEdge: function( newNode ){
                 console.log("popopop");
                 console.log(newNode);
-                
+
                 newNode.data.tags.forEach((tag) => {
                     
                     if(this.tagCounter[tag.name] == null || !this.tagCounter[tag.name].length) {
