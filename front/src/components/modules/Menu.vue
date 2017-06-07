@@ -55,7 +55,7 @@ export default {
         reset: function() {
             this.nodeParameters = {
                 name: "",
-				tags: null,
+				tags: [],
 				description : ""
             };
             this.oldNode = undefined;

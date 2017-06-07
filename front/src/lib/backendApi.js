@@ -211,10 +211,10 @@ export async function addLink( recifId, corailId, tagId, token ) {
 export async function rmLink(  recifId, corailId, tagId, token ) {
 
     let params = {
-        recifId: recifId,
-        corailId: corailId,
-        tagId: tagId,
-        token: token
+        recifId,
+        corailId,
+        tagId,
+        token
     };
     let query = { url: '/api/rm/link', qs: params };
 
@@ -239,9 +239,9 @@ export async function getRecifs() {
  * @param recifId
  * @returns Tags[]
  */
-export async function getTags(recifId) {
+export async function getTags(recifId, token) {
 
-    let params = { recifId: recifId };
+    let params = { recifId, token };
     let query = { url: '/api/info/tag', qs: params};
 
     let body = await get(query).catch(() => undefined);
@@ -249,6 +249,36 @@ export async function getTags(recifId) {
     if(body === undefined || body.err) {
         return undefined;
     }
+
+    return body.msg;
+}
+
+/**
+ * Remove Corail
+ * @param recifId
+ * @param corailId
+ */
+export async function removeCorail(recifId, corailId, token) {
+
+    let qs = { recifId, corailId, token};
+    let url = '/api/rm/corail';
+
+    let body = await post({ url, qs });
+
+    return body.msg; 
+}
+
+/**
+ * Remove Tag
+ * @param recifId
+ * @param tagId
+ */
+export async function removeTag(recifId, tagId, token) {
+
+    let qs = { recifId, corailId, token};
+    let url = '/api/rm/tag';
+
+    let body = await post({ url, qs });
 
     return body.msg;
 }
