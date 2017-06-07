@@ -172,8 +172,39 @@ export async function updateIdea(projectId, ideaId, title, description, token) {
 
     return body.msg;
 }
-
+/**
+ * add link between coral and tag
+ * @param projectId
+ * @param ideaId
+ * @param tagId
+ * @param token
+ */
 export async function addLink( projectId, ideaId, tagId, token ) {
+    console.log(projectId + ' ' + ideaId + ' ' + tagId);
+    let params = {
+        projectId: projectId,
+        ideaId: ideaId,
+        tagId: tagId,
+        token: token
+    };
+    let query = { url: '/api/create/link', qs: params };
+
+    let body = await post(query);
+
+    if(body.err) {
+        throw new Error(body.msg);
+    }
+
+    return body;
+}
+/**
+ * remove link between coral and tag
+ * @param projectId
+ * @param ideaId
+ * @param tagId
+ * @param token
+ */
+export async function rmLink(  projectId, ideaId, tagId, token ) {
 
     let params = {
         projectId: projectId,
@@ -181,6 +212,11 @@ export async function addLink( projectId, ideaId, tagId, token ) {
         tagId: tagId,
         token: token
     };
+    let query = { url: '/api/rm/link', qs: params };
+
+    let body = await post(query);
+
+    return body;
 }
 /**
  * Get all projects

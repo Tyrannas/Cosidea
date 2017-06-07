@@ -128,10 +128,10 @@ router.post('/tag', (req, res) => {
 router.use('/link', auth.secureProject);
 router.post('/link', (req, res) => {
 
-    let ideaId = req.params.ideaId;
-    let tagId  = req.params.tagId;
+    let ideaId = req.query.ideaId;
+    let tagId  = req.query.tagId;
 
     idea.addTag(ideaId, tagId)
     .then(() => res.json( new ReqSucces('Link added') ))
-    .catch(() => res.json( new ReqError('Add link failed') ));
+    .catch((err) => res.json( new ReqError(err) ));
 });
