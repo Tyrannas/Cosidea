@@ -19,7 +19,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
     };
 
     _.assign(sigma.settings, sigmaSettings);
-
+    sigma.renderers.def = sigma.renderers.canvas;
     export default {
 
         name: 'sigma',
@@ -54,7 +54,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
             toggleForceAtlas: function(){
 
                 if(this.sigmaInstance.isForceAtlas2Running()){
-                    this.sigmaInstance.stopForceAtlas2();
+                    this.sigmaInstance.killForceAtlas2();
                 }
                 else{
                     this.sigmaInstance.startForceAtlas2( this.forceAtlasParameters );
