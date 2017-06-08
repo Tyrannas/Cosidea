@@ -14,11 +14,11 @@
         <div v-show="searching" class="search">
             <ul class="search_results">
                 <li v-for="tag in filteredTags" class="search_result">
-                    <span class="select_tag" @click="selectTag(tag)">{{tag}}</span>
-                    <a @click="deleteTag" class="delete_tag">x</a>
+                    <span class="select_tag" v-on:click="selectTag(tag)">{{tag}}</span>
+                    <a v-on:click="deleteTag(tag)" class="delete_tag">x</a>
                 </li>
                 <li v-show="filteredTags.length === 0">
-                    <span class="select_tag" @click="createTag">{{search + " " + "Creer un tag"}}</span>
+                    <span class="select_tag" v-on:click="createTag">{{search + " " + "Creer un tag"}}</span>
                 </li>
             </ul>
         </div>
