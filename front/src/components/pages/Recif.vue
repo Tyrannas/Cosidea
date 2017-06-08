@@ -46,7 +46,7 @@ export default {
             // Node selected in sigma
             selectedNode:   undefined,   
 
-            socket:         io.connect()
+            //socket:         io.connect()
         }
     },
     methods: {
@@ -132,7 +132,7 @@ export default {
             }
         },
         init: async function() {
-            this.socket.on('connect', () => console.log('CONNECTED SOCKET IO'));
+            //this.socket.on('connect', () => console.log('CONNECTED SOCKET IO'));
 
             let recif = await api.getRecif(this.name);
 
@@ -143,7 +143,7 @@ export default {
                 return;
             }
             this.isValid = true;
-            console.log(recif);
+            //console.log(recif);
 
             this.id = recif.id;
             this.description = recif.description;
@@ -161,7 +161,7 @@ export default {
         async buildRecif() {
             let corails = await api.getCorails(this.token);
             this.tags = await api.getTags(this.token);
-
+            
             this.$refs.sigma.buildGraph( corails );
         },
         addRecif: async function() {

@@ -4,15 +4,15 @@ Created by Orion 2017
 
 <template>
 	<nav class="sideBar">
-		<input type="text" class="myInput" placeholder="Corail" v-model="nodeParameters.name"/>
-		<textarea class="myInput" placeholder="Description" v-model="nodeParameters.description"></textarea>
+		<input type="text" class="myInput" placeholder="Corail" v-model="corailParam.name"/>
+		<textarea class="myInput" placeholder="Description" v-model="corailParam.description"></textarea>
         <taginput
                 v-model="corailParam.tags"
                 :tagsValues="tagsNames"
                 @menuAddTag="addTag"
                 @menuDeleteTag="deleteTag"
         ></taginput>
-		<a class="myButton" v-on:click="buildCorail" v-if="!isLoad" >Add Node</a>
+		<a class="myButton" v-on:click="addCorail" v-if="!isLoad" >Add Node</a>
         <a class="myButton" v-on:click="updateCorail" v-if="isLoad">Update Node</a>
         <a class="myButton" v-on:click="removeCorail" v-if="isLoad" >Remove Node</a>
         <a class="myButton" v-on:click="toggleForceAtlas" >{{forceAtlasStatus}}</a>
@@ -62,7 +62,7 @@ export default {
             this.isLoad = false;
         },
 	    toggleForceAtlas: function(){
-	        this.$emit("recifToggleForceAtlas");
+	        this.$emit("toggleForceAtlas");
 	        this.forceAtlasStatus = this.forceAtlasStatus === "Start" ? "Stop" : "Start";
         },
         updateCorail: function() {
@@ -128,9 +128,9 @@ export default {
             this.reset();
             this.isLoad = true;
             this.corailParam = corail;
-
+            //console.log(corail);
             // take tag names
-            if(v instanceof Array) {
+            if(corail.tags instanceof Array) {
                 corail.tags = corail.tags.map((tag) => tag.name);
             }
             else {
