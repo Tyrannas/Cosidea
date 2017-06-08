@@ -10,9 +10,17 @@ Created by Orion 2017
 				:options="tagsNames"
                 @tag="addTag"
                 :taggable="true"
-                :multiple="true">
+                :multiple="true"
+                tag-placeholder="Creer nouveau tag"
+                placeholder="Ajouter tag"
+                selectLabel="Selectionner"
+        >
 		</multiselect>
 		<textarea class="myInput" placeholder="Description" v-model="nodeParameters.description"></textarea>
+        <taginput
+                v-model="nodeParameters.tags"
+                :tagsValues="tagsNames"
+        ></taginput>
 		<a class="myButton" v-on:click="addNode" v-if="!charged" >addNode</a>
         <a class="myButton" v-on:click="updateNode" v-if="charged">updateNode</a>
         <a class="myButton" v-on:click="removeNode" v-if="charged" >RemoveNode</a>
@@ -23,11 +31,14 @@ Created by Orion 2017
 
 <script>
 import * as api from '../../lib/backendApi';
-import multiselect from 'vue-multiselect'
+import multiselect from '../../../node_modules/vue-multiselect/src/Multiselect.vue'
+import taginput from '../modules/TagInput.vue'
+
 export default {
 	name: 'menu',
 	components: {
-	    'multiselect': multiselect
+	    'multiselect': multiselect,
+        'taginput': taginput
 	},
     props: ['tags'],
 	data (){
@@ -146,6 +157,10 @@ export default {
             this.tags.push(tag);
             this.nodeParameters.tags.push(tag.name);
         },
+    },
+    mounted(){
+	    console.log('component initialisé, values:');
+	    console.log(this.tagsValues);
     }
 }
 </script>
@@ -481,6 +496,11 @@ export default {
         background: #ededed;
         pointer-events: none;
     }
-
+    .deleteTag{
+        background: indianred;
+        padding: 0.5rem;
+        color: white;
+        float: left;
+    }
 
 </style>
