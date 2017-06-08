@@ -3,11 +3,11 @@
 <template>
   <div id="test">
     <sideBar ref="addCorail" id="addCorail"
-             @recifToggleForceAtlas="toggleForceAtlas"
-             @recifAddNode="addNode"
-             @recifUpdateNode="updateNode"
-             @recifRemoveNode="removeNode"
-             @recifAddTag="addTag"
+             v-on:toggleForceAtlas="toggleForceAtlas"
+             v-on:addCorail="addCorail"
+             v-on:updateCorail="updateCorail"
+             v-on:removeCorail="removeCorail"
+             v-on:addTag="addTag"
              v-bind:tags="tags"
     ></sideBar>
     <div v-if="connected">Recif: {{ name }} <br /> {{ description }} </div>
@@ -16,16 +16,16 @@
         <button type="submit" v-on:click="addRecif">YES!</button>
     </div>
     <sigma ref="sigma"
-           @recifClickNode="clickNode"
-           @recifClickStage="clickStage"
+           v-on:clickNode="clickNode"
+           v-on:clickStage="clickStage"
     ></sigma>
   </div>
 </template>
-
 <script>
 import Menu from '../modules/Menu.vue'
 import Sigma from '../modules/Sigma.vue'
 import * as api from 'lib/backendApi';
+import * as io from 'socket.io-client';
 
 export default {
     name: 'recif',
@@ -35,62 +35,84 @@ export default {
             id:             undefined,
             description:    '',
             isProtected:    false,
+            // Connection token
             token:          undefined,
-
+            // Existing tags in the recif
             tags: [],
-
+            // The recif name exist
             isValid:        true,
+            // Is Auth, true if recif is protected and pwd is valid
             isAuth:         false,
+            // Node selected in sigma
+            selectedNode:   undefined,   
 
-            //socket:         io()
+            socket:         io.connect()
         }
     },
     methods: {
         toggleForceAtlas: function() {
             this.$refs.sigma.toggleForceAtlas();
         },
+        addCorail: async function( corail ){
 
-        addNode: async function( node ){
-
-            let newNode = this.$refs.sigma.addNode( node );
+            let newNode = this.$refs.sigma.addNode( corail );
             
             let params = {
-                name: node.name,
-                description: node.description,
+                name: corail.name,
+                description: corail.description,
                 token: this.token,
                 tags: ''
             };
 
-            if(node.tags != null) {
+            // tag ids to string, comma separated
+            if( node.tags instanceof Array ) {
                 params.tags = node.tags.map((t) => t.id).join(',');
             }
             
+            // backend add
             let id = await api.addCorail(params);
+            // update id with new unique id
             newNode.data.id = id;
+            console.log('NEW ID IS: ' + id);
+
         },
-        updateNode( info ) {
-            this.$refs.sigma.addEdge( info.add );
-            this.$refs.sigma.removeEdge( info.rm );
+        updateCorail( info ) {
+            // info = { corail: Corail, toAdd: tags[], toRem: tags[] }
+            let node = this.selectedNode;
+            let corail = info.corail;
+
+            // Add new tag edges
+            node.data.tags = info.toAdd;
+            this.$refs.sigma.addEdge( node );
+            // Remove tag edges
+            node.data.tags = info.toRem;
+            this.$refs.sigma.removeEdge( node );
 
             //update node data
-            this.$refs.sigma.updateNode( info.new );
+            node.data = corail;
+            this.$refs.sigma.updateNode( node );
             
             //backend update
-            let corail = info.new.data;
             api.updateCorail( this.token, corail.id, corail.name, corail.description );
-            info.add.data.tags.forEach((tag) => api.addLink( this.token, corail.id, tag.id ));
-            info.rm.data.tags.forEach((tag) => api.rmLink( this.token, corail.id, tag.id ));
+            info.toAdd.forEach((tag) => api.addLink( this.token, corail.id, tag.id ));
+            info.toRem.forEach((tag) => api.rmLink( this.token, corail.id, tag.id ));
 
+            // corail is updated, unselect
+            this.selectedCorail = undefined;
         },
-        removeNode( node ) {
-            this.$refs.sigma.removeNode(node);
-            api.removeCorail(this.token, node.data.id);
+        removeCorail( corail ) {
+            // remove node in sigma
+            this.$refs.sigma.removeNode(this.selectedNode);
+            // remove node in backend
+            api.removeCorail(this.token, corail.id);
         },
         addTag( name ){
             api.addTag(this.token, name);
         },
         clickNode: function( node ){
-            this.$refs.addCorail.clickNode(node);
+            
+            this.selectedNode = node;
+            this.$refs.addCorail.load(node.data);
         },
         clickStage: function(){
             this.$refs.addCorail.reset();
@@ -110,9 +132,12 @@ export default {
             }
         },
         init: async function() {
+            this.socket.on('connect', () => console.log('CONNECTED SOCKET IO'));
+
             let recif = await api.getRecif(this.name);
 
             if (recif === undefined) {
+                console.log('recif === undefined');
                 this.isValid = false;
 
                 return;
