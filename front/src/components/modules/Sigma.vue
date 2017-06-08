@@ -267,12 +267,12 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 this.sigmaInstance.bind('clickNode', function( event ){
                     let node = event.data.node;
                     //console.log(parent);
-                    parent.$emit('clickNode', node);
+                    parent.$emit('recifClickNode', node);
                 });
 
                 // empty menu when clicked on canvas
-                this.sigmaInstance.bind('clickStage', function ( event ){
-                   parent.$emit('clickStage');
+                this.sigmaInstance.bind('recifClickStage', function ( event ){
+                   parent.$emit('recifClickStage');
                 });
 
                 // dragListener

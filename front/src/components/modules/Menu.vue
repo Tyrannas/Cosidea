@@ -5,21 +5,12 @@ Created by Orion 2017
 <template>
 	<nav class="sideBar">
 		<input type="text" class="myInput" placeholder="Corail" v-model="nodeParameters.name"/>
-		<multiselect class="myInput"
-				v-model="nodeParameters.tags"
-				:options="tagsNames"
-                @tag="addTag"
-                :taggable="true"
-                :multiple="true"
-                tag-placeholder="Creer nouveau tag"
-                placeholder="Ajouter tag"
-                selectLabel="Selectionner"
-        >
-		</multiselect>
 		<textarea class="myInput" placeholder="Description" v-model="nodeParameters.description"></textarea>
         <taginput
                 v-model="nodeParameters.tags"
                 :tagsValues="tagsNames"
+                @menuAddTag="addTag"
+                @menuDeleteTag="deleteTag"
         ></taginput>
 		<a class="myButton" v-on:click="addNode" v-if="!charged" >addNode</a>
         <a class="myButton" v-on:click="updateNode" v-if="charged">updateNode</a>
@@ -74,14 +65,13 @@ export default {
             this.oldNode = undefined;
         },
 	    toggleForceAtlas: function(){
-	        this.$emit("toggleForceAtlas");
+	        this.$emit("recifToggleForceAtlas");
 	        this.forceAtlasStatus = this.forceAtlasStatus === "Start" ? "Stop" : "Start";
         },
         updateNode: function() {
 
             let corail = Object.assign({}, this.nodeParameters);
             corail.id = this.oldNode.data.id;
-            console.log('corail.id: ' + corail.id);
 
             if(corail.tags != null)
                 corail.tags = corail.tags.map((tagName) => this.tagsIndex[tagName]);
@@ -114,7 +104,7 @@ export default {
 
             console.log(toAdd);
             console.log(toRem);
-            this.$emit('updateNode', { new: updated, add: toAdd, rm: toRem });
+            this.$emit('recifUpdateNode', { new: updated, add: toAdd, rm: toRem });
             
             this.reset();
         },
@@ -132,13 +122,13 @@ export default {
                 node.tags = [];
 
             // emit update event
-	        this.$emit("addNode", node);
+	        this.$emit("recifAddNode", node);
             this.reset();
 
         },
         removeNode: function() {
             let node = Object.assign({}, this.oldNode);
-            this.$emit('removeNode', node);
+            this.$emit('recifRemoveNode', node);
             this.reset();
         },
         clickNode: function( node ){
@@ -148,15 +138,17 @@ export default {
             this.nodeParameters.tags = node.data.tags.map((t) => t.name);
             this.nodeParameters.description = node.data.description;
         },
-        addTag: function (newTag) {
+        addTag: function ( newTag ) {
             const tag = {
-                name: newTag,
-                code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
+                name: newTag
             };
-            this.$emit('addTag', newTag);
+            this.$emit('recifAddTag', newTag);
             this.tags.push(tag);
             this.nodeParameters.tags.push(tag.name);
         },
+        deleteTag: function ( oldTag ){
+            this.tags = this.tags.filter(t => t.name !== oldTag);
+        }
     },
     mounted(){
 	    console.log('component initialisé, values:');

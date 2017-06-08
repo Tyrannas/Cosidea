@@ -1,5 +1,5 @@
 <template>
-    <div class="multiselect">
+    <div class="multiselect" @blur="toggleSearch(false)" @click="toggleSearch(true)" :tabindex="-1">
         <div class="tag_container">
             <span class="selected_tag" v-for="tag in value">
                 <span class="selected_tag_text">{{tag}}</span>
@@ -7,10 +7,11 @@
                     aria-hidden="true"
                     @mousedown.prevent="removeTag(tag)"
                     class="selected_tag_remove">
+                    x
                 </i>
             </span>
         </div>
-        <input class="search_bar" type="text" v-model="search" @click="toggleSearch(true)" @blur="toggleSearch(false)" :placeholder="placeholder"/>
+        <input class="search_bar" type="text" v-model="search"  :placeholder="placeholder"/>
         <div v-show="searching" class="search">
             <ul class="search_results">
                 <li v-for="tag in filteredTags" class="search_result">
@@ -37,7 +38,11 @@
                 required: true
             },
             value: {
-            }
+                type: null,
+                default: function _default() {
+                    return [];
+                }
+            },
         },
         data (){
             return{
@@ -52,19 +57,19 @@
         },
         methods: {
             selectTag( tag ){
-                console.log(" on a selectionné un tag " + tag);
                 this.value.push(tag);
+                this.searching = false;
                 this.$emit('input', this.value);
             },
             createTag(){
-                this.$emit('addTag', this.search)
+                this.$emit('menuAddTag', this.search)
             },
             removeTag( tag ){
                 this.value = this.value.filter(e => e!== tag);
                 this.$emit('input', this.value)
             },
             deleteTag( tag ){
-                this.$emit('deleteTag', tag);
+                this.$emit('menuDeleteTag', tag);
             },
             toggleSearch( status ){
                 this.searching = status;
@@ -79,7 +84,7 @@
         width: 100%;
         position: relative;
     }
-    .select_tag:hover, .delete_tag:hover{
+    .select_tag:hover, .delete_tag:hover, .selected_tag_remove:hover{
         cursor: pointer;
         background: red;
     }

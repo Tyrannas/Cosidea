@@ -3,11 +3,11 @@
 <template>
   <div id="test">
     <sideBar ref="addCorail" id="addCorail"
-             v-on:toggleForceAtlas="toggleForceAtlas"
-             v-on:addNode="addNode"
-             v-on:updateNode="updateNode"
-             v-on:removeNode="removeNode"
-             v-on:addTag="addTag"
+             @recifToggleForceAtlas="toggleForceAtlas"
+             @recifAddNode="addNode"
+             @recifUpdateNode="updateNode"
+             @recifRemoveNode="removeNode"
+             @recifAddTag="addTag"
              v-bind:tags="tags"
     ></sideBar>
     <div v-if="connected">Recif: {{ name }} <br /> {{ description }} </div>
@@ -16,12 +16,12 @@
         <button type="submit" v-on:click="addRecif">YES!</button>
     </div>
     <sigma ref="sigma"
-           v-on:clickNode="clickNode"
-           v-on:clickStage="clickStage"
+           @recifClickNode="clickNode"
+           @recifClickStage="clickStage"
     ></sigma>
   </div>
 </template>
-<script src="/socket.io/socket.io.js"></script>
+
 <script>
 import Menu from '../modules/Menu.vue'
 import Sigma from '../modules/Sigma.vue'
@@ -67,8 +67,6 @@ export default {
             
             let id = await api.addCorail(params);
             newNode.data.id = id;
-            console.log('NEW ID IS: ' + id);
-
         },
         updateNode( info ) {
             this.$refs.sigma.addEdge( info.add );
@@ -115,7 +113,6 @@ export default {
             let recif = await api.getRecif(this.name);
 
             if (recif === undefined) {
-                console.log('recif === undefined');
                 this.isValid = false;
 
                 return;
