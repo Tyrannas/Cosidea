@@ -19,7 +19,7 @@ Created by Orion 2017
 		<textarea class="myInput" placeholder="Description" v-model="nodeParameters.description"></textarea>
         <taginput
                 v-model="nodeParameters.tags"
-                tagValues="tagsNames"
+                :tagsValues="tagsNames"
         ></taginput>
 		<a class="myButton" v-on:click="addNode" v-if="!charged" >addNode</a>
         <a class="myButton" v-on:click="updateNode" v-if="charged">updateNode</a>
@@ -157,6 +157,10 @@ export default {
             this.tags.push(tag);
             this.nodeParameters.tags.push(tag.name);
         },
+    },
+    mounted(){
+	    console.log('component initialisé, values:');
+	    console.log(this.tagsValues);
     }
 }
 </script>

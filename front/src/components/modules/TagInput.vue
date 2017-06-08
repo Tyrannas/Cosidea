@@ -1,6 +1,6 @@
 <template>
     <div class="multiselect">
-        <div class="tag_container">
+        <div class="tag_container" :selectedTags="selectedTags">
             <span class="selected_tag" v-for="tag in selectedTags">
                 <span class="selected_tag_text">tag</span>
                 <i
@@ -10,15 +10,15 @@
                 </i>
             </span>
         </div>
-        <input type="text" v-model="search" @click="toggleSearch(true)" @blur="toggleSearch(false)" :placeholder="placeholder" v-bind:value="value"/>
+        <input class="search_bar" type="text" v-model="search" @click="toggleSearch(true)" @blur="toggleSearch(false)" :placeholder="placeholder"/>
         <div v-show="searching" class="search">
             <ul class="search_results">
                 <li v-for="tag in filteredTags" class="search_result">
                     <span class="select_tag" @click="selectTag(tag)">{{tag}}</span>
-                    <a @click="delete_tag" class="delete_tag">x</a>
+                    <a @click="deleteTag" class="delete_tag">x</a>
                 </li>
                 <li v-show="filteredTags.length === 0">
-                    <span class="select_tag" @click="createTag">{{search}}</span>
+                    <span class="select_tag" @click="createTag">{{search + " " + "Creer un tag"}}</span>
                 </li>
             </ul>
         </div>
@@ -28,14 +28,16 @@
 <script>
     export default {
         name: 'multiselect',
+        model: {
+            prop: 'selectedTags'
+        },
         props: {
             placeholder: 'Ajouter un tag',
             createTagLabel: 'Créer un tag',
             selectTagLabel: 'Sélectionner',
-            selectedTags: [],
-            value: {
+            tagsValues: {
                 type: Array,
-                default: []
+                required: true
             }
         },
         data (){
@@ -46,21 +48,24 @@
         },
         computed: {
             filteredTags () {
-                return this.value.filter(t => t.indexOf(search) !== -1);
+                return this.tagsValues.filter(t => t.indexOf(this.search) !== -1);
             }
         },
         methods: {
-            selectTag(){
-
+            selectTag( tag ){
+                console.log(" on a selectionné un tag " + tag);
+                this.selectedTags.push(tag);
+                this.$emit('input', this.selectedTags);
             },
             createTag(){
-
+                this.$emit('addTag', this.search)
             },
-            removeTag(){
-
+            removeTag( tag ){
+                this.selectedTags = this.selectedTags.filter(e => e!== tag);
+                this.$emit('input', this.selectedTags)
             },
-            deleteTag(){
-
+            deleteTag( tag ){
+                this.$emit('deleteTag', tag);
             },
             toggleSearch( status ){
                 this.searching = status;
@@ -68,3 +73,15 @@
         }
     }
 </script>
+
+<style>
+    .multiselect{
+        background: white;
+        width: 100%;
+        position: relative;
+    }
+    .select_tag:hover, .delete_tag:hover{
+        cursor: pointer;
+        background: red;
+    }
+</style>
