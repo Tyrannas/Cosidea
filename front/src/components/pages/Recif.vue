@@ -8,6 +8,7 @@
              @recifUpdateNode="updateNode"
              @recifRemoveNode="removeNode"
              @recifAddTag="addTag"
+             @recifDeleteTag="deleteTag"
              v-bind:tags="tags"
     ></sideBar>
     <div v-if="connected">Recif: {{ name }} <br /> {{ description }} </div>
@@ -89,25 +90,15 @@ export default {
         addTag( name ){
             api.addTag(this.token, name);
         },
+        deleteTag( tag ){
+            this.tags = this.tags.filter(t => t.id !== tag.id);
+            api.removeTag(this.token, tag.id);
+        },
         clickNode: function( node ){
             this.$refs.addCorail.clickNode(node);
         },
         clickStage: function(){
             this.$refs.addCorail.reset();
-        },
-        testApplication: function(){
-            let arr = this.$refs.addCorail.tagsValues;
-            for(let i = 0; i < 150; ++i){
-                let tags = [];
-                for(let i = 0; i < Math.floor(Math.random() * 3); ++i){
-                    tags.push(arr[Math.floor(Math.random()*arr.length)])
-                }
-                this.$refs.sigma.addNode({
-                    name: 'n' + i,
-                    tags: tags,
-                    id: Math.random()
-                });
-            }
         },
         init: async function() {
             let recif = await api.getRecif(this.name);

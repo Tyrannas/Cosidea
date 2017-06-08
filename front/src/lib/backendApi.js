@@ -271,7 +271,7 @@ export async function removeCorail( token, corailId ) {
  */
 export async function removeTag( token, tagId ) {
 
-    let qs = { corailId, token};
+    let qs = { tagId, token};
     let url = '/api/rm/tag';
 
     let body = await post({ url, qs });

@@ -60,13 +60,14 @@
                 this.value.push(tag);
                 this.searching = false;
                 this.$emit('input', this.value);
+                this.search = "";
             },
             createTag(){
-                this.$emit('menuAddTag', this.search)
+                this.$emit('menuAddTag', this.search);
+                this.search = "";
             },
             removeTag( tag ){
-                this.value = this.value.filter(e => e!== tag);
-                this.$emit('input', this.value)
+                this.$emit('input', this.value.filter(e => e!== tag))
             },
             deleteTag( tag ){
                 this.$emit('menuDeleteTag', tag);

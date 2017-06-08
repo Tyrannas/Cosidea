@@ -143,11 +143,11 @@ export default {
                 name: newTag
             };
             this.$emit('recifAddTag', newTag);
-            this.tags.push(tag);
             this.nodeParameters.tags.push(tag.name);
         },
         deleteTag: function ( oldTag ){
-            this.tags = this.tags.filter(t => t.name !== oldTag);
+            this.$emit('recifDeleteTag', this.tagsIndex[oldTag]);
+            this.nodeParameters.tags = this.nodeParameters.tags.filter(t => t!== oldTag.name);
         }
     },
     mounted(){
