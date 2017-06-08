@@ -1,8 +1,8 @@
 <template>
     <div class="multiselect">
-        <div class="tag_container" :selectedTags="selectedTags">
-            <span class="selected_tag" v-for="tag in selectedTags">
-                <span class="selected_tag_text">tag</span>
+        <div class="tag_container">
+            <span class="selected_tag" v-for="tag in value">
+                <span class="selected_tag_text">{{tag}}</span>
                 <i
                     aria-hidden="true"
                     @mousedown.prevent="removeTag(tag)"
@@ -28,9 +28,6 @@
 <script>
     export default {
         name: 'multiselect',
-        model: {
-            prop: 'selectedTags'
-        },
         props: {
             placeholder: 'Ajouter un tag',
             createTagLabel: 'Créer un tag',
@@ -38,6 +35,8 @@
             tagsValues: {
                 type: Array,
                 required: true
+            },
+            value: {
             }
         },
         data (){
@@ -54,15 +53,15 @@
         methods: {
             selectTag( tag ){
                 console.log(" on a selectionné un tag " + tag);
-                this.selectedTags.push(tag);
-                this.$emit('input', this.selectedTags);
+                this.value.push(tag);
+                this.$emit('input', this.value);
             },
             createTag(){
                 this.$emit('addTag', this.search)
             },
             removeTag( tag ){
-                this.selectedTags = this.selectedTags.filter(e => e!== tag);
-                this.$emit('input', this.selectedTags)
+                this.value = this.value.filter(e => e!== tag);
+                this.$emit('input', this.value)
             },
             deleteTag( tag ){
                 this.$emit('deleteTag', tag);
