@@ -1,5 +1,5 @@
 <template>
-    <div class="multiselect" @blur="toggleSearch(false)" :tabindex="0">
+    <div class="tag_selection" @blur="toggleSearch(false)" :tabindex="0">
         <div class="tag_container">
             <span class="selected_tag" v-for="tag in value">
                 <span class="selected_tag_text">{{tag}}</span>
@@ -11,7 +11,7 @@
                 </a>
             </span>
         </div>
-        <input class="search_bar" type="text" v-model="search"  :placeholder="placeholder" @focus="toggleSearch(true)" @blur="toggleSearch(false)"/>
+        <input class="search_bar" type="text" v-model="search"  :placeholder="placeholder" @focus="toggleSearch(true)" @blur="testBlur"/>
         <div v-show="searching" class="search">
             <ul class="search_results">
                 <li v-for="tag in filteredTags" class="search_result">
@@ -27,8 +27,11 @@
 </template>
 
 <script>
+    /**
+     * Component to select tags and add them to an array
+     */
     export default {
-        name: 'multiselect',
+        name: 'tagSelection',
         props: {
             placeholder: 'Ajouter un tag',
             createTagLabel: 'Créer un tag',
@@ -42,7 +45,7 @@
                 default: function _default() {
                     return [];
                 }
-            },
+            }
         },
         data (){
             return{
@@ -60,10 +63,11 @@
                 this.value.push(tag);
                 this.$emit('input', this.value);
                 this.search = "";
-//                this.toggleSearch( false )
+                this.toggleSearch( false )
             },
             createTag(){
                 this.$emit('menuAddTag', this.search);
+                this.toggleSearch( false )
                 this.search = "";
             },
             removeTag( tag ){
@@ -74,13 +78,22 @@
             },
             toggleSearch( status ){
                 this.searching = status;
+            },
+            /**
+             * test if the click is outside of the component, if yes hide search
+             * @param event
+             */
+            testBlur( event ){
+                console.log(event.relatedTarget);
+                if(event.relatedTarget) return;
+                this.toggleSearch(false);
             }
         }
     }
 </script>
 
 <style>
-    .multiselect{
+    .tag_selection {
         border: none;
         border-radius: 7px;
         display: block;
