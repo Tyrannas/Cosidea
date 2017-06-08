@@ -25,6 +25,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
         data (){
             return {
                 tagCounter: {},
+                corailIndex: {},
                 sigmaInstance: new sigma({
                     g : {
                         nodes: [],
@@ -88,7 +89,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
             addNode: function( params ){
 
                 //console.log(params);
-                if(params.tags === undefined) {
+                if(!(params.tags instanceof Array)) {
                     params.tags = [];
                 }
 
@@ -110,7 +111,6 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 // create links between new Node and previously existing ones
                 this.addEdge(newNode);
                 //console.log(this.sigmaInstance.graph.nodes());
-                this.bindEvents();
 
                 if(this.sigmaInstance.isForceAtlas2Running()){
                     this.sigmaInstance.killForceAtlas2();
@@ -267,12 +267,13 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 this.sigmaInstance.bind('clickNode', function( event ){
                     let node = event.data.node;
                     //console.log(parent);
-                    parent.$emit('recifClickNode', node);
+                    //console.log(node.id);
+                    parent.$emit('clickNode', node);
                 });
 
                 // empty menu when clicked on canvas
-                this.sigmaInstance.bind('recifClickStage', function ( event ){
-                   parent.$emit('recifClickStage');
+                this.sigmaInstance.bind('clickStage', function ( event ){
+                   parent.$emit('clickStage');
                 });
 
                 // dragListener

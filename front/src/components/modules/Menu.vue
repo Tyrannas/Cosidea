@@ -4,17 +4,17 @@ Created by Orion 2017
 
 <template>
 	<nav class="sideBar">
-		<input type="text" class="myInput" placeholder="Corail" v-model="nodeParameters.name"/>
-		<textarea class="myInput" placeholder="Description" v-model="nodeParameters.description"></textarea>
+		<input type="text" class="myInput" placeholder="Corail" v-model="corailParam.name"/>
+		<textarea class="myInput" placeholder="Description" v-model="corailParam.description"></textarea>
         <taginput
-                v-model="nodeParameters.tags"
+                v-model="corailParam.tags"
                 :tagsValues="tagsNames"
                 @menuAddTag="addTag"
-                @menuDeleteTag="deleteTag"
+                @menuDeleteTag="removeTag"
         ></taginput>
-		<a class="myButton" v-on:click="addNode" v-if="!charged" >addNode</a>
-        <a class="myButton" v-on:click="updateNode" v-if="charged">updateNode</a>
-        <a class="myButton" v-on:click="removeNode" v-if="charged" >RemoveNode</a>
+		<a class="myButton" v-on:click="addCorail" v-if="!isLoad" >Add Node</a>
+        <a class="myButton" v-on:click="updateCorail" v-if="isLoad">Update Node</a>
+        <a class="myButton" v-on:click="removeCorail" v-if="isLoad" >Remove Node</a>
         <a class="myButton" v-on:click="toggleForceAtlas" >{{forceAtlasStatus}}</a>
 	</nav>
 </template>
@@ -35,8 +35,12 @@ export default {
 	data (){
 		return {
 			forceAtlasStatus: "Start",
-			nodeParameters: {},
-            oldNode: undefined,
+			corailParam: {
+                name: '',
+                description: '',
+                tags: []
+            },
+            oldCorail: undefined
 		}
 	},
     mounted: function() {
@@ -51,103 +55,110 @@ export default {
             this.tags.forEach((tag) => index[tag.name] = tag);
             return index; 
         },
-        charged: function() {
-            return this.oldNode !== undefined;
+        isLoad: function() {
+            return this.oldCorail !== undefined;
         }
     },
     methods: {
         reset: function() {
-            this.nodeParameters = {
+            this.corailParam = {
                 name: "",
 				tags: [],
 				description : ""
             };
-            this.oldNode = undefined;
+            this.oldCorail = undefined;
         },
 	    toggleForceAtlas: function(){
-	        this.$emit("recifToggleForceAtlas");
+	        this.$emit("toggleForceAtlas");
 	        this.forceAtlasStatus = this.forceAtlasStatus === "Start" ? "Stop" : "Start";
         },
-        updateNode: function() {
+        updateCorail: function() {
 
-            let corail = Object.assign({}, this.nodeParameters);
-            corail.id = this.oldNode.data.id;
+            console.log('update!')
 
-            if(corail.tags != null)
+            let corail = Object.assign({}, this.corailParam);
+            //corail.id = this.oldNode.data.id;
+
+            if(corail.tags instanceof Array)
                 corail.tags = corail.tags.map((tagName) => this.tagsIndex[tagName]);
             
-            let toAdd = { id: this.oldNode.id, data: {tags: [] }};
-            let toRem = { id: this.oldNode.id, data: {tags: [] }};
-            let updated = { id: this.oldNode.id, data: corail };
+            let toAdd = [];
+            let toRem = [];
 
             let indexer = {};
             // for each tag that we had before mark true
-            this.oldNode.data.tags.forEach((tag) => {
+            this.oldCorail.tags.forEach((tag) => {
                 indexer[tag.name] = true;
             });
             // for each node delete key if is not new, else add node
-            this.nodeParameters.tags.forEach((tagName) => {
+            this.corailParam.tags.forEach((tagName) => {
                 // is old
                 if(indexer[tagName] !== undefined) {
                     delete indexer[tagName];
                 }
                 // is new
                 else {
-                    toAdd.data.tags.push(this.tagsIndex[tagName]);
+                    toAdd.push(this.tagsIndex[tagName]);
                 }
             });
 
             // The key in indexer now gives us the deleted tags
             Object.keys(indexer).forEach((tagName) => {
-                toRem.data.tags.push(this.tagsIndex[tagName]);
+                toRem.push(this.tagsIndex[tagName]);
             });
-
-            console.log(toAdd);
-            console.log(toRem);
-            this.$emit('recifUpdateNode', { new: updated, add: toAdd, rm: toRem });
+            console.log('add tags: ' + toAdd.join(','));
+            this.$emit('updateCorail', { corail, toAdd, toRem });
             
             this.reset();
         },
-        addNode: function(){
+        addCorail: function(){
 
-            // copy node params and assign default id
-            let node = Object.assign({}, this.nodeParameters);
+            // copy corail params to avoid references
+            let corail = Object.assign({}, this.corailParam);
 
-            node.id = this.nodesId++;
             // Get full tag object from tagName
-            if(node.tags !== null && node.tags !== undefined)
-                node.tags = node.tags.map((tagName) => this.tagsIndex[tagName]);
-            
-            else
-                node.tags = [];
+            if(corail.tags instanceof Array) {
+                corail.tags = corail.tags.map((tagName) => this.tagsIndex[tagName]);
+            }
+            else {
+                corail.tags = [];
+            }
 
             // emit update event
-	        this.$emit("recifAddNode", node);
+	        this.$emit("addCorail", corail);
             this.reset();
 
         },
-        removeNode: function() {
-            let node = Object.assign({}, this.oldNode);
-            this.$emit('recifRemoveNode', node);
+        removeCorail: function() {
+            this.$emit('removeCorail', this.corailParam);
             this.reset();
         },
-        clickNode: function( node ){
+        load: function( corail ){
+
             this.reset();
-            this.oldNode = Object.assign( {}, node );
-            this.nodeParameters.name = node.data.name;
-            this.nodeParameters.tags = node.data.tags.map((t) => t.name);
-            this.nodeParameters.description = node.data.description;
+            this.oldCorail = corail;
+            this.corailParam = Object.assign({}, corail);
+            //console.log(corail);
+            // take tag names
+            if(this.corailParam.tags instanceof Array) {
+                this.corailParam.tags = this.corailParam.tags.map((tag) => tag.name);
+            }
+            else {
+                this.corailParam.tags = [];
+            }
         },
         addTag: function ( newTag ) {
             const tag = {
                 name: newTag
             };
-            this.$emit('recifAddTag', newTag);
-            this.nodeParameters.tags.push(tag.name);
+
+            this.$emit('addTag', newTag);
+            this.corailParam.tags.push(tag.name);
         },
-        deleteTag: function ( oldTag ){
-            this.$emit('recifDeleteTag', this.tagsIndex[oldTag]);
-            this.nodeParameters.tags = this.nodeParameters.tags.filter(t => t!== oldTag.name);
+        removeTag: function ( oldTag ){
+            this.$emit('removeTag', this.tagsIndex[oldTag]);
+            console.log(this.corailParam);
+            this.corailParam.tags = this.corailParam.tags.filter(t => t!== oldTag.name);
         }
     },
     mounted(){

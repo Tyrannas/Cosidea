@@ -31,9 +31,9 @@ function removeSubscriber(socket: Socket) {
         return;
     }
     // remove from subscribers
-    let index = subscribers[socket.recifId].some((s: Socket) => s.id === socket.id);
-    subscribers[socket.recifId].splice(index, 1);
-    // Delete key
+    let list = subscribers[socket.recifId];
+    list = list.filter((s: Socket) => s.id === socket.id);
+
     delete socket.recifId;
 }
 
