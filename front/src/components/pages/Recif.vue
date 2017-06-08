@@ -110,7 +110,6 @@ export default {
             api.addTag(this.token, name);
         },
         clickNode: function( node ){
-            
             this.selectedNode = node;
             this.$refs.addCorail.load(node.data);
         },

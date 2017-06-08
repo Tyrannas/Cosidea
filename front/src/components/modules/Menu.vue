@@ -36,7 +36,7 @@ export default {
 		return {
 			forceAtlasStatus: "Start",
 			corailParam: {},
-            isLoad: false
+            oldCorail: undefined
 		}
 	},
     mounted: function() {
@@ -50,6 +50,9 @@ export default {
             let index = {};
             this.tags.forEach((tag) => index[tag.name] = tag);
             return index; 
+        },
+        isLoad: function() {
+            return this.oldCorail !== undefined;
         }
     },
     methods: {
@@ -59,13 +62,15 @@ export default {
 				tags: [],
 				description : ""
             };
-            this.isLoad = false;
+            this.oldCorail = undefined;
         },
 	    toggleForceAtlas: function(){
 	        this.$emit("toggleForceAtlas");
 	        this.forceAtlasStatus = this.forceAtlasStatus === "Start" ? "Stop" : "Start";
         },
         updateCorail: function() {
+
+            console.log('update!')
 
             let corail = Object.assign({}, this.corailParam);
             //corail.id = this.oldNode.data.id;
@@ -78,7 +83,7 @@ export default {
 
             let indexer = {};
             // for each tag that we had before mark true
-            this.oldNode.data.tags.forEach((tag) => {
+            this.oldCorail.tags.forEach((tag) => {
                 indexer[tag.name] = true;
             });
             // for each node delete key if is not new, else add node
@@ -97,7 +102,7 @@ export default {
             Object.keys(indexer).forEach((tagName) => {
                 toRem.push(this.tagsIndex[tagName]);
             });
-
+            console.log('add tags: ' + toAdd.join(','));
             this.$emit('updateCorail', { corail, toAdd, toRem });
             
             this.reset();
@@ -125,16 +130,17 @@ export default {
             this.reset();
         },
         load: function( corail ){
+
             this.reset();
-            this.isLoad = true;
-            this.corailParam = corail;
+            this.oldCorail = corail;
+            this.corailParam = Object.assign({}, corail);
             //console.log(corail);
             // take tag names
-            if(corail.tags instanceof Array) {
-                corail.tags = corail.tags.map((tag) => tag.name);
+            if(this.corailParam.tags instanceof Array) {
+                this.corailParam.tags = this.corailParam.tags.map((tag) => tag.name);
             }
             else {
-                corail.tags = [];
+                this.corailParam.tags = [];
             }
         },
         addTag: function ( newTag ) {
