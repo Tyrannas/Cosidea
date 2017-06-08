@@ -1,25 +1,25 @@
 <template>
-    <div class="multiselect" @blur="toggleSearch(false)" @click="toggleSearch(true)" :tabindex="-1">
+    <div class="multiselect" @blur="toggleSearch(false)" :tabindex="0">
         <div class="tag_container">
             <span class="selected_tag" v-for="tag in value">
                 <span class="selected_tag_text">{{tag}}</span>
-                <i
+                <a
                     aria-hidden="true"
                     @mousedown.prevent="removeTag(tag)"
                     class="selected_tag_remove">
                     x
-                </i>
+                </a>
             </span>
         </div>
-        <input class="search_bar" type="text" v-model="search"  :placeholder="placeholder"/>
+        <input class="search_bar" type="text" v-model="search"  :placeholder="placeholder" @focus="toggleSearch(true)" @blur="toggleSearch(false)"/>
         <div v-show="searching" class="search">
             <ul class="search_results">
                 <li v-for="tag in filteredTags" class="search_result">
-                    <span class="select_tag" v-on:click="selectTag(tag)">{{tag}}</span>
-                    <a v-on:click="deleteTag(tag)" class="delete_tag">x</a>
+                    <span class="select_tag" @focus.prevent @click.stop="selectTag(tag)">{{tag}}</span>
+                    <a @focus.prevent @click.stop="deleteTag(tag)" class="delete_tag">x</a>
                 </li>
                 <li v-show="filteredTags.length === 0">
-                    <span class="select_tag" v-on:click="createTag">{{search + " " + "Creer un tag"}}</span>
+                    <span class="select_tag" @focus.prevent @click.stop="createTag">{{search + " " + "Creer un tag"}}</span>
                 </li>
             </ul>
         </div>
@@ -58,9 +58,9 @@
         methods: {
             selectTag( tag ){
                 this.value.push(tag);
-                this.searching = false;
                 this.$emit('input', this.value);
                 this.search = "";
+//                this.toggleSearch( false )
             },
             createTag(){
                 this.$emit('menuAddTag', this.search);
@@ -81,9 +81,13 @@
 
 <style>
     .multiselect{
+        border: none;
+        border-radius: 7px;
+        display: block;
+        width: 85%;
+        padding: 1rem;
+        margin: 1rem auto;
         background: white;
-        width: 100%;
-        position: relative;
     }
     .select_tag:hover, .delete_tag:hover, .selected_tag_remove:hover{
         cursor: pointer;
