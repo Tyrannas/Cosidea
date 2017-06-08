@@ -87,7 +87,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
              */
             addNode: function( params ){
 
-                console.log(params);
+                //console.log(params);
                 if(params.tags === undefined) {
                     params.tags = [];
                 }
@@ -235,6 +235,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
             updateNode( node ) {
                 this.nodes(node.id).data = node.data;
                 this.nodes(node.id).label = node.data.name;
+                this.sigmaInstance.refresh();
             },
             /**
              * builds the graph with a array of nodes

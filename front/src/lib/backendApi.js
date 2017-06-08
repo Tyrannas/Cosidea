@@ -56,8 +56,12 @@ export async function addCorail( params ){
 
     let query = { url: '/api/create/corail', qs: params };
     let body = await post(query);
+    
+    if(body.err) {
+        throw new Error(body.err);
+    }
 
-    return body.msg.id;
+    return body.msg;
 }
 
 
@@ -66,9 +70,11 @@ export async function addCorail( params ){
  * @param params : recif corail, tag name, optional: token
  * @returns {Promise.<*>}
  */
-export async function addTag( params ){
-    let query = {url: '/api/create/tag', qs: params};
-    let body = await post(query);
+export async function addTag( token, name ){
+    let qs = { token, name};
+    let url = '/api/create/tag';
+
+    let body = await post({ url, qs });
 
     if(body === undefined || body.err) {
         return undefined;
@@ -120,11 +126,10 @@ export async function getRecif(recifName) {
  * @param password
  * @returns Promise<token: string>
  */
-async function getToken(recifId, password) {
+export async function getToken(recifId, password) {
 
-    let parmas = {recifId: recifId, pwd: password};
-    let query = {url: '/api/auth/recif', qs: parmas };
-
+    let qs = { recifId, pwd: password};
+    let query = {url: '/api/auth/recif', qs };
 
     let body = await get(query);
 
@@ -139,36 +144,36 @@ async function getToken(recifId, password) {
 
 /**
  * Get Corails associated to a recif
- * @param recifId
  * @param token
  * @returns Promise<corails[]>
  */
-export async function getCorails(recifId, token) {
+export async function getCorails(token) {
 
-    let params = { recifId: recifId, token: token }
-    let query = {url: '/api/info/corail', qs: params};
+    let qs = { token }
+    let url = '/api/info/corail';
     
-    let body = await get(query);
+    let body = await get({ url, qs });
 
-    if (body === undefined || body.err) {
-        throw new Error('request failed');
+    if (body.err) {
+        throw new Error(body.msg);
     }
     
     return body.msg;
 }
 
-export async function updateCorail(recifId, corailId, name, description, token) {
-    console.log('corail id: ' + corailId);
-    let params = {
-        recifId: recifId,
-        corailId: corailId,
-        token: token,
-        name: name,
-        description: description
-    };
-    let query = { url: '/api/update/corail', qs: params };
+/**
+ * Update Corail name and description
+ * @param token
+ * @param corailId
+ * @param name
+ * @param description
+ */
+export async function updateCorail(token, corailId, name, description) {
 
-    let body = await post(query);
+    let qs = { token, corailId, name, description };    
+    let url = '/api/update/corail';
+
+    let body = await post({ url, qs });
 
     if(body === undefined || body.err) {
         throw new Error('update corail failed');
@@ -178,22 +183,16 @@ export async function updateCorail(recifId, corailId, name, description, token) 
 }
 /**
  * add link between coral and tag
- * @param recifId
+ * @param token
  * @param corailId
  * @param tagId
- * @param token
  */
-export async function addLink( recifId, corailId, tagId, token ) {
-    console.log(recifId + ' ' + corailId + ' ' + tagId);
-    let params = {
-        recifId: recifId,
-        corailId: corailId,
-        tagId: tagId,
-        token: token
-    };
-    let query = { url: '/api/create/link', qs: params };
+export async function addLink( token, corailId, tagId ) {
 
-    let body = await post(query);
+    let qs = { token, corailId, tagId };
+    let url = '/api/create/link';
+
+    let body = await post({ url, qs });
 
     if(body.err) {
         throw new Error(body.msg);
@@ -203,22 +202,19 @@ export async function addLink( recifId, corailId, tagId, token ) {
 }
 /**
  * remove link between coral and tag
- * @param recifId
+ * @param token
  * @param corailId
  * @param tagId
- * @param token
  */
-export async function rmLink(  recifId, corailId, tagId, token ) {
+export async function rmLink( token, corailId, tagId ) {
 
-    let params = {
-        recifId,
-        corailId,
-        tagId,
-        token
-    };
-    let query = { url: '/api/rm/link', qs: params };
+    let qs = { token, corailId, tagId };
+    let url = '/api/rm/link';
 
-    let body = await post(query);
+    let body = await post({ url, qs });
+    if(body.err) {
+        throw new Error(body.msg);
+    }
 
     return body.msg;
 }
@@ -236,15 +232,15 @@ export async function getRecifs() {
 
 /**
  * Get Tags from Recif 
- * @param recifId
+ * @param token
  * @returns Tags[]
  */
-export async function getTags(recifId, token) {
+export async function getTags(token) {
 
-    let params = { recifId, token };
-    let query = { url: '/api/info/tag', qs: params};
+    let qs = { token };
+    let query = { url: '/api/info/tag', qs};
 
-    let body = await get(query).catch(() => undefined);
+    let body = await get(query);
 
     if(body === undefined || body.err) {
         return undefined;
@@ -255,12 +251,12 @@ export async function getTags(recifId, token) {
 
 /**
  * Remove Corail
- * @param recifId
+ * @param token
  * @param corailId
  */
-export async function removeCorail(recifId, corailId, token) {
+export async function removeCorail( token, corailId ) {
 
-    let qs = { recifId, corailId, token};
+    let qs = { corailId, token};
     let url = '/api/rm/corail';
 
     let body = await post({ url, qs });
@@ -270,12 +266,12 @@ export async function removeCorail(recifId, corailId, token) {
 
 /**
  * Remove Tag
- * @param recifId
+ * @param token
  * @param tagId
  */
-export async function removeTag(recifId, tagId, token) {
+export async function removeTag( token, tagId ) {
 
-    let qs = { recifId, corailId, token};
+    let qs = { corailId, token};
     let url = '/api/rm/tag';
 
     let body = await post({ url, qs });

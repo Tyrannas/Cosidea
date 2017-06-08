@@ -21,7 +21,7 @@
     ></sigma>
   </div>
 </template>
-
+<script src="/socket.io/socket.io.js"></script>
 <script>
 import Menu from '../modules/Menu.vue'
 import Sigma from '../modules/Sigma.vue'
@@ -40,7 +40,9 @@ export default {
             tags: [],
 
             isValid:        true,
-            isAuth:         false
+            isAuth:         false,
+
+            //socket:         io()
         }
     },
     methods: {
@@ -55,7 +57,7 @@ export default {
             let params = {
                 name: node.name,
                 description: node.description,
-                recifId: this.id,
+                token: this.token,
                 tags: ''
             };
 
@@ -65,29 +67,29 @@ export default {
             
             let id = await api.addCorail(params);
             newNode.data.id = id;
+            console.log('NEW ID IS: ' + id);
 
         },
-        updateNode(corail) {
-            this.$refs.sigma.addEdge( corail.add );
-            this.$refs.sigma.removeEdge( corail.rm );
+        updateNode( info ) {
+            this.$refs.sigma.addEdge( info.add );
+            this.$refs.sigma.removeEdge( info.rm );
 
             //update node data
-            this.$refs.sigma.updateNode( corail.new );
+            this.$refs.sigma.updateNode( info.new );
             
             //backend update
-            console.log(corail.new.data);
-
-            api.updateCorail(this.id, corail.new.data.id, corail.new.data.name, corail.new.data.description, this.token);
-            corail.add.data.tags.forEach((tag) => api.addLink(this.id, corail.new.data.id, tag.id, this.token));
-            corail.rm.data.tags.forEach((tag) => api.rmLink(this.id, corail.new.data.id, tag.id, this.token));
+            let corail = info.new.data;
+            api.updateCorail( this.token, corail.id, corail.name, corail.description );
+            info.add.data.tags.forEach((tag) => api.addLink( this.token, corail.id, tag.id ));
+            info.rm.data.tags.forEach((tag) => api.rmLink( this.token, corail.id, tag.id ));
 
         },
         removeNode( node ) {
             this.$refs.sigma.removeNode(node);
-            api.removeCorail(this.id, node.data.id, this.token);
+            api.removeCorail(this.token, node.data.id);
         },
-        addTag( tag ){
-            api.addTag({recifId: this.id, name: tag});
+        addTag( name ){
+            api.addTag(this.token, name);
         },
         clickNode: function( node ){
             this.$refs.addCorail.clickNode(node);
@@ -128,13 +130,17 @@ export default {
             if(this.description == null) 
                 this.description = '';
 
-            if (this.connected)
+            if (!this.isProtected)
             {
-                let corails = await api.getCorails(this.id);
-                this.tags = await api.getTags(this.id);
-
-                this.$refs.sigma.buildGraph( corails );
+                this.token = await api.getToken(this.id);
+                this.buildRecif();
             }
+        },
+        async buildRecif() {
+            let corails = await api.getCorails(this.token);
+            this.tags = await api.getTags(this.token);
+
+            this.$refs.sigma.buildGraph( corails );
         },
         addRecif: async function() {
             

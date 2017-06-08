@@ -47,7 +47,7 @@ router.post('/user', async (req, res) => {
 router.post('/recif', async(req, res) => {
 
     let name        = req.query.name as string;
-    let isProtected = req.query.isProtected == true as boolean;
+    let isProtected = req.query.isProtected as boolean;
     let description        = req.query.description as string;
     let owner       = req.query.owner as number;
     let pwd         = req.query.pwd as string;
@@ -65,23 +65,22 @@ router.post('/recif', async(req, res) => {
         return;
     }
 
-    if(isProtected && owner === undefined) {
-        res.json( new ReqError('Protected Recif needs an Owner') );
-        return;
-    }
+    console.log(isProtected);
 
-    if(isProtected) {
+    if(isProtected && owner !== undefined) {
+
         let usr = await user.findById(owner);
 
         if(usr === undefined) {
             res.json( new ReqError('Owner not found') );
             return;
         }
+    }
+    if(isProtected) {
         if(pwd === undefined) {
-            res.json( new ReqError('Password needed if owner is set') );
+            res.json( new ReqError('Password needed if isProtected') );
             return;
         }
-        
         hash = await bcrypt.hash(pwd, req.app.get('saltRounds'));
     }
 
