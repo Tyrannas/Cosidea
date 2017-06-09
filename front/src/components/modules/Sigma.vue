@@ -48,7 +48,8 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                     scalingRatio: 10,
                     gravity: 1
                 },
-                nodesId: 0
+                nodesId: 0,
+                isMultiInstert: false
             }
         },
         methods : {
@@ -109,13 +110,21 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 this.sigmaInstance.graph.addNode(newNode);
                 newNode = this.nodes(newNode.id);
                 // create links between new Node and previously existing ones
-                this.addEdge(newNode);
+                this.addEdge(newNode.id, params.tags);
                 //console.log(this.sigmaInstance.graph.nodes());
 
                 if(this.sigmaInstance.isForceAtlas2Running()){
                     this.sigmaInstance.killForceAtlas2();
                     this.sigmaInstance.startForceAtlas2();
                 }
+
+                if(!this.isMultiInstert)
+                {
+                    this.sigmaInstance.refresh();
+                    this.toggleForceAtlas();
+                    setTimeout(() => this.toggleForceAtlas(), 100);
+                }
+
                 // returns the newly created node
                 return newNode;
             },
@@ -123,8 +132,11 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
              * create links between a node and the rest of the graph if they share tags
              * @param newNode
              */
-            addEdge: function( newNode ){
-              newNode.data.tags.forEach((tag) => {
+            addEdge: function( nodeId, tags ){
+                // get the newNode
+                let newNode = this.nodes(nodeId);
+
+                tags.forEach((tag) => {
  
                     if(this.tagCounter[tag.name] == null || !this.tagCounter[tag.name].length) {
                         this.tagCounter[tag.name] = [];
@@ -187,7 +199,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
              * */
             removeNode: function( node ) {
 
-                this.removeEdge( node );
+                this.removeEdge( node.id, node.data.tags );
 
                 this.sigmaInstance.graph.dropNode(node.id);
                 this.sigmaInstance.refresh();
@@ -196,9 +208,12 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
              * Remove Edges from Graph
              * @param node
              * */
-            removeEdge: function( node ) {
+            removeEdge: function( nodeId, tags ) {
+                // the node we want to update
+                let node = this.nodes(nodeId);
+
                 //for each tag to be removed look into tagCounter lower edges
-                node.data.tags.forEach((tag) => {
+                tags.forEach((tag) => {
 
                     let nodes = this.tagCounter[tag.name];
                     let index = -1, size = nodes.length;
@@ -206,13 +221,13 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                     for(let i = 0; i < size; i++) {
 
                         // if we found our node in the tagCounter remember index for delete
-                        if(nodes[i].id === node.id) {
+                        if(nodes[i].id === nodeId) {
                             index = i;
                             continue;
                         }
                         
                         // if we found another node, resize existing edge
-                        let id = this.createId(nodes[i].id, node.id);
+                        let id = this.createId(nodes[i].id, nodeId);
                         if(this.edges(id) !== undefined) {
 
                             if(this.edges(id).realSize === 1)
@@ -242,9 +257,11 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
              * @param nodesArray
              */
             buildGraph: function( nodesArray ){
+                this.isMultiInstert = true;
                 nodesArray.forEach(node => {
                     this.addNode( node );
                 });
+                this.isMultiInstert = false;
             },
             /**
              * reset the graph

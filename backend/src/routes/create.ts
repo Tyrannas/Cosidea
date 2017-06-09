@@ -6,6 +6,7 @@ import * as tag     from '../model/tag';
 import * as bcrypt  from 'bcrypt';
 import * as jwt     from 'jsonwebtoken';
 import * as auth    from './auth';
+import * as socket  from './socket';
 
 import {ReqError, ReqSuccess}   from './api';
 
@@ -97,22 +98,26 @@ router.post('/recif', async(req, res) => {
 router.use('/corail', auth.secureRecif);
 router.post('/corail', async (req, res) => {
 
+    let token = req.query.token;
     let recifId  = req.query.recifId;
     let name   = req.query.name;
     let description    = req.query.description;
     let tags    = req.query.tags;
     
-    let insertTags: number[] = [];
     let id: number = -1;
 
     // parse TagIds
     if(tags !== undefined && tags !== '') {
-        insertTags = tags.split(',').map(Number);
+        tags = tags.split(',').map(Number);
+    }
+    else {
+        tags = []
     }
 
     try{
         id = await corail.addCorail(recifId, name, description);
-        insertTags.forEach((tagId) => corail.addTag(id, tagId));
+        tags.forEach((tagId: number) => corail.addTag(id, tagId));
+        socket.send(token, recifId, 'add corail', { id, recifId, name, description, tags });
         res.json( new ReqSuccess(id) );
     }
     catch(err){

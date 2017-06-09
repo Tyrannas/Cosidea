@@ -1,11 +1,11 @@
 import * as AUTH from './auth';
 import * as express from 'express';
-import {ReqError, ReqSuccess} from './api';
 
 let subscribers: any = {};
 
 export interface Socket extends SocketIO.Socket {
-    recifId: number;
+    recifId: number,
+    token: string
 }
 
 /**
@@ -41,19 +41,23 @@ function removeSubscriber(socket: Socket) {
  * Socket io route, used for dynamic behavior on the Recif
  */
 export function route( socket: Socket, app: express.Application) {
-
+    //console.log('connected client');
     /**
      * Subscribe event
      * @param token
      */
     socket.on('subscribe', async (data: any) => {
-
+        //console.log('subscribe ' + data.token);
         let decode = await AUTH.verifyToken(data.token, app.get('secret'));
         if(decode === undefined) {
-            socket.emit('exception', new ReqError('token not valid') );
+            //console.log('failed');
+            socket.emit('subscribe failed', 'token not valid' );
         }
         else {
+            //console.log('success');
+            socket.token = data.token;
             addSubscriber(decode.recif, socket);
+            socket.emit('subscribe success');
         }
      });
 
@@ -61,7 +65,26 @@ export function route( socket: Socket, app: express.Application) {
       * Disconnect event
       */
       socket.on('disconnect', () => {
-          removeSubscriber(socket)
+          removeSubscriber(socket);
       });
 
+}
+
+/**
+ * Send function for api routes. Automatic broadcast to recif
+ * @param recifId
+ * @param event
+ * @param data
+ */
+export function send( token: string, recifId: number, event: string, data: any) {
+
+    let sockets = subscribers[recifId];
+    if( sockets instanceof Array ) {
+        
+        sockets.forEach((socket) => {
+            if(socket.token !== token)
+                socket.emit( event, data );
+        });
+    
+    }
 }

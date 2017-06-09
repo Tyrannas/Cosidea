@@ -26,6 +26,7 @@
 import Menu from '../modules/Menu.vue'
 import Sigma from '../modules/Sigma.vue'
 import * as api from 'lib/backendApi';
+import * as dynapi from 'lib/dynapi';
 import * as io from 'socket.io-client';
 
 export default {
@@ -46,9 +47,29 @@ export default {
             isAuth:         false,
             // Node selected in sigma
             selectedNode:   undefined,   
-
-            //socket:         io.connect()
+            // WebSocket for dynamic events
+            socket:         io.connect(),
+            // Indexer from corail.id to sigma node
+            nodeIndexer: {}
         }
+    },
+    computed: {
+        connected: function() {
+            return (!this.isProtected || this.isAuth) && this.isValid;
+        },
+        //tags indexed by id, used for dynapi to reconstruct objects
+        tagIndexer: function() {
+            let idx = {};
+            this.tags.forEach( (t) => idx[t.id] = t );
+            return idx;
+        }
+    },
+    async mounted(){
+        this.init();
+    },
+    components: {
+        'sideBar': Menu,
+        'sigma': Sigma
     },
     methods: {
         toggleForceAtlas: function() {
@@ -83,11 +104,9 @@ export default {
             let corail = info.corail;
 
             // Add new tag edges
-            node.data.tags = info.toAdd;
-            this.$refs.sigma.addEdge( node );
-            // Remove tag edges
-            node.data.tags = info.toRem;
-            this.$refs.sigma.removeEdge( node );
+            this.$refs.sigma.addEdge( node.id, info.toAdd );
+            // remove tag edges
+            this.$refs.sigma.removeEdge( node.id, info.toRem );
 
             //update node data
             node.data = corail;
@@ -103,6 +122,7 @@ export default {
         },
         removeCorail( corail ) {
             // remove node in sigma
+            console.log(this.selectedNode);
             this.$refs.sigma.removeNode(this.selectedNode);
             // remove node in backend
             api.removeCorail(this.token, corail.id);
@@ -122,7 +142,6 @@ export default {
             this.$refs.addCorail.reset();
         },
         init: async function() {
-            //this.socket.on('connect', () => console.log('CONNECTED SOCKET IO'));
 
             let recif = await api.getRecif(this.name);
 
@@ -146,6 +165,8 @@ export default {
             {
                 this.token = await api.getToken(this.id);
                 this.buildRecif();
+                dynapi.connect( this, this.socket );
+
             }
         },
         async buildRecif() {
@@ -176,18 +197,6 @@ export default {
             this.auth = false;
             this.isValid = true;
         }
-    },
-    computed: {
-        connected: function() {
-            return (!this.isProtected || this.isAuth) && this.isValid;
-        }
-    },
-    async mounted(){
-        this.init();
-    },
-    components: {
-        'sideBar': Menu,
-        'sigma': Sigma
     },
     watch: {
         $route: function(route) {
