@@ -82,8 +82,10 @@ export function send( token: string, recifId: number, event: string, data: any) 
     if( sockets instanceof Array ) {
         
         sockets.forEach((socket) => {
-            if(socket.token !== token)
+            if(socket.token !== token) {
+                //console.log('emit');
                 socket.emit( event, data );
+            }
         });
     
     }

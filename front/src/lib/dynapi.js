@@ -38,12 +38,16 @@ export function connect(self, socket) {
     });
 
     socket.on('add link', ( link ) => {
-        
-        let node = self.nodeIndexer[link.corailId];
+        console.log('add link event');
+        link.tagId = Number(link.tagId);
+
+        let node = self.nodeIndexer[Number(link.corailId)];
         let tag = self.tags.find( (t) => t.id === link.tagId );
+
         // if doesnt already contains
         if (!node.data.tags.some((t) => t.id === link.tagId)) {
             self.$refs.sigma.addEdge(node.id, [tag]);
+            node.data.tags.push(tag);
         }
     });
 

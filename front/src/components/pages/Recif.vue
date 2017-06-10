@@ -95,6 +95,7 @@ export default {
             let id = await api.addCorail(params);
             // update id with new unique id
             newNode.data.id = id;
+            this.nodeIndexer[id] = newNode;
             console.log('NEW ID IS: ' + id);
 
         },
@@ -127,10 +128,12 @@ export default {
             // remove node in backend
             api.removeCorail(this.token, corail.id);
         },
-        addTag( name ){
-            api.addTag(this.token, name);
+        async addTag( name ){
+            let id = await api.addTag(this.token, name);
+            this.tags.push({ id, name });
         },
         removeTag( tag ){
+            // TODO not waiting for backed, make possible in local
             this.tags = this.tags.filter(t => t.id !== tag.id);
             api.removeTag(this.token, tag.id);
         },
@@ -173,7 +176,9 @@ export default {
             let corails = await api.getCorails(this.token);
             this.tags = await api.getTags(this.token);
             
-            this.$refs.sigma.buildGraph( corails );
+            let nodes = this.$refs.sigma.buildGraph( corails );
+            // add corails to indexer
+            nodes.forEach(node => this.nodeIndexer[node.data.id] = node);
         },
         addRecif: async function() {
             

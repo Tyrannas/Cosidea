@@ -257,11 +257,17 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
              * @param nodesArray
              */
             buildGraph: function( nodesArray ){
+                let nodes = [];
+                // Avoid emit in addNode
                 this.isMultiInstert = true;
+                
                 nodesArray.forEach(node => {
-                    this.addNode( node );
+                    nodes.push(this.addNode( node ));
                 });
+                // Reactive emits
                 this.isMultiInstert = false;
+
+                return nodes;
             },
             /**
              * reset the graph

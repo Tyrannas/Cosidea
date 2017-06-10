@@ -146,12 +146,19 @@ router.post('/tag', (req, res) => {
  * Route create link between Corail and Tag
  */
 router.use('/link', auth.secureRecif);
-router.post('/link', (req, res) => {
+router.post('/link', async (req, res) => {
 
+    let recifId = req.query.recifId;
+    let token = req.query.token;
     let corailId = req.query.corailId;
     let tagId  = req.query.tagId;
 
-    corail.addTag(corailId, tagId)
-    .then(() => res.json( new ReqSuccess('Link added') ))
-    .catch((err) => res.json( new ReqError(err) ));
+    try {
+        await corail.addTag(corailId, tagId);
+        socket.send(token, recifId, 'add link', { corailId, tagId });
+        res.json( new ReqSuccess('Link added') );
+    }
+    catch (err) {
+        res.json(new ReqError(err));
+    }
 });
