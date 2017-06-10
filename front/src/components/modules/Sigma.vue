@@ -48,8 +48,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                     scalingRatio: 10,
                     gravity: 1
                 },
-                nodesId: 0,
-                isMultiInstert: false
+                nodesId: 0
             }
         },
         methods : {
@@ -116,13 +115,6 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 if(this.sigmaInstance.isForceAtlas2Running()){
                     this.sigmaInstance.killForceAtlas2();
                     this.sigmaInstance.startForceAtlas2();
-                }
-
-                if(!this.isMultiInstert)
-                {
-                    this.sigmaInstance.refresh();
-                    this.toggleForceAtlas();
-                    setTimeout(() => this.toggleForceAtlas(), 100);
                 }
 
                 // returns the newly created node
@@ -258,14 +250,10 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
              */
             buildGraph: function( nodesArray ){
                 let nodes = [];
-                // Avoid emit in addNode
-                this.isMultiInstert = true;
                 
                 nodesArray.forEach(node => {
                     nodes.push(this.addNode( node ));
                 });
-                // Reactive emits
-                this.isMultiInstert = false;
 
                 return nodes;
             },
@@ -316,6 +304,14 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 else if(nodeId2 < nodeId1) return '' + nodeId2 + '-' + nodeId1;
                 throw new Error('Edge between same nodes!');
             },
+            /**
+             * refresh sigma instance and toggle fast Force atlas for reordering
+             **/
+            refresh() { 
+                this.sigmaInstance.refresh();
+                this.toggleForceAtlas(); 
+                setTimeout(() => this.toggleForceAtlas(), 200); 
+            }
         },
         props:null,
         mounted (){

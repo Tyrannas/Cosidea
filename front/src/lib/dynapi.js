@@ -25,6 +25,7 @@ export function connect(self, socket) {
         if (self.nodeIndexer[corail.id] === undefined) {
             // add to sigma
             let node = self.$refs.sigma.addNode(corail);
+            self.$refs.sigma.refresh();
             // hold reference to node for update
             self.nodeIndexer[corail.id] = node;
         }
@@ -47,6 +48,7 @@ export function connect(self, socket) {
         // if doesnt already contains
         if (!node.data.tags.some((t) => t.id === link.tagId)) {
             self.$refs.sigma.addEdge(node.id, [tag]);
+            self.$refs.sigma.refresh();
             node.data.tags.push(tag);
         }
     });

@@ -28,6 +28,7 @@ import Sigma from '../modules/Sigma.vue'
 import * as api from 'lib/backendApi';
 import * as dynapi from 'lib/dynapi';
 import * as io from 'socket.io-client';
+import * as utils from 'lib/utils';
 
 export default {
     name: 'recif',
@@ -78,6 +79,7 @@ export default {
         addCorail: async function( corail ){
 
             let newNode = this.$refs.sigma.addNode( corail );
+            this.$refs.sigma.refresh();
             
             let params = {
                 name: corail.name,
@@ -112,7 +114,8 @@ export default {
             //update node data
             node.data = corail;
             this.$refs.sigma.updateNode( node );
-            
+            this.$refs.sigma.refresh();
+
             //backend update
             api.updateCorail( this.token, corail.id, corail.name, corail.description );
             info.toAdd.forEach((tag) => api.addLink( this.token, corail.id, tag.id ));
@@ -129,8 +132,10 @@ export default {
             api.removeCorail(this.token, corail.id);
         },
         async addTag( name ){
+            let tag = { id: utils.tmpId(), name }
+            this.tags.push(tag);
             let id = await api.addTag(this.token, name);
-            this.tags.push({ id, name });
+            tag.id = id;
         },
         removeTag( tag ){
             // TODO not waiting for backed, make possible in local
@@ -177,6 +182,7 @@ export default {
             this.tags = await api.getTags(this.token);
             
             let nodes = this.$refs.sigma.buildGraph( corails );
+            this.$refs.sigma.refresh();
             // add corails to indexer
             nodes.forEach(node => this.nodeIndexer[node.data.id] = node);
         },
@@ -205,9 +211,11 @@ export default {
     },
     watch: {
         $route: function(route) {
+            console.log('route changed');
             let newTitle = route.params.recif;
             if(newTitle !== this.name) {
                 this.clear();
+                //this.$refs.sigma.resetGraph();
                 this.name = newTitle;
                 this.init();
             }
