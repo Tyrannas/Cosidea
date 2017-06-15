@@ -98,11 +98,11 @@ router.post('/recif', async(req, res) => {
 router.use('/corail', auth.secureRecif);
 router.post('/corail', async (req, res) => {
 
-    let token = req.query.token;
-    let recifId  = req.query.recifId;
-    let name   = req.query.name;
-    let description    = req.query.description;
-    let tags    = req.query.tags;
+    let token       = req.query.token;
+    let recifId     = req.query.recifId;
+    let name        = req.query.name;
+    let description = req.query.description;
+    let tags        = req.query.tags;
     
     let id: number = -1;
 
@@ -117,7 +117,15 @@ router.post('/corail', async (req, res) => {
     try{
         id = await corail.addCorail(recifId, name, description);
         tags.forEach((tagId: number) => corail.addTag(id, tagId));
-        socket.send(token, recifId, 'add corail', { id, recifId, name, description, tags });
+
+        socket.send(token, recifId, 'create corail', { 
+            id: Number(id), 
+            recifId: Number(recifId), 
+            name, 
+            description, 
+            tags 
+        });
+        
         res.json( new ReqSuccess(id) );
     }
     catch(err){
@@ -132,14 +140,21 @@ router.post('/corail', async (req, res) => {
  * Route create tag
  */
 router.use('/tag', auth.secureRecif);
-router.post('/tag', (req, res) => {
+router.post('/tag', async (req, res) => {
 
+    let token = req.query.token;
     let recifId = req.query.recifId;
     let name = req.query.name;
 
-    tag.addTag(recifId, name)
-    .then((id) => res.json( new ReqSuccess(id) ))
-    .catch((err) => res.json( new ReqError(err) ));
+    try{
+        let id = await tag.addTag(recifId, name);
+        socket.send(token, recifId, 'create tag', { name, id: Number(id) });
+        res.json( new ReqSuccess(id) );
+        
+    }
+    catch( err ) {
+        res.json( new ReqError(err) );
+    }
 });
 
 /**
@@ -155,8 +170,8 @@ router.post('/link', async (req, res) => {
 
     try {
         await corail.addTag(corailId, tagId);
-        socket.send(token, recifId, 'add link', { corailId, tagId });
-        res.json( new ReqSuccess('Link added') );
+        socket.send(token, recifId, 'create link', { corailId: Number(corailId), tagId: Number(tagId) });
+        res.json( new ReqSuccess('Link created') );
     }
     catch (err) {
         res.json(new ReqError(err));

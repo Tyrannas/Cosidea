@@ -141,6 +141,7 @@ export default {
             // TODO not waiting for backed, make possible in local
             this.tags = this.tags.filter(t => t.id !== tag.id);
             api.removeTag(this.token, tag.id);
+            this.removeTagFromCorails(tag);
         },
         clickNode: function( node ){
             this.selectedNode = node;
@@ -207,6 +208,23 @@ export default {
             this.token = false;
             this.auth = false;
             this.isValid = true;
+        },
+        removeTagFromCorails: function(tag) {
+            // get nodes containing a corail with this tag
+            let nodes = Object.keys(this.nodeIndexer)
+            .map(key => this.nodeIndexer[key])
+            .filter(node => node.data.tags.some(t => t.id === tag.id));
+            // remove edge from sigma, and remove tag from corails
+            nodes.forEach(node => this.$refs.sigma.removeEdge(node.id, [tag]));
+            nodes.forEach(node => node.data.tags = node.data.tags.filter(t => t.id !== tag.id));
+
+            // actualise sigma
+            this.$refs.sigma.refresh();
+
+            // reload selected node
+            if(this.selectedNode !== undefined){
+                this.$refs.addCorail.load(this.selectedNode.data);
+            }
         }
     },
     watch: {

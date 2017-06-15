@@ -16,10 +16,10 @@ export function connect(self, socket) {
 
 
     /**
-     * Add routes
+     * Create routes
      */
 
-    socket.on('add corail', ( corail ) => {
+    socket.on('create corail', ( corail ) => {
         // fill tags from id to tag
         corail.tags = corail.tags.map((id) => self.tagIndexer[id]);
         if (self.nodeIndexer[corail.id] === undefined) {
@@ -31,18 +31,18 @@ export function connect(self, socket) {
         }
     });
 
-    socket.on('add tag', ( tag ) => {
+    socket.on('create tag', ( tag ) => {
         
         if( !self.tags.some((t) => t.name === tag.name) ) {
             self.tags.push(tag);
         }
     });
 
-    socket.on('add link', ( link ) => {
+    socket.on('create link', ( link ) => {
         console.log('add link event');
-        link.tagId = Number(link.tagId);
+        link.tagId = link.tagId;
 
-        let node = self.nodeIndexer[Number(link.corailId)];
+        let node = self.nodeIndexer[link.corailId];
         let tag = self.tags.find( (t) => t.id === link.tagId );
 
         // if doesnt already contains
@@ -56,4 +56,20 @@ export function connect(self, socket) {
     /**
      * Remove routes
      */
+
+    socket.on('remove corail', ( corail ) => {
+
+        let node = self.nodeIndexer[corail.id];
+        self.$refs.sigma.removeNode(node);
+
+    });
+
+    socket.on('remove tag', ( tag ) => {
+        // we only recive tag id, retrive full tag
+        tag = self.tags.find(t => t.id === tag.id);
+        console.log(tag);
+        self.tags = self.tags.filter(t => t.id !== tag.id);
+        self.removeTagFromCorails(tag);
+
+    });
 }
