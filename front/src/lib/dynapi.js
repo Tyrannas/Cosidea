@@ -72,4 +72,18 @@ export function connect(self, socket) {
         self.removeTagFromCorails(tag);
 
     });
+
+    socket.on('remove link', ( link ) => {
+        console.log(link);
+        let node = self.nodeIndexer[link.corailId];
+        let corail = node.data;
+        let tag = self.tags.find(t => t.id === link.tagId);
+
+        // remove from sigma
+        self.$refs.sigma.removeEdge( node.id, [tag] );
+        self.$refs.sigma.refresh();
+
+        corail.tags = corail.tags.filter(t => t.id !== link.tagId);
+
+    });
 }
