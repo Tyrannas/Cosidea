@@ -192,6 +192,7 @@ export default {
             let params = {
                 name: this.name,
                 description: this.description,
+                isProtected: false
             };
 
             let id = await api.addRecif(params);

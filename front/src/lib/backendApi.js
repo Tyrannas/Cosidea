@@ -89,11 +89,12 @@ export async function addTag( token, name ){
  * @returns {Promise.<*>}
  */
 export async function addRecif( params ){
-
+    console.log('add recif...');
     let query = { url: '/api/create/recif', qs: params };
     let body = await post(query);
     
     if(body === undefined || body.err) {
+        console.log(body);
         return undefined;
     }
     return body.msg;

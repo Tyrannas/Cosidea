@@ -48,11 +48,12 @@ router.post('/user', async (req, res) => {
 router.post('/recif', async(req, res) => {
 
     let name        = req.query.name as string;
-    let isProtected = req.query.isProtected as boolean;
-    let description        = req.query.description as string;
+    let isProtected = req.query.isProtected == 'true';
+    let description = req.query.description as string;
     let owner       = req.query.owner as number;
     let pwd         = req.query.pwd as string;
     let hash        = '';
+
 
     if(name === undefined || isProtected === undefined) {
         res.json( new ReqError('name and isProtecteded params needed'));
