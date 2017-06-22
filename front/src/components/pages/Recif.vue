@@ -11,17 +11,22 @@
              @removeTag="removeTag"
              v-bind:tags="tags"
     ></sideBar>
-    <div v-if="connected">Recif: {{ name }} <br /> {{ description }} </div>
+
+    <div v-if="connected"> Recif: {{ name }} <br> {{ description }} </div>
+
     <div v-else>Create room?
-        <input type="text" v-model="description" placeholder="description" />
+        <input type="text" v-model="description" placeholder="description">
         <button type="submit" v-on:click="addRecif">YES!</button>
     </div>
+ 
     <sigma ref="sigma"
            v-on:clickNode="clickNode"
            v-on:clickStage="clickStage"
     ></sigma>
+ 
   </div>
 </template>
+
 <script>
 import Menu from '../modules/Menu.vue'
 import Sigma from '../modules/Sigma.vue'
@@ -112,12 +117,15 @@ export default {
             this.$refs.sigma.removeEdge( node.id, info.toRem );
 
             //update node data
+            let changed = utils.corailChanged(node.data, corail);
             node.data = corail;
             this.$refs.sigma.updateNode( node );
             this.$refs.sigma.refresh();
 
             //backend update
-            api.updateCorail( this.token, corail.id, corail.name, corail.description );
+            if(changed){
+                api.updateCorail( this.token, corail.id, corail.name, corail.description );
+            }
             info.toAdd.forEach((tag) => api.addLink( this.token, corail.id, tag.id ));
             info.toRem.forEach((tag) => api.rmLink( this.token, corail.id, tag.id ));
 

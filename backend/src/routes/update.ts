@@ -6,6 +6,7 @@ import * as bcrypt  from 'bcrypt';
 import * as jwt     from 'jsonwebtoken';
 import * as auth    from './auth';
 import * as tag     from '../model/tag';
+import * as socket  from './socket';
 
 import {ReqError, ReqSuccess}   from './api';
 
@@ -21,6 +22,7 @@ export let router = express.Router();
 router.use('/corail', auth.secureRecif);
 router.post('/corail', async (req, res) => {
 
+    let token = req.query.token;
     let recifId = req.query.recifId;
     let corailId = req.query.corailId;
     let name = req.query.name;
@@ -28,6 +30,7 @@ router.post('/corail', async (req, res) => {
 
     try {
         let id = await idea.update(recifId, corailId, name, description);
+        socket.send(token, recifId, 'update corail', { id: Number(corailId), name, description });
         return res.json( new ReqSuccess(id) );
     }
     catch(err) {

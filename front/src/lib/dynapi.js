@@ -74,7 +74,7 @@ export function connect(self, socket) {
     });
 
     socket.on('remove link', ( link ) => {
-        console.log(link);
+        //console.log(link);
         let node = self.nodeIndexer[link.corailId];
         let corail = node.data;
         let tag = self.tags.find(t => t.id === link.tagId);
@@ -86,4 +86,17 @@ export function connect(self, socket) {
         corail.tags = corail.tags.filter(t => t.id !== link.tagId);
 
     });
+
+    /**
+     * Update routes
+     */
+
+    socket.on('update corail', ( corail ) => {
+        
+        let node = self.nodeIndexer[corail.id];
+        
+        corail.tags = node.data.tags;
+        node.data = corail;
+        node.label = corail.name;
+    })
 }
