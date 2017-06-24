@@ -10,6 +10,7 @@
              @addTag="addTag"
              @removeTag="removeTag"
              v-bind:tags="tags"
+             v-bind:tagCounter="tagCounter"
     ></sideBar>
 
     <div v-if="connected"> Recif: {{ name }} <br> {{ description }} </div>
@@ -22,6 +23,7 @@
     <sigma ref="sigma"
            v-on:clickNode="clickNode"
            v-on:clickStage="clickStage"
+           v-on:tagCounter="tg => tagCounter = Object.assign({}, tg)"
     ></sigma>
  
   </div>
@@ -56,7 +58,9 @@ export default {
             // WebSocket for dynamic events
             socket:         io.connect(),
             // Indexer from corail.id to sigma node
-            nodeIndexer: {}
+            nodeIndexer: {},
+            //tag Counter updated by sigma
+            tagCounter: {test: []}
         }
     },
     computed: {

@@ -3,20 +3,24 @@ Created by Orion 2017
 -->
 
 <template>
-	<nav class="sideBar">
-		<input type="text" class="myInput" placeholder="Corail" v-model="corailParam.name"/>
-		<textarea class="myInput" placeholder="Description" v-model="corailParam.description"></textarea>
+    <nav class="sideBar">
+        <input type="text" class="myInput" placeholder="Corail" v-model="corailParam.name">
+        <textarea class="myInput" placeholder="Description" v-model="corailParam.description"></textarea>
         <taginput
                 v-model="corailParam.tags"
                 :tagsValues="tagsNames"
                 @menuAddTag="addTag"
                 @menuDeleteTag="removeTag"
         ></taginput>
-		<a class="myButton" v-on:click="addCorail" v-if="!isLoad" >Add Node</a>
+        <a class="myButton" v-on:click="addCorail" v-if="!isLoad" >Add Node</a>
         <a class="myButton" v-on:click="updateCorail" v-if="isLoad">Update Node</a>
         <a class="myButton" v-on:click="removeCorail" v-if="isLoad" >Remove Node</a>
         <a class="myButton" v-on:click="toggleForceAtlas" >{{forceAtlasStatus}}</a>
-	</nav>
+
+        <div>
+            <span v-for="counter in counters" :key="counter.name"><a> {{ counter.count }} : {{ counter.name }} </a> <br> </span>
+        </div>
+    </nav>
 </template>
 
 
@@ -31,7 +35,7 @@ export default {
 	    'multiselect': multiselect,
         'taginput': taginput
 	},
-    props: ['tags'],
+    props: ['tags', 'tagCounter'],
 	data (){
 		return {
 			forceAtlasStatus: "Start",
@@ -57,6 +61,11 @@ export default {
         },
         isLoad: function() {
             return this.oldCorail !== undefined;
+        },
+        counters: function() {
+            return Object.keys(this.tagCounter)
+            .map(name => { return { name, count: this.tagCounter[name].length } })
+            .sort((a, b) => b.count - a.count);
         }
     },
     methods: {

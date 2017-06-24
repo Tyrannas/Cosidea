@@ -165,8 +165,8 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                     }
                     // insert node into tagCounter
                     this.tagCounter[tag.name].push(newNode);
-                    
                 });
+                this.$emit('tagCounter', this.tagCounter);
             },
             /**
              * Resize Node by value
@@ -234,6 +234,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                     // remove node from tagCounter
                     this.tagCounter[tag.name].splice(index, 1);
                 });
+                this.$emit('tagCounter', this.tagCounter);
             },
             /**
              * update node data field
