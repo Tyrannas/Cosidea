@@ -48,6 +48,21 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
         },
         methods : {
             /**
+             * init the sigma renderer
+             * */
+            init() {
+                this.sigmaInstance.addRenderer({
+                    type: "canvas",
+                    container: "graph-container",
+                    nodeHoverColor: "default",
+                    defaultNodeHoverColor: config.edge.color
+                }).settings({
+                    'maxNodeSize': 30,
+                });
+
+                this.bindEvents();
+            },
+            /**
              * Fast accesor for Edges
              * @param id
              * @returns edge
@@ -278,6 +293,9 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
              */
             resetGraph: function (){
                 this.sigmaInstance.graph.clear();
+                this.sigmaInstance.refresh();
+                Object.assign(this.$data, this.$options.data.apply(this));
+                this.init();
             },
             /**
              * bind the events to the graph
@@ -382,17 +400,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
         },
         props:null,
         mounted (){
-
-            this.sigmaInstance.addRenderer({
-                type: "canvas",
-                container: "graph-container",
-                nodeHoverColor: "default",
-                defaultNodeHoverColor: config.edge.color
-            }).settings({
-                'maxNodeSize': 30,
-            });
-
-            this.bindEvents();
+            this.init();
         }
     }
 </script>
