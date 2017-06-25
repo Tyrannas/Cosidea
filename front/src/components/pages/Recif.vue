@@ -2,7 +2,7 @@
 
 <template>
   <div id="test">
-    <sideBar ref="addCorail" id="addCorail"
+    <sideBar v-if="connected" ref="addCorail" id="addCorail"
              @toggleForceAtlas="toggleForceAtlas"
              @addCorail="addCorail"
              @updateCorail="updateCorail"
@@ -16,14 +16,14 @@
 
     <div v-if="connected"> Recif: {{ name }} <br> {{ description }} </div>
     <div v-else-if="isProtected && isValid">
-        <form>
+        <form @submit.prevent>
             <input type="password" v-model="password" placeholder="password">
             <button type="submit" @click="login">Login</button>
         </form>
     </div>
     <div v-else>
         <p>Recif doesnt exist! Do you want to create it ?</p>
-        <form>
+        <form form @submit.prevent>
             <span>Name: {{ name }}</span><br>
             <label>Description: </label><input type="text" v-model="description" placeholder="description">
             <br>
