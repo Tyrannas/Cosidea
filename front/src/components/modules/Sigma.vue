@@ -276,10 +276,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
              * reset the graph
              */
             resetGraph: function (){
-                this.sigmaInstance.graph = {
-                    nodes: [],
-                    edges: []
-                }
+                this.sigmaInstance.graph.clear();
             },
             /**
              * bind the events to the graph

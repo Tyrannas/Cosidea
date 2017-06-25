@@ -2,7 +2,7 @@
 
 <template>
   <div id="test">
-    <sideBar ref="addCorail" id="addCorail"
+    <sideBar v-if="connected" ref="addCorail" id="addCorail"
              @toggleForceAtlas="toggleForceAtlas"
              @addCorail="addCorail"
              @updateCorail="updateCorail"
@@ -15,10 +15,26 @@
     ></sideBar>
 
     <div v-if="connected"> Recif: {{ name }} <br> {{ description }} </div>
-
-    <div v-else>Create room?
-        <input type="text" v-model="description" placeholder="description">
-        <button type="submit" v-on:click="addRecif">YES!</button>
+    <div v-else-if="isProtected && isValid">
+        <form @submit.prevent>
+            <input type="password" v-model="password" placeholder="password">
+            <button type="submit" @click="login">Login</button>
+        </form>
+    </div>
+    <div v-else>
+        <p>Recif doesnt exist! Do you want to create it ?</p>
+        <form form @submit.prevent>
+            <span>Name: {{ name }}</span><br>
+            <label>Description: </label><input type="text" v-model="description" placeholder="description">
+            <br>
+            <label>Password protected: </label><toggle-button @change="e => isProtected = e.value" :value="false" :labels="{ checked: 'yes', unchecked: 'no' }" />
+            <br>
+            <span v-if="isProtected">
+                <label>Password: </label><input type="password" v-model="password" placeholder="password">
+                <br>
+            </span>
+            <button type="submit" v-on:click="addRecif">Create</button>
+        </form>
     </div>
  
     <sigma ref="sigma"
@@ -46,6 +62,7 @@ export default {
             id:             undefined,
             description:    '',
             isProtected:    false,
+            password:       '',
             // Connection token
             token:          undefined,
             // Existing tags in the recif
@@ -183,12 +200,20 @@ export default {
             if(this.description == null) 
                 this.description = '';
 
-            if (!this.isProtected)
+            if (!this.isProtected || this.password != '')
             {
-                this.token = await api.getToken(this.id);
+                this.login();
+            }
+        },
+        async login() {
+            this.token = await api.getToken(this.id, this.password);
+            if(this.token !== undefined) {
+                this.isAuth = true;
                 this.buildRecif();
-                dynapi.connect( this, this.socket );
-
+                dynapi.connect( this );
+            }
+            else {
+                alert('Connection failed');
             }
         },
         async buildRecif() {
@@ -202,10 +227,16 @@ export default {
         },
         addRecif: async function() {
             
+            if(this.isProtected && this.password.length < 3) {
+                alert('enter password please! minimum 3 characters');
+                return;
+            }
+
             let params = {
                 name: this.name,
                 description: this.description,
-                isProtected: false
+                isProtected: this.isProtected,
+                pwd: this.password
             };
 
             let id = await api.addRecif(params);
@@ -244,13 +275,18 @@ export default {
     watch: {
         $route: function(route) {
             console.log('route changed');
-            let newTitle = route.params.recif;
-            if(newTitle !== this.name) {
-                this.clear();
-                //this.$refs.sigma.resetGraph();
-                this.name = newTitle;
-                this.init();
-            }
+            this.$refs.sigma.resetGraph();
+            this.$refs.sigma.refresh();
+            // nice trick to reset data
+            Object.assign(this.$data, this.$options.data.apply(this));
+
+            this.init();
+            // if(newTitle !== this.name) {
+            //     this.clear();
+            //     //this.$refs.sigma.resetGraph();
+            //     this.name = newTitle;
+            //     this.init();
+            // }
         }
     }
 }
