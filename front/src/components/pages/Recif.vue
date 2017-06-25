@@ -23,7 +23,7 @@
     </div>
     <div v-else>
         <p>Recif doesnt exist! Do you want to create it ?</p>
-        <form form @submit.prevent>
+        <form @submit.prevent>
             <span>Name: {{ name }}</span><br>
             <label>Description: </label><input type="text" v-model="description" placeholder="description">
             <br>
