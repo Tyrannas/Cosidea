@@ -1,6 +1,11 @@
-
+/**
+ * connect a recif to dynapi. the recif should have a field socket
+ * @param {Vue Component} self  
+ */
 // self is this in the vue componnent
-export function connect(self, socket) {
+export function connect(self) {
+    // get socket from self
+    let socket = self.socket;
 
     console.log('dynapi');
     socket.emit('subscribe', { token: self.token });
