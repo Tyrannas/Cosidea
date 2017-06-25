@@ -2,12 +2,13 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import VueResource from 'vue-resource' // $http handler
+import ToggleButton from 'vue-js-toggle-button'
 import App from './App.vue'
 import router from './router'
 
 Vue.config.productionTip = false
 Vue.use(VueResource);
-
+Vue.use(ToggleButton);
 
 /* eslint-disable no-new */
 new Vue({

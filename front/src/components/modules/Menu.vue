@@ -18,7 +18,11 @@ Created by Orion 2017
         <a class="myButton" v-on:click="toggleForceAtlas" >{{forceAtlasStatus}}</a>
 
         <div>
-            <span v-for="counter in counters" :key="counter.name"><a> {{ counter.count }} : {{ counter.name }} </a> <br> </span>
+            <span v-for="counter in counters" :key="counter.id">
+                <a> {{ counter.count }} : {{ counter.name }} </a>
+                <toggle-button v-if="counter.count > 1" @change="toggleHighlight($event.value, counter.id)" :value="false" :labels="true"/>
+                <br> 
+            </span>
         </div>
     </nav>
 </template>
@@ -33,7 +37,7 @@ export default {
 	name: 'menu',
 	components: {
 	    'multiselect': multiselect,
-        'taginput': taginput
+        'taginput': taginput,
 	},
     props: ['tags', 'tagCounter'],
 	data (){
@@ -44,7 +48,8 @@ export default {
                 description: '',
                 tags: []
             },
-            oldCorail: undefined
+            oldCorail: undefined,
+            toggleIds: []
 		}
 	},
     mounted: function() {
@@ -69,7 +74,7 @@ export default {
         },
         counters: function() {
             return Object.keys(this.tagCounter)
-            .map(id => { return { name: this.tagsById[id].name, count: this.tagCounter[id].length } })
+            .map(id => { return { name: this.tagsById[id].name, count: this.tagCounter[id].length, id } })
             .sort((a, b) => b.count - a.count);
         }
     },
@@ -173,6 +178,12 @@ export default {
             this.$emit('removeTag', this.tagsByName[oldTag]);
             console.log(this.corailParam);
             this.corailParam.tags = this.corailParam.tags.filter(t => t!== oldTag.name);
+        },
+        toggleHighlight(isOn, id) {
+            if(isOn) this.toggleIds.push(Number(id));
+            else this.toggleIds = this.toggleIds.filter(i => i != id);
+            
+            this.$emit('toggleIds', this.toggleIds);
         }
     },
     mounted(){
