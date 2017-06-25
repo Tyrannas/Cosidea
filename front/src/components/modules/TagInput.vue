@@ -11,7 +11,7 @@
                 </a>
             </span>
         </div>
-        <input class="search_bar" type="text" v-model="search"  :placeholder="placeholder" @focus="toggleSearch(true)" @blur="testBlur">
+        <input class="search_bar" type="text" v-model="search"  @keyup.enter="validate" :placeholder="placeholder" @focus="toggleSearch(true)" @blur="testBlur">
         <div v-show="searching" class="search">
             <ul class="search_results">
                 <li v-for="tag in filteredTags" :key="tag" class="search_result" @focus.prevent @click.stop="selectTag(tag)">
@@ -66,11 +66,11 @@
                 this.value.push(tag);
                 this.$emit('input', this.value);
                 this.search = "";
-                this.toggleSearch( false )
+                // this.toggleSearch( false );
             },
             createTag(){
                 this.$emit('menuAddTag', this.search);
-                this.toggleSearch( false )
+                // this.toggleSearch( false );
                 this.search = "";
             },
             removeTag( tag ){
@@ -81,6 +81,14 @@
             },
             toggleSearch( status ){
                 this.searching = status;
+            },
+            validate(){
+                if(this.filteredTags.length == 1){
+                    this.selectTag( this.filteredTags[0] ) ;
+                }
+                else if(this.filteredTags.length == 0){
+                    this.createTag();
+                }
             },
             /**
              * test if the click is outside of the component, if yes hide search
