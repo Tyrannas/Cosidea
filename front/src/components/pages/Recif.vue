@@ -11,6 +11,7 @@
              @removeTag="removeTag"
              v-bind:tags="tags"
              v-bind:tagCounter="tagCounter"
+             @toggleIds="ids => $refs.sigma.highlightTags(ids)"
     ></sideBar>
 
     <div v-if="connected"> Recif: {{ name }} <br> {{ description }} </div>
@@ -60,7 +61,7 @@ export default {
             // Indexer from corail.id to sigma node
             nodeIndexer: {},
             //tag Counter updated by sigma
-            tagCounter: {test: []}
+            tagCounter: {}
         }
     },
     computed: {

@@ -1,6 +1,6 @@
 <template>
   <div id="test">
-    <div v-for="proj in projects" class="messageBox">Project {{proj.name}} is
+    <div v-for="proj in projects" :key="proj.id" class="messageBox">Project {{proj.name}} is
       <span v-if="!proj.isProtected" >not</span> protected
     </div>
   </div>

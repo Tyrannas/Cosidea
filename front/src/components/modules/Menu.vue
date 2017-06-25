@@ -18,7 +18,11 @@ Created by Orion 2017
         <a class="myButton" v-on:click="toggleForceAtlas" >{{forceAtlasStatus}}</a>
 
         <div>
-            <span v-for="counter in counters" :key="counter.name"><a> {{ counter.count }} : {{ counter.name }} </a> <br> </span>
+            <span v-for="counter in counters" :key="counter.id">
+                <a> {{ counter.count }} : {{ counter.name }} </a>
+                <toggle-button v-if="counter.count > 1" @change="toggleHighlight($event.value, counter.id)" :value="false" :labels="true"/>
+                <br> 
+            </span>
         </div>
     </nav>
 </template>
@@ -33,7 +37,7 @@ export default {
 	name: 'menu',
 	components: {
 	    'multiselect': multiselect,
-        'taginput': taginput
+        'taginput': taginput,
 	},
     props: ['tags', 'tagCounter'],
 	data (){
@@ -44,7 +48,8 @@ export default {
                 description: '',
                 tags: []
             },
-            oldCorail: undefined
+            oldCorail: undefined,
+            toggleIds: []
 		}
 	},
     mounted: function() {
@@ -54,17 +59,22 @@ export default {
         tagsNames: function() {
             return this.tags.map((tag) => tag.name);
         },
-        tagsIndex: function() {
+        tagsByName: function() {
             let index = {};
             this.tags.forEach((tag) => index[tag.name] = tag);
             return index; 
+        },
+        tagsById: function() {
+            let index = {};
+            this.tags.forEach((tag) => index[tag.id] = tag);
+            return index;
         },
         isLoad: function() {
             return this.oldCorail !== undefined;
         },
         counters: function() {
             return Object.keys(this.tagCounter)
-            .map(name => { return { name, count: this.tagCounter[name].length } })
+            .map(id => { return { name: this.tagsById[id].name, count: this.tagCounter[id].length, id } })
             .sort((a, b) => b.count - a.count);
         }
     },
@@ -89,7 +99,7 @@ export default {
             //corail.id = this.oldNode.data.id;
 
             if(corail.tags instanceof Array)
-                corail.tags = corail.tags.map((tagName) => this.tagsIndex[tagName]);
+                corail.tags = corail.tags.map((tagName) => this.tagsByName[tagName]);
             
             let toAdd = [];
             let toRem = [];
@@ -107,13 +117,13 @@ export default {
                 }
                 // is new
                 else {
-                    toAdd.push(this.tagsIndex[tagName]);
+                    toAdd.push(this.tagsByName[tagName]);
                 }
             });
 
             // The key in indexer now gives us the deleted tags
             Object.keys(indexer).forEach((tagName) => {
-                toRem.push(this.tagsIndex[tagName]);
+                toRem.push(this.tagsByName[tagName]);
             });
             console.log('add tags: ' + toAdd.join(','));
             this.$emit('updateCorail', { corail, toAdd, toRem });
@@ -127,7 +137,7 @@ export default {
 
             // Get full tag object from tagName
             if(corail.tags instanceof Array) {
-                corail.tags = corail.tags.map((tagName) => this.tagsIndex[tagName]);
+                corail.tags = corail.tags.map((tagName) => this.tagsByName[tagName]);
             }
             else {
                 corail.tags = [];
@@ -165,9 +175,15 @@ export default {
             this.corailParam.tags.push(tag.name);
         },
         removeTag: function ( oldTag ){
-            this.$emit('removeTag', this.tagsIndex[oldTag]);
+            this.$emit('removeTag', this.tagsByName[oldTag]);
             console.log(this.corailParam);
             this.corailParam.tags = this.corailParam.tags.filter(t => t!== oldTag.name);
+        },
+        toggleHighlight(isOn, id) {
+            if(isOn) this.toggleIds.push(Number(id));
+            else this.toggleIds = this.toggleIds.filter(i => i != id);
+            
+            this.$emit('toggleIds', this.toggleIds);
         }
     },
     mounted(){
