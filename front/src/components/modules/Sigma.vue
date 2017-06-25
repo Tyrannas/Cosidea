@@ -120,13 +120,6 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 newNode = this.nodes(newNode.id);
                 // create links between new Node and previously existing ones
                 this.addEdge(newNode.id, params.tags);
-                //console.log(this.sigmaInstance.graph.nodes());
-
-                if(this.sigmaInstance.isForceAtlas2Running()){
-                    this.sigmaInstance.killForceAtlas2();
-                    this.sigmaInstance.startForceAtlas2();
-                }
-
                 // returns the newly created node
                 return newNode;
             },
@@ -381,6 +374,9 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
 
                 this.sigmaInstance.refresh();
             },
+            /**
+             * resize the zoom according to the size of the graph
+             */
             adaptZoom(){
                 let canvas = document.getElementsByClassName('sigma-scene')[0];
                 let cHeight = canvas.height;
@@ -389,13 +385,11 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 let maxY = _.maxBy(this.nodes(), 'y').y;
                 let minX = _.minBy(this.nodes(), 'x').x;
                 let minY = _.minBy(this.nodes(), 'y').y;
-                console.log(cHeight, cWidth, maxX, maxY, minX, minY);
-                let ratio = 1 / Math.log(Math.min(cHeight / Math.abs(maxY - minY), cWidth / Math.abs(maxX - minX)));
-                console.log(ratio);
-                this.sigmaInstance.camera.ratio = ratio;
-                this.sigmaInstance.camera.x = 0;
+
+                this.sigmaInstance.camera.ratio = 1 / Math.log(Math.min(cHeight / Math.abs(maxY - minY), cWidth / Math.abs(maxX - minX)));
+                this.sigmaInstance.camera.x = 10;
                 this.sigmaInstance.camera.y = 0;
-                this.sigmaInstance.refresh();
+                this.refresh();
             }
         },
         props:null,
