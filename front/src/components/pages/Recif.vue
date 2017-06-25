@@ -219,9 +219,7 @@ export default {
         async buildRecif() {
             let corails = await api.getCorails(this.token);
             this.tags = await api.getTags(this.token);
-            
             let nodes = this.$refs.sigma.buildGraph( corails );
-            this.$refs.sigma.refresh();
             // add corails to indexer
             nodes.forEach(node => this.nodeIndexer[node.data.id] = node);
         },
