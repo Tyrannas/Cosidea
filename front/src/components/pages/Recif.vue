@@ -21,7 +21,7 @@
             <button type="submit" @click="login">Login</button>
         </form>
     </div>
-    <div v-else>
+    <div v-else-if="isLoad">
         <p>Recif doesnt exist! Do you want to create it ?</p>
         <form @submit.prevent>
             <span>Name: {{ name }}</span><br>
@@ -62,13 +62,15 @@ export default {
             id:             undefined,
             description:    '',
             isProtected:    false,
-            password:       '',
+            password:       undefined,
+            
+            isLoad: false,
             // Connection token
             token:          undefined,
             // Existing tags in the recif
             tags: [],
             // The recif name exist
-            isValid:        true,
+            isValid:        false,
             // Is Auth, true if recif is protected and pwd is valid
             isAuth:         false,
             // Node selected in sigma
@@ -83,7 +85,7 @@ export default {
     },
     computed: {
         connected: function() {
-            return (!this.isProtected || this.isAuth) && this.isValid;
+            return (!this.isProtected || this.isAuth) && this.isValid && this.isLoad;
         },
         //tags indexed by id, used for dynapi to reconstruct objects
         tagIndexer: function() {
@@ -183,6 +185,7 @@ export default {
         init: async function() {
 
             let recif = await api.getRecif(this.name);
+            this.isLoad = true;
 
             if (recif === undefined) {
                 console.log('recif === undefined');
@@ -199,8 +202,12 @@ export default {
 
             if(this.description == null) 
                 this.description = '';
+            
+            if(this.isProtected && typeof(Storage) !== undefined) {
+                this.password = localStorage.getItem(this.id);
+            }
 
-            if (!this.isProtected || this.password != '')
+            if (!this.isProtected || this.password !== undefined)
             {
                 this.login();
             }
@@ -211,6 +218,10 @@ export default {
                 this.isAuth = true;
                 this.buildRecif();
                 dynapi.connect( this );
+
+                if(typeof(Storage) !== undefined) {
+                    localStorage.setItem(this.id, this.password);
+                }
             }
             else {
                 alert('Connection failed');
