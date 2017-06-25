@@ -332,18 +332,34 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
 
                 let hEdges = []; // edges to highlight
                 let dEdges = []; // edges to stay default mode
+                let hNodes = new Set();
+                let dNodes = new Set();
 
                 this.edges().forEach((e) => {
                     if(_.intersection(e.tags, tagIds).length !== 0) {
                         hEdges.push(e);
+                        hNodes.add(e.source);
+                        hNodes.add(e.target);
                     }
                     else {
                         dEdges.push(e);
+                        dNodes.add(e.source);
+                        dNodes.add(e.target);
                     }
                 });
 
-                hEdges.forEach(e => e.color = config.edge.highlightColor)
-                dEdges.forEach(e => e.color = config.edge.color)
+                hEdges.forEach(e => {
+                    e.color = config.edge.highlightColor;
+                    e.size = config.edge.highlightSize;
+                });
+                dEdges.forEach(e => {
+                    e.color = config.edge.color;
+                    e.size = config.edge.size;
+                });
+
+                for(let nId of dNodes)this.sigmaInstance.graph.nodes(nId).color = config.node.color;
+                for(let nId of hNodes)this.sigmaInstance.graph.nodes(nId).color = config.node.highlightColor;
+
                 this.sigmaInstance.refresh();
             }
         },
