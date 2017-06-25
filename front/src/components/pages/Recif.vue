@@ -274,17 +274,10 @@ export default {
         $route: function(route) {
             console.log('route changed');
             this.$refs.sigma.resetGraph();
-            this.$refs.sigma.refresh();
             // nice trick to reset data
             Object.assign(this.$data, this.$options.data.apply(this));
-
+            // init room with new route
             this.init();
-            // if(newTitle !== this.name) {
-            //     this.clear();
-            //     //this.$refs.sigma.resetGraph();
-            //     this.name = newTitle;
-            //     this.init();
-            // }
         }
     }
 }
