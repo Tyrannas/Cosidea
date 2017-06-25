@@ -60,7 +60,7 @@ export default {
             // Indexer from corail.id to sigma node
             nodeIndexer: {},
             //tag Counter updated by sigma
-            tagCounter: {test: []}
+            tagCounter: {}
         }
     },
     computed: {
