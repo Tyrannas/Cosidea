@@ -270,6 +270,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                     nodes.push(this.addNode( node ));
                 });
 
+                this.adaptZoom();
                 return nodes;
             },
             /**
@@ -357,9 +358,25 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                     e.size = config.edge.size;
                 });
 
-                for(let nId of dNodes)this.sigmaInstance.graph.nodes(nId).color = config.node.color;
-                for(let nId of hNodes)this.sigmaInstance.graph.nodes(nId).color = config.node.highlightColor;
+                for(let nId of dNodes)this.nodes(nId).color = config.node.color;
+                for(let nId of hNodes)this.nodes(nId).color = config.node.highlightColor;
 
+                this.sigmaInstance.refresh();
+            },
+            adaptZoom(){
+                let canvas = document.getElementsByClassName('sigma-scene')[0];
+                let cHeight = canvas.height;
+                let cWidth = canvas.width;
+                let maxX = _.maxBy(this.nodes(), 'x').x;
+                let maxY = _.maxBy(this.nodes(), 'y').y;
+                let minX = _.minBy(this.nodes(), 'x').x;
+                let minY = _.minBy(this.nodes(), 'y').y;
+                console.log(cHeight, cWidth, maxX, maxY, minX, minY);
+                let ratio = 1 / Math.log(Math.min(cHeight / Math.abs(maxY - minY), cWidth / Math.abs(maxX - minX)));
+                console.log(ratio);
+                this.sigmaInstance.camera.ratio = ratio;
+                this.sigmaInstance.camera.x = 0;
+                this.sigmaInstance.camera.y = 0;
                 this.sigmaInstance.refresh();
             }
         },
