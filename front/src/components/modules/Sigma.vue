@@ -121,6 +121,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 // create links between new Node and previously existing ones
                 this.addEdge(newNode.id, params.tags);
                 // returns the newly created node
+                this.refresh();
                 return newNode;
             },
             /**
@@ -265,7 +266,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
             updateNode( node ) {
                 this.nodes(node.id).data = node.data;
                 this.nodes(node.id).label = node.data.name;
-                this.sigmaInstance.refresh();
+                this.refresh();
             },
             /**
              * builds the graph with a array of nodes
@@ -279,6 +280,7 @@ Sigma Menu component, allows to create nodes, modify the graph and force atlas.
                 });
 
                 this.adaptZoom();
+                this.refresh();
                 return nodes;
             },
             /**

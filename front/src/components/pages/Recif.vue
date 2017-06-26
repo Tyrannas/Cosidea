@@ -108,7 +108,6 @@ export default {
         addCorail: async function( corail ){
 
             let newNode = this.$refs.sigma.addNode( corail );
-            this.$refs.sigma.refresh();
             
             let params = {
                 name: corail.name,
@@ -127,8 +126,6 @@ export default {
             // update id with new unique id
             newNode.data.id = id;
             this.nodeIndexer[id] = newNode;
-            console.log('NEW ID IS: ' + id);
-
         },
         updateCorail( info ) {
             // info = { corail: Corail, toAdd: tags[], toRem: tags[] }
@@ -144,7 +141,6 @@ export default {
             let changed = utils.corailChanged(node.data, corail);
             node.data = corail;
             this.$refs.sigma.updateNode( node );
-            this.$refs.sigma.refresh();
 
             //backend update
             if(changed){
@@ -233,6 +229,7 @@ export default {
             let nodes = this.$refs.sigma.buildGraph( corails );
             // add corails to indexer
             nodes.forEach(node => this.nodeIndexer[node.data.id] = node);
+            this.$refs.sigma.refresh();
         },
         addRecif: async function() {
             
